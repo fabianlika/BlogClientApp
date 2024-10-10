@@ -1,0 +1,60 @@
+.container {
+  max-width: 600px; /* Set a max width for the container */
+  margin: auto; /* Center the container */
+  padding: 20px; /* Add padding around the container */
+}
+
+.title {
+  font-size: 28px; /* Increase title size */
+  font-weight: bold; /* Bold title */
+  color: #333; /* Dark color for the title */
+  margin-bottom: 20px; /* Space below the title */
+}
+
+.form-label {
+  font-weight: bold; /* Bold label text */
+  color: #555; /* Darker color for labels */
+}
+
+.form-control {
+  border: 1px solid #ccc; /* Light grey border for inputs */
+  border-radius: 5px; /* Rounded corners for inputs */
+  padding: 10px; /* Add padding inside inputs */
+  transition: border-color 0.3s; /* Transition for focus effect */
+}
+
+.form-control:focus {
+  border-color: #4caf50; /* Change border color on focus */
+  outline: none; /* Remove default outline */
+}
+
+.btn {
+  padding: 10px 15px; /* Add padding to buttons */
+  border-radius: 5px; /* Rounded corners for buttons */
+  font-size: 16px; /* Increase font size for buttons */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.btn-save {
+  background-color: #007bff; /* Primary blue background */
+  color: white; /* White text */
+}
+
+.btn-save:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.btn-cancel {
+  background-color: #e53935; /* Red background for cancel button */
+  color: white; /* White text */
+}
+
+.btn-cancel:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}
+
+/* Optional: Add some spacing around the alert */
+.alert {
+  margin-top: 20px; /* Space above the alert */
+  text-align: center; /* Center align alert text */
+}

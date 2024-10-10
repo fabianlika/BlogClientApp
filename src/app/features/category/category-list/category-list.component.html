@@ -1,0 +1,29 @@
+<div class="container">
+  <h1 class="mt-3 title">Category List</h1>
+
+  <div class="d-flex justify-content-end mt-3">
+    <button class="btn btn-primary btn-add" (click)="openAddDialog()">Add Category</button>
+  </div>
+
+  <ng-container *ngIf="categories$ | async as categories">
+    <table class="table mt-3 styled-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Modify</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let category of categories">
+          <td>{{category.Name}}</td>
+          <td>{{category.Url}}</td>
+          <td>
+            <button class="btn btn-light btn-edit" (click)="openEditDialog(category)">Edit</button>
+            <button class="btn btn-danger btn-delete" (click)="deleteCategory(category.CategoryId)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</div>

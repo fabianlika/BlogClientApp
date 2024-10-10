@@ -1,0 +1,57 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <h1 class="logo">Canvas of Thoughts</h1>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link" [routerLink]="['']">Home</a>
+          </li>
+          <li class="nav-item" *ngIf="!isLoggedIn()">
+            <a class="nav-link" [routerLink]="['/login']">Login</a>
+          </li>
+          <li class="nav-item" *ngIf="!isLoggedIn()">
+            <a class="nav-link" [routerLink]="['/signup']">Signup</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn()">
+            <a class="nav-link" (click)="logout()">Logout</a>
+          </li>
+          <li class="nav-item dropdown" *ngIf="isAdmin() && isLoggedIn()"   >
+            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Admin Panel
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+              <li><a class="dropdown-item" [routerLink]="['/user-list']">User List</a></li>
+              <li><a class="dropdown-item" [routerLink]="['/user-roles']">User Roles</a></li>
+              <li><a class="dropdown-item" [routerLink]="['/admin/categories']">Category List</a></li>
+              <li><a class="dropdown-item" [routerLink]="['/posts-table']">Posts Table</a></li>
+            </ul>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn()">
+            <a class="nav-link" [routerLink]="['/admin/blogposts/add']">Add Posts</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn()">
+            <a class="nav-link" [routerLink]="['/posts']">Posts List</a>
+          </li>
+          <li class="nav-item" *ngIf="isLoggedIn()">
+            <a class="nav-link" [routerLink]="['/add-photo']">Add Photo</a>
+          </li>
+
+          <li class="nav-item" *ngIf="isLoggedIn()">
+            <a class="nav-link" [routerLink]="['/my-profile']">My Profile</a>
+          </li>
+          
+
+        </ul>
+
+
+
+      </div>
+    </div>
+  </nav>
+</header>

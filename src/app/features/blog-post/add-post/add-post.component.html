@@ -1,0 +1,35 @@
+<div class="container mt-5 form-container">
+  <form #postForm="ngForm" (ngSubmit)="onSubmit()" class="form-content">
+    <h1 class="form-title">Add New Post</h1>
+    <div class="form-group">
+      <label for="title" class="form-label">Title</label>
+      <input type="text" id="title" name="title" [(ngModel)]="post.Title" required class="form-control">
+    </div>
+
+    <div class="form-group">
+      <label for="content" class="form-label">Content</label>
+      <textarea id="content" name="content" [(ngModel)]="post.Content" required class="form-control"></textarea>
+    </div>
+
+    <div class="form-group custom-dropdown">
+      <label for="category" class="form-label">Category</label>
+      <div (click)="toggleDropdown()" class="dropdown-selected">
+        {{ selectedCategory || 'Select a Category' }} <span class="arrow">{{ isDropdownOpen ? '▲' : '▼' }}</span>
+      </div>
+      <div *ngIf="isDropdownOpen" class="dropdown-list">
+        <div *ngFor="let category of categories" (click)="selectCategory(category)" class="dropdown-item">
+          {{ category.Name }}
+        </div>
+      </div>
+      <input type="hidden" name="category" [(ngModel)]="post.CategoryId" />
+    </div>
+    
+
+    <div class="form-group">
+      <label for="file" class="form-label">Upload Photos</label>
+      <input type="file" id="file" (change)="onFileChange($event)" class="form-control file-input" accept="image/*" multiple />
+    </div>
+
+    <button type="submit" class="btn btn-submit" [disabled]="!postForm.valid">Add Post</button>
+  </form>
+</div>

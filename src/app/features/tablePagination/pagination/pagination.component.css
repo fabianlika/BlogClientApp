@@ -1,0 +1,34 @@
+.pagination-container {
+    text-align: center;
+  }
+  
+  .pagination {
+    display: inline-flex;
+    padding: 0;
+  }
+  
+  .page-item {
+    margin: 0 5px;
+  }
+  
+  .page-item.disabled .page-link {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  
+  .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .page-link {
+    cursor: pointer;
+    padding: 10px;
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .page-link:hover {
+    background-color: #f1f1f1;
+  }
+  

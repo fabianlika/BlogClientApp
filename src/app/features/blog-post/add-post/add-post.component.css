@@ -1,0 +1,151 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 600px;
+  background: linear-gradient(145deg, #ffffff, #f0f0f0);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-title {
+  text-align: center;
+  color: #444;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  margin-bottom: 5px;
+  font-size: 15px;
+  color: #333;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+input,
+textarea,
+select,
+.file-input {
+  padding: 15px; /* Increased padding */
+  font-size: 18px; /* Increased font size */
+  color: #333;
+  border: 2px solid #007bff; /* Changed border color */
+  border-radius: 10px;
+  background: #e9f5ff; /* Light background */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  min-height: 45px; /* Increased minimum height */
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.file-input:focus {
+  outline: none;
+  border-color: #0056b3; /* Darker blue on focus */
+  box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
+}
+
+textarea {
+  min-height: 120px;
+}
+
+.btn-submit {
+  background-color: #0077ff;
+  color: #ffffff;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-submit:hover {
+  background-color: #005bb5;
+  transform: translateY(-3px);
+}
+
+.btn-submit:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.shadow {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom Dropdown Styles */
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-selected {
+  padding: 15px;
+  font-size: 18px; /* Increased font size */
+  color: #333; /* Text color */
+  background: #e9f5ff;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 100%; /* Position below the selected item */
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #007bff;
+  border-radius: 10px;
+  z-index: 1000; /* Ensure dropdown appears above other elements */
+  max-height: 200px; /* Limit height */
+  overflow-y: auto; /* Scroll if too many items */
+}
+
+.dropdown-item {
+  padding: 10px;
+  font-size: 16px; /* Font size for dropdown items */
+  color: #333; /* Text color */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dropdown-item:hover {
+  background: #007bff; /* Highlight color on hover */
+  color: white; /* Change text color on hover */
+}
+
+/* Dropdown Option Styles */
+select option {
+  padding: 10px;
+  font-size: 16px;
+  color: #333; /* Text color for options */
+  background: #ffffff; /* Background color for options */
+}

@@ -1,0 +1,26 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { UserRoleDetail } from '../models/user-role-details.model';
+import { environment } from 'src/environments/environment.development';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class UserRoleService {
+  private apiUrl = `${environment.apiBaseUrl}/api/UserRole/UserRoleDetails`;
+  private apiUrl2 = `${environment.apiBaseUrl}/api/UserRole`;
+
+  constructor(private http: HttpClient) {}
+
+  getAllUserRoles(): Observable<UserRoleDetail[]> {
+    return this.http.get<UserRoleDetail[]>(this.apiUrl);
+  }
+
+
+  updateUserRole(userId: string, role: string): Observable<any> {
+    const updatePayload = { roles: role };
+    return this.http.put(`${this.apiUrl2}/${userId}`, updatePayload);
+  }
+
+}

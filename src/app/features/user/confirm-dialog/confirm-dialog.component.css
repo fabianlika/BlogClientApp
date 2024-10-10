@@ -1,0 +1,59 @@
+/* Style the dialog title */
+.dialog-title {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Style the dialog content */
+.dialog-content {
+  font-size: 16px;
+  color: #555;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Center the buttons */
+.dialog-actions {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+/* Style the 'Yes' button */
+.btn-confirm {
+  background-color: #4caf50; /* Green background */
+  color: white;
+  padding: 10px 20px; /* Larger padding */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Bigger font */
+  margin-right: 10px; /* Space between buttons */
+}
+
+/* Hover effect for 'Yes' button */
+.btn-confirm:hover {
+  background-color: #45a049;
+}
+
+/* Style the 'No' button */
+.btn-cancel {
+  background-color: #e53935; /* Red background */
+  color: white;
+  padding: 10px 20px; /* Larger padding */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px; /* Bigger font */
+}
+
+/* Hover effect for 'No' button */
+.btn-cancel:hover {
+  background-color: #d32f2f;
+}
+
+/* Optional: Add some padding to the dialog box itself */
+mat-dialog-container {
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,12 @@
+<section class="featured-posts">
+    <h3>Featured Articles</h3>
+    <div class="post-grid">
+      <div class="post-card" *ngFor="let post of [1, 2, 3]">
+        <img src="https://via.placeholder.com/400x200" alt="Post Image">
+        <h4>Post Title {{ post }}</h4>
+        <p>Brief post description. Click below to read more!</p>
+        <a [routerLink]="['/posts', post]" class="btn-secondary">Read More</a>
+      </div>
+    </div>
+  </section>
+  

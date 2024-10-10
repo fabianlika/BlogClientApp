@@ -1,0 +1,38 @@
+/* dashboard.component.css */
+
+.dashboard-container {
+    background-color: #f8f9fa;
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #343a40;
+  }
+  
+  .dashboard-section {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    color: #007bff;
+    font-weight: 500;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+  }
+  
+  .dashboard-btn {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+  }
+  
+  .dashboard-btn:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    color: #ffffff;
+  }
+  

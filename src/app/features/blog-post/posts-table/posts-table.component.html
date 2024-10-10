@@ -1,0 +1,31 @@
+<div class="container mt-5">
+  <h1 class="text-center title">Unapproved Posts</h1>
+  <div class="table-responsive">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Author</th>
+          <th>Upload Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of displayedPosts">
+          <td>{{ post.Title }}</td>
+          <td>{{ post.Author }}</td>
+          <td>{{ formatDate(post.CreatedAt) }}</td>
+          <td>
+            <button (click)="approvePost(post.PostId)" class="btn-approve">Approve</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
+</div>

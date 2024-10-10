@@ -1,0 +1,143 @@
+<div class="outer">
+  <div class="container d-flex justify-content-center align-items-center" id="signup-container">
+    <div class="card shadow-lg p-4" id="signup-card">
+      <div class="card-header text-center bg-transparent border-0 mb-3">
+        <h3 class="font-weight-bold text-primary">Create an Account</h3>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="signUpForm" (ngSubmit)="onSignUp()">
+          <!-- Name Input -->
+          <div class="form-group mb-3">
+            <label for="name" class="text-muted">Name <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-0">
+                  <i class="fa fa-user text-primary"></i>
+                </span>
+              </div>
+              <input id="name" formControlName="Name" type="text" class="form-control" placeholder="Enter your name" />
+            </div>
+            <div *ngIf="signUpForm.get('Name')?.invalid && (signUpForm.get('Name')?.dirty || signUpForm.get('Name')?.touched)">
+              <small class="text-danger" *ngIf="signUpForm.get('Name')?.hasError('required')">Name is required</small>
+            </div>
+          </div>
+
+          <!-- Username Input -->
+          <div class="form-group mb-3">
+            <label for="username" class="text-muted">Username <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-0">
+                  <i class="fa fa-user text-primary"></i>
+                </span>
+              </div>
+              <input id="username" formControlName="Username" type="text" class="form-control" placeholder="Enter your username" />
+            </div>
+            <div *ngIf="signUpForm.get('Username')?.invalid && (signUpForm.get('Username')?.dirty || signUpForm.get('Username')?.touched)">
+              <small class="text-danger" *ngIf="signUpForm.get('Username')?.hasError('required')">Username is required</small>
+            </div>
+          </div>
+
+          <!-- Email Input -->
+          <div class="form-group mb-3">
+            <label for="email" class="text-muted">Email <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-0">
+                  <i class="fa fa-envelope text-primary"></i>
+                </span>
+              </div>
+              <input id="email" formControlName="Email" type="email" class="form-control" placeholder="Enter your email" />
+            </div>
+            <div *ngIf="signUpForm.get('Email')?.invalid && (signUpForm.get('Email')?.dirty || signUpForm.get('Email')?.touched)">
+              <small class="text-danger" *ngIf="signUpForm.get('Email')?.hasError('required')">Email is required</small>
+              <small class="text-danger" *ngIf="signUpForm.get('Email')?.hasError('email')">Enter a valid email</small>
+            </div>
+          </div>
+
+          <!-- Phone Number Input -->
+          <div class="form-group mb-3">
+            <label for="phone" class="text-muted">Phone Number <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-0">
+                  <i class="fa fa-phone text-primary"></i>
+                </span>
+              </div>
+              <input id="phone" formControlName="PhoneNumber" type="text" class="form-control" placeholder="Enter your phone number" />
+            </div>
+            <div *ngIf="signUpForm.get('PhoneNumber')?.invalid && (signUpForm.get('PhoneNumber')?.dirty || signUpForm.get('PhoneNumber')?.touched)">
+              <small class="text-danger" *ngIf="signUpForm.get('PhoneNumber')?.hasError('required')">Phone number is required</small>
+              <small class="text-danger" *ngIf="signUpForm.get('PhoneNumber')?.hasError('invalidPhone')">Please enter a valid phone number</small>
+            </div>
+          </div>
+
+          <!-- Password Input -->
+          <div class="form-group mb-3">
+            <label for="password" class="text-muted">Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-0">
+                  <i class="fa fa-lock text-primary"></i>
+                </span>
+              </div>
+              <input id="password" formControlName="PasswordHash" [type]="passwordType" class="form-control" placeholder="Enter your password" />
+              <div class="input-group-append">
+                <span class="input-group-text bg-light border-0" (click)="togglePasswordVisibility()">
+                  <i [ngClass]="passwordIcon"></i>
+                </span>
+              </div>
+            </div>
+            <div *ngIf="signUpForm.get('PasswordHash')?.invalid && (signUpForm.get('PasswordHash')?.dirty || signUpForm.get('PasswordHash')?.touched)">
+              <small class="text-danger" *ngIf="signUpForm.get('PasswordHash')?.hasError('required')">Password is required</small>
+            </div>
+          </div>
+
+          <!-- Repeat Password Input -->
+          <div class="form-group mb-3">
+            <label for="repeatPassword" class="text-muted">Repeat Password <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-0">
+                  <i class="fa fa-lock text-primary"></i>
+                </span>
+              </div>
+              <input id="repeatPassword" formControlName="RepeatPassword" [type]="repeatPasswordType" class="form-control" placeholder="Repeat your password" />
+              <div class="input-group-append">
+                <span class="input-group-text bg-light border-0" (click)="toggleRepeatPasswordVisibility()">
+                  <i [ngClass]="repeatPasswordIcon"></i>
+                </span>
+              </div>
+            </div>
+            <div *ngIf="signUpForm.hasError('mismatch') && (signUpForm.get('RepeatPassword')?.dirty || signUpForm.get('RepeatPassword')?.touched)">
+              <small class="text-danger">Passwords do not match</small>
+            </div>
+          </div>
+
+          <!-- Birthday Input -->
+          <div class="form-group mb-3">
+            <label for="birthday" class="text-muted">Birthday <span class="text-danger">*</span></label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text bg-light border-0">
+                  <i class="fa fa-calendar text-primary"></i>
+                </span>
+              </div>
+              <input id="birthday" formControlName="Birthday" type="date" class="form-control" />
+            </div>
+            <div *ngIf="signUpForm.get('Birthday')?.invalid && (signUpForm.get('Birthday')?.dirty || signUpForm.get('Birthday')?.touched)">
+              <small class="text-danger" *ngIf="signUpForm.get('Birthday')?.hasError('required')">Birthday is required</small>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block py-2 mt-4">Sign Up</button>
+
+          <div class="text-center pt-4">
+            <span class="text-muted">Already have an account? </span>
+            <a id="login-link" class="text-primary" [routerLink]="['/login']">Login</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

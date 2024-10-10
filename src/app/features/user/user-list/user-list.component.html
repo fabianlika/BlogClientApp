@@ -1,0 +1,35 @@
+<ng-container *ngIf="paginatedUsers.length > 0">
+  <table class="table mt-3 styled-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Birthday</th>
+        <th>Phone Number</th>
+       
+        <th>Modify</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of paginatedUsers">
+        <td>{{user.Name}}</td>
+        <td>{{user.Username}}</td>
+        <td>{{user.Email}}</td>
+        <td>{{user.Birthday | date:'shortDate'}}</td>
+        <td>{{user.PhoneNumber}}</td>
+       
+        <td>
+          <button class="btn btn-light btn-edit" (click)="openEditDialog(user)">Edit</button>
+          <button class="btn btn-danger btn-delete" (click)="deleteUser(user.UserId)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-container>
+
+<app-pagination
+  [currentPage]="currentPage"
+  [totalPages]="totalPages"
+  (pageChange)="onPageChange($event)">
+</app-pagination>

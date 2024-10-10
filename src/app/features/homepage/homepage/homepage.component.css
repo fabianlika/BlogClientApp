@@ -125,19 +125,4 @@
     text-align: center;
     font-size: 0.9rem;
   }
-  .custom-snackbar {
-    font-size: 1.2rem;  /* Bigger text */
-    padding: 16px 24px; /* More padding for larger appearance */
-    width: 400px;       /* Adjust the width */
-    color: #000;        /* Black text for better visibility */
-    background-color: transparent; /* Transparent background */
-
-    box-shadow: none;   /* Remove shadow */
-  }
   
-  .custom-snackbar-action {
-    color: #4caf50; /* Green color for action button */
-  }
-  
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

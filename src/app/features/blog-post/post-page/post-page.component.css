@@ -1,0 +1,69 @@
+.small-image {
+    max-width: 500px; /* Set maximum width */
+    max-height: 550px; /* Set maximum height */
+    object-fit: cover; /* Keep aspect ratio */
+  }
+  
+  .image-wrapper {
+    display: flex; /* Change to flex */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+  }
+  
+  .post-image-container {
+    display: flex; /* Ensure the entire container is flexible */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center all children */
+  }
+  
+  .image-carousel {
+    max-height: 400px;
+    max-width: 100%;
+    object-fit: cover;
+    cursor: pointer;
+  }
+  
+  .post-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  .card {
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .list-group-item a {
+    text-decoration: none;
+  }
+  
+  .list-group-item a:hover {
+    text-decoration: underline;
+  }
+  
+  .post-files ul {
+    padding-left: 0;
+  }
+  
+  .list-unstyled a {
+    text-decoration: none;
+  }
+  
+  a.btn-outline-secondary.btn-sm {
+    font-size: 0.9rem;
+  }
+  
+  h2.text-primary {
+    font-weight: bold;
+    font-size: 1.75rem;
+  }
+  
+  .post-files ul {
+    padding-left: 0;
+  }
+  

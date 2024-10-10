@@ -1,0 +1,89 @@
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .outer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh; /* Take full viewport height */
+    padding: 0 15px; /* Add some horizontal padding */
+  }
+  
+  #signup-container {
+    flex: 1; /* Make sure it takes available space */
+    padding-top: 80px; /* Avoid navbar overlap */
+    padding-bottom: 80px; /* Avoid footer overlap */
+  }
+  
+  #signup-card {
+    width: 100%;
+    max-width: 450px; /* Limit width for larger screens */
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input-group {
+    margin-bottom: 1.25rem;
+  }
+  
+  .input-group-text {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-right: 0;
+  }
+  
+  .form-control {
+    border: 1px solid #ccc;
+    border-left: 0;
+  }
+  
+  .form-group label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    border-radius: 50px;
+    transition: all 0.3s;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  .card-header h3 {
+    font-size: 1.5rem;
+    color: #333;
+  }
+  
+  .text-muted {
+    font-size: 0.9rem;
+  }
+  
+  #login-link {
+    color: #007bff;
+  }
+  
+  #login-link:hover {
+    text-decoration: underline;
+  }
+
+  .text-danger {
+    color: #dc3545; /* Bootstrap's danger color */
+    font-size: 0.875rem; /* Slightly smaller font size */
+    margin-top: 0.25rem; /* Space above the error message */
+    font-weight: 500; /* Medium font weight */
+    transition: all 0.3s ease; /* Smooth transition for hover or focus effects */
+  }
+  
+  .text-danger:hover {
+    color: #c82333; /* Darker shade on hover */
+    text-decoration: underline; /* Underline on hover */
+  }
+  
+  

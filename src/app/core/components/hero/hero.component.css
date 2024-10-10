@@ -1,0 +1,16 @@
+.hero {
+    background-image: url('/assets/images/our-background-image.png');
+    background-size: cover;
+    background-position: center;
+    color: white; 
+    padding: 50px 0;
+    text-align: center;
+  }
+  
+  .hero-content {
+    max-width: 600px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7); 
+    padding: 20px;
+    border-radius: 10px;
+  }

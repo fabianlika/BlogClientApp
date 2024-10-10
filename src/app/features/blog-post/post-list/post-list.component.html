@@ -1,0 +1,66 @@
+<div class="container post-list-container mt-4">
+  <h1 class="text-center text-primary mb-4">Post List</h1>
+
+  <!-- Search Bar -->
+  <div class="search-bar mb-4">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search posts..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+    />
+  </div>
+
+  <!-- Category Filter -->
+  <div class="category-filter mb-4">
+    <select class="form-select" (change)="filterByCategory($event)">
+      <option value="">All Categories</option>
+      <option *ngFor="let category of categories" [value]="category.CategoryId">
+        {{ category.Name }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Post List -->
+  <div class="row">
+    <div *ngFor="let post of paginatedPosts" class="col-md-6 mb-4">
+      <div class="post-card h-100 shadow border-0 rounded">
+        <div class="card-body">
+          <h2 class="card-title text-center text-secondary">{{ post.Title }}</h2>
+          <p class="card-text text-center">
+            <small class="text-muted d-block">
+              <i class="fas fa-calendar-alt"></i> {{ post.CreatedAt | date: 'mediumDate' }}
+            </small>
+            <small class="text-muted">
+              <i class="fas fa-user"></i> By: {{ post.Author }}
+            </small>
+          </p>
+          <div class="post-images mb-3 d-flex justify-content-center" *ngIf="postImages[post.PostId] && postImages[post.PostId].length > 0">
+            <img 
+              [src]="postImages[post.PostId][0]" 
+              alt="{{ post.Title }} Image" 
+              class="img-fluid rounded single-large-image" 
+              (click)="openImage(postImages[post.PostId][0])" />
+          </div>
+          <p class="post-content text-justify">{{ post.Content | stripHtml | slice:0:150 }}...</p>
+          <div class="text-center">
+            <button class="view-post-btn btn btn-primary" (click)="viewPost(post.PostId)">View Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-image-modal 
+    [isOpen]="isModalOpen" 
+    [selectedImage]="selectedImage"></app-image-modal>
+
+  <!-- Pagination Component -->
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChange)="onPageChange($event)"
+    class="mt-4"
+  ></app-pagination>
+</div>

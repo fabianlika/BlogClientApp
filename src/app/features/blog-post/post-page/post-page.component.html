@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <!-- Post Title, Back Button, and Edit Button -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary mb-0">{{ post?.Title }}</h2>
+    <div>
+      <a routerLink="/posts" class="btn btn-outline-secondary btn-sm">Back to Posts</a>
+      <button 
+        *ngIf="canEditPost && post" 
+        class="btn btn-warning btn-sm ms-2" 
+        (click)="openEditPostModal(post)" 
+      >
+        Edit Post
+      </button>
+    </div>
+  </div>
+
+  <!-- Author and Date -->
+  <p class="text-muted mb-4">
+    <small>By: <strong>{{ post?.Author }}</strong></small> | 
+    <small>{{ post?.CreatedAt | date: 'mediumDate' }}</small>
+  </p>
+
+  <!-- Post Content -->
+  <div class="post-content border-bottom pb-4 mb-4">
+    <div [innerHTML]="post?.Content" class="content-body"></div>
+  </div>
+
+  <!-- Images Carousel -->
+  <div *ngIf="postImages.length" class="post-image-container mt-4">
+    <div class="d-flex justify-content-center align-items-center mb-3">
+      <button (click)="previousImage()" class="btn btn-outline-primary btn-sm me-2">&lt;</button>
+      <img 
+        [src]="postImages[currentImageIndex]" 
+        alt="{{ post?.Title }} Image" 
+        class="img-fluid rounded small-image" 
+        (click)="openImage(postImages[currentImageIndex])" 
+      />
+      <button (click)="nextImage()" class="btn btn-outline-primary btn-sm ms-2">&gt;</button>
+    </div>
+    <p class="text-muted text-center">{{ currentImageIndex + 1 }} of {{ postImages.length }}</p>
+  </div>
+
+  <!-- Files Section -->
+  <div *ngIf="postFiles.length" class="post-files mt-4">
+    <h5 class="text-secondary">Attachments:</h5>
+    <ul class="list-group list-group-flush">
+      <li *ngFor="let file of postFiles" class="list-group-item">
+        <a [href]="file.content" download target="_blank" class="text-info">
+          <i class="fas fa-file-alt me-2"></i> {{ file.name }}
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Edit Post Modal -->
+<!-- Parent Component Template (e.g., post-page.component.html) -->
+<div *ngIf="isEditModalOpen" class="modal fade show d-block">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <app-edit-post 
+        *ngIf="selectedPost" 
+        [post]="selectedPost" 
+        (closeEditModal)="closeEditPostModal()"
+        (postUpdated)="handlePostUpdated($event)"
+      ></app-edit-post>
+    </div>
+  </div>
+</div>
+
+</div>

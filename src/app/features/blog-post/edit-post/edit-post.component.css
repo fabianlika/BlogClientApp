@@ -1,0 +1,53 @@
+.form-container {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+  
+  .btn-close:hover {
+    color: red;
+  }
+  
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+
+.form-control {
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.btn-submit {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.btn-submit:disabled {
+    background-color: #6c757d;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background-color: #0056b3;
+}

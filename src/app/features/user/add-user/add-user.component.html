@@ -1,0 +1,90 @@
+<div class="outer">
+    <div class="container d-flex justify-content-center align-items-center" id="add-user-container">
+      <div class="card shadow-lg p-4" id="add-user-card">
+        <div class="card-header text-center bg-transparent border-0 mb-4">
+          <h3 class="font-weight-bold text-primary">Add New User</h3>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="addUserForm" (ngSubmit)="onAddUser()">
+            <!-- Name Input -->
+            <div class="form-group mb-3">
+              <label for="name" class="text-muted">Name <span class="text-danger">*</span></label>
+              <input id="name" formControlName="Name" type="text" class="form-control" placeholder="Enter your name" />
+              <div *ngIf="addUserForm.get('Name')?.invalid && (addUserForm.get('Name')?.dirty || addUserForm.get('Name')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('Name')?.hasError('required')">Name is required</small>
+              </div>
+            </div>
+  
+            <!-- Username Input -->
+            <div class="form-group mb-3">
+              <label for="username" class="text-muted">Username <span class="text-danger">*</span></label>
+              <input id="username" formControlName="Username" type="text" class="form-control" placeholder="Enter your username" />
+              <div *ngIf="addUserForm.get('Username')?.invalid && (addUserForm.get('Username')?.dirty || addUserForm.get('Username')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('Username')?.hasError('required')">Username is required</small>
+              </div>
+            </div>
+  
+            <!-- Email Input -->
+            <div class="form-group mb-3">
+              <label for="email" class="text-muted">Email <span class="text-danger">*</span></label>
+              <input id="email" formControlName="Email" type="email" class="form-control" placeholder="Enter your email" />
+              <div *ngIf="addUserForm.get('Email')?.invalid && (addUserForm.get('Email')?.dirty || addUserForm.get('Email')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('Email')?.hasError('required')">Email is required</small>
+                <small class="text-danger" *ngIf="addUserForm.get('Email')?.hasError('email')">Enter a valid email</small>
+              </div>
+            </div>
+  
+            <!-- Phone Number Input -->
+            <div class="form-group mb-3">
+              <label for="phone" class="text-muted">Phone Number <span class="text-danger">*</span></label>
+              <input id="phone" formControlName="PhoneNumber" type="text" class="form-control" placeholder="Enter your phone number" />
+              <div *ngIf="addUserForm.get('PhoneNumber')?.invalid && (addUserForm.get('PhoneNumber')?.dirty || addUserForm.get('PhoneNumber')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('PhoneNumber')?.hasError('required')">Phone number is required</small>
+                <small class="text-danger" *ngIf="addUserForm.get('PhoneNumber')?.hasError('invalidPhone')">Please enter a valid phone number</small>
+              </div>
+            </div>
+  
+            <!-- Password Input -->
+            <div class="form-group mb-3 position-relative">
+              <label for="password" class="text-muted">Password <span class="text-danger">*</span></label>
+              <input id="password" formControlName="PasswordHash" [type]="passwordType" class="form-control" placeholder="Enter your password" />
+              <span class="input-group-text position-absolute end-0" (click)="togglePasswordVisibility()" style="cursor: pointer;">
+                <i [ngClass]="passwordIcon"></i>
+              </span>
+              <div *ngIf="addUserForm.get('PasswordHash')?.invalid && (addUserForm.get('PasswordHash')?.dirty || addUserForm.get('PasswordHash')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('PasswordHash')?.hasError('required')">Password is required</small>
+              </div>
+            </div>
+  
+            <!-- Repeat Password Input -->
+            <div class="form-group mb-3 position-relative">
+              <label for="repeatPassword" class="text-muted">Confirm Password <span class="text-danger">*</span></label>
+              <input id="repeatPassword" formControlName="RepeatPassword" [type]="repeatPasswordType" class="form-control" placeholder="Confirm your password" />
+              <span class="input-group-text position-absolute end-0" (click)="toggleRepeatPasswordVisibility()" style="cursor: pointer;">
+                <i [ngClass]="repeatPasswordIcon"></i>
+              </span>
+              <div *ngIf="addUserForm.hasError('mismatch') && (addUserForm.dirty || addUserForm.touched)">
+                <small class="text-danger">Passwords must match</small>
+              </div>
+              <div *ngIf="addUserForm.get('RepeatPassword')?.invalid && (addUserForm.get('RepeatPassword')?.dirty || addUserForm.get('RepeatPassword')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('RepeatPassword')?.hasError('required')">Confirm Password is required</small>
+              </div>
+            </div>
+  
+            <!-- Birthday Input -->
+            <div class="form-group mb-3">
+              <label for="birthday" class="text-muted">Birthday <span class="text-danger">*</span></label>
+              <input id="birthday" formControlName="Birthday" type="date" class="form-control" />
+              <div *ngIf="addUserForm.get('Birthday')?.invalid && (addUserForm.get('Birthday')?.dirty || addUserForm.get('Birthday')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('Birthday')?.hasError('required')">Birthday is required</small>
+              </div>
+            </div>
+  
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-block" [disabled]="addUserForm.invalid">Add User</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

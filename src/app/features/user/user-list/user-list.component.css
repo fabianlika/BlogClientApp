@@ -1,67 +1,46 @@
 .container {
-    max-width: 1200px; /* Set a max width for the container */
-    margin: auto; /* Center the container */
-    padding: 20px; /* Add padding around the container */
-  }
-  
-  .title {
-    font-size: 28px; /* Increase title size */
-    font-weight: bold; /* Bold title */
-    color: #333; /* Dark color for the title */
-    text-align: center; /* Center align the title */
-    margin-bottom: 20px; /* Space below the title */
-  }
-  
-  .styled-table {
-    width: 100%; /* Full width for the table */
-    border-collapse: collapse; /* Collapse borders for a cleaner look */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  }
-  
-  .styled-table th,
-  .styled-table td {
-    padding: 12px; /* Increase padding for better spacing */
-    text-align: left; /* Left-align text */
-  }
-  
-  .styled-table th {
-    background-color: #4caf50; /* Green background for header */
-    color: white; /* White text for header */
-    font-weight: bold; /* Bold header text */
-  }
-  
-  .styled-table tr:nth-child(even) {
-    background-color: #f2f2f2; /* Light grey for even rows */
-  }
-  
-  .styled-table tr:hover {
-    background-color: #e0e0e0; /* Darker grey on hover for rows */
-  }
-  
-  .btn {
-    border: none; /* Remove borders for buttons */
-    padding: 10px 15px; /* Add padding to buttons */
-    border-radius: 5px; /* Rounded corners for buttons */
-    font-size: 16px; /* Increase font size for buttons */
-    cursor: pointer; /* Pointer cursor on hover */
-  }
-  
-  .btn-edit {
-    background-color: #4caf50; /* Green background for edit button */
-    color: white; /* White text */
-    margin-right: 10px; /* Space between buttons */
-  }
-  
-  .btn-edit:hover {
-    background-color: #45a049; /* Darker green on hover */
-  }
-  
-  .btn-delete {
-    background-color: #e53935; /* Red background for delete button */
-    color: white; /* White text */
-  }
-  
-  .btn-delete:hover {
-    background-color: #d32f2f; /* Darker red on hover */
-  }
-  
+  max-width: 1200px; /* Set a max width for the container */
+  margin: auto; /* Center the container */
+  padding: 20px; /* Add padding around the container */
+}
+
+.title {
+  font-size: 28px; /* Increase title size */
+  font-weight: bold; /* Bold title */
+  color: #333; /* Dark color for the title */
+  text-align: center; /* Center align the title */
+  margin-bottom: 20px; /* Space below the title */
+}
+
+.table {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.table th,
+.table td {
+  padding: 12px; /* Increase padding for better spacing */
+  text-align: left; /* Left-align text */
+}
+
+.table th {
+  background-color: #4caf50; /* Green background for header */
+  color: white; /* White text for header */
+}
+
+.table tbody tr:hover {
+  background-color: #e0e0e0; /* Darker grey on hover for rows */
+}
+
+/* Optional: Add custom hover effects on buttons */
+.btn {
+  transition: background-color 0.3s; /* Smooth transition for button background */
+}
+.btn-success:hover {
+  background-color: #45a049; /* Darker green on hover for edit button */
+}
+.btn-danger:hover {
+  background-color: #d32f2f; /* Darker red on hover for delete button */
+}
+.table td {
+  vertical-align: middle; /* Aligns the text vertically center in the table cells */
+}

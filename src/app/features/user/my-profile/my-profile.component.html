@@ -35,18 +35,50 @@
 
       <!-- Password fields displayed when editing password -->
       <div *ngIf="isEditingPassword">
-          <div class="form-group">
-              <label for="password">New Password</label>
-              <input id="password" type="password" formControlName="PasswordHash" class="form-control" (input)="checkPasswords()" />
-          </div>
-          <div class="form-group">
-              <label for="confirmPassword">Confirm Password</label>
-              <input id="confirmPassword" type="password" formControlName="ConfirmPassword" class="form-control" (input)="checkPasswords()" />
-              <div *ngIf="passwordMismatch && confirmPasswordTouched">
-                  <small style="color: red;">Passwords do not match.</small>
-              </div>
-          </div>
-      </div>
+        <div class="form-group">
+            <label for="password">New Password</label>
+            <div class="input-group">
+                <input
+                    id="password"
+                    [type]="showPassword ? 'text' : 'password'"
+                    formControlName="PasswordHash"
+                    class="form-control"
+                    (input)="checkPasswords()"
+                />
+                <div class="input-group-append">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        (click)="togglePasswordVisibility('new')">
+                        <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <div class="input-group">
+                <input
+                    id="confirmPassword"
+                    [type]="showConfirmPassword ? 'text' : 'password'"
+                    formControlName="ConfirmPassword"
+                    class="form-control"
+                    (input)="checkPasswords()"
+                />
+                <div class="input-group-append">
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary"
+                        (click)="togglePasswordVisibility('confirm')">
+                        <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
+                    </button>
+                </div>
+            </div>
+            <div *ngIf="passwordMismatch && confirmPasswordTouched">
+                <small style="color: red;">Passwords do not match.</small>
+            </div>
+        </div>
+    </div>
       
       <button type="submit" class="btn btn-primary">Update Profile</button>
   </form>

@@ -1,34 +1,39 @@
-.pagination-container {
-    text-align: center;
-  }
-  
-  .pagination {
-    display: inline-flex;
-    padding: 0;
-  }
-  
-  .page-item {
-    margin: 0 5px;
-  }
-  
-  .page-item.disabled .page-link {
-    pointer-events: none;
-    opacity: 0.5;
-  }
-  
-  .page-item.active .page-link {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .page-link {
-    cursor: pointer;
-    padding: 10px;
-    text-decoration: none;
-    color: #007bff;
-  }
-  
-  .page-link:hover {
-    background-color: #f1f1f1;
-  }
-  
+.pagination-container { 
+  text-align: center; /* Center align the pagination */
+}
+
+.pagination {
+  display: inline-flex; /* Display pagination items in a row */
+  padding: 0; /* Remove default padding */
+  margin-top: 1rem; /* Add some top margin for spacing */
+}
+
+.page-item {
+  margin: 0 5px; /* Add spacing between page items */
+}
+
+.page-item.disabled .page-link {
+  pointer-events: none; /* Disable pointer events for disabled items */
+  opacity: 0.5; /* Dim the disabled items */
+}
+
+.page-item.active .page-link {
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white; /* White text for active item */
+}
+
+.page-link {
+  cursor: pointer; /* Show pointer cursor on hover */
+  padding: 10px 15px; /* Add padding for better touch targets */
+  text-decoration: none; /* Remove underline */
+  color: #007bff; /* Bootstrap primary color */
+  border: 1px solid transparent; /* Add transparent border for consistency */
+  border-radius: 0.25rem; /* Rounded corners for buttons */
+  transition: background-color 0.2s, color 0.2s; /* Smooth transitions */
+}
+
+.page-link:hover {
+  background-color: #f1f1f1; /* Light grey on hover */
+  border-color: #007bff; /* Add border color on hover */
+  color: #0056b3; /* Darker blue for text on hover */
+}

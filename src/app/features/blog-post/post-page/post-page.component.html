@@ -1,15 +1,31 @@
 <div class="container mt-4">
-  <!-- Post Title, Back Button, and Edit Button -->
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2 class="text-primary mb-0">{{ post?.Title }}</h2>
     <div>
-      <a routerLink="/posts" class="btn btn-outline-secondary btn-sm">Back to Posts</a>
+      <!-- Back to Posts Button (on the left) -->
+      <a routerLink="/posts" class="btn btn-outline-secondary btn-sm">
+        <i class="fas fa-arrow-left me-2"></i>
+      </a>
+    </div>
+    <div>
+      <h2 class="text-primary mb-0">{{ post?.Title }}</h2>
+    </div>
+    <div>
+      <!-- Edit Post Button with Edit Icon -->
       <button 
         *ngIf="canEditPost && post" 
         class="btn btn-warning btn-sm ms-2" 
         (click)="openEditPostModal(post)" 
       >
-        Edit Post
+        <i class="fas fa-edit"></i>
+      </button>
+
+      <!-- Delete Post Button with Trash Icon -->
+      <button
+        *ngIf="canEditPost && post"
+        class="btn btn-danger btn-sm ms-2"
+        (click)="deletePost()"
+      >
+        <i class="fas fa-trash"></i>
       </button>
     </div>
   </div>
@@ -53,18 +69,43 @@
   </div>
 
   <!-- Edit Post Modal -->
-<!-- Parent Component Template (e.g., post-page.component.html) -->
-<div *ngIf="isEditModalOpen" class="modal fade show d-block">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <app-edit-post 
-        *ngIf="selectedPost" 
-        [post]="selectedPost" 
-        (closeEditModal)="closeEditPostModal()"
-        (postUpdated)="handlePostUpdated($event)"
-      ></app-edit-post>
+  <div *ngIf="isEditModalOpen" class="modal fade show d-block">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <app-edit-post 
+          *ngIf="selectedPost" 
+          [post]="selectedPost" 
+          (closeEditModal)="closeEditPostModal()"
+          (postUpdated)="handlePostUpdated($event)"
+        ></app-edit-post>
+      </div>
     </div>
   </div>
+
+ <!-- Display Comments -->
+<div *ngIf="comments.length" class="comments-section mt-4">
+  <h5 class="text-secondary">Comments ({{ comments.length }}):</h5>
+  <ul class="list-group">
+    <li *ngFor="let comment of comments" class="list-group-item mb-3">
+      <div class="d-flex justify-content-between align-items-start">
+        <p class="mb-1">
+          <strong>{{ comment.UserName }}</strong> <small class="text-muted">- {{ comment.CreatedAt | date:'medium' }}</small>
+        </p>
+      </div>
+      <p class="mb-0">{{ comment.Content }}</p>
+    </li>
+  </ul>
 </div>
 
+<!-- Add Comment Form -->
+<div class="add-comment mt-4">
+  <h5 class="text-secondary">Add Comment:</h5>
+  <textarea 
+    [(ngModel)]="newCommentContent" 
+    class="form-control mb-2" 
+    rows="3" 
+    placeholder="Enter your comment here"
+  ></textarea>
+  <button class="btn btn-primary" (click)="addComment()">Submit Comment</button>
 </div>
+

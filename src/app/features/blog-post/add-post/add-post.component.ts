@@ -174,8 +174,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
 
 
-  onFileChange(event: any) {
-    this.selectedFiles = Array.from(event.target.files);
-    console.log('Selected Files:', this.selectedFiles); // Log selected files
+  onFileChange(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      // Convert FileList to Array and append new files
+      const newFiles = Array.from(input.files);
+      this.selectedFiles = [...this.selectedFiles, ...newFiles]; // Merge new files with existing files
+    }
   }
 }

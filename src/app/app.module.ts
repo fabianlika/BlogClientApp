@@ -38,6 +38,7 @@ import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { ImageModalComponent } from './features/blog-post/image-modal/image-modal.component';
 import { PostPageComponent } from './features/blog-post/post-page/post-page.component';
 import { EditPostComponent } from './features/blog-post/edit-post/edit-post.component';
+import { AddUserComponent } from './features/user/add-user/add-user.component';
 
 
 
@@ -69,6 +70,7 @@ import { EditPostComponent } from './features/blog-post/edit-post/edit-post.comp
     ImageModalComponent,
     PostPageComponent,
     EditPostComponent,
+  
     //SignupComponent,
      // Ensure PaginationComponent is declared here,
      
@@ -87,7 +89,7 @@ import { EditPostComponent } from './features/blog-post/edit-post/edit-post.comp
     PaginationComponent,
     SignupComponent,
     ReactiveFormsModule,
-    SlickCarouselModule
+    SlickCarouselModule , AddUserComponent,
   
   ],
   providers: [],

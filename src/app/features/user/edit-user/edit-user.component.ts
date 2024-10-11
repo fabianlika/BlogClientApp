@@ -5,7 +5,9 @@ import { User } from '../models/user.model';
 import { UpdateUser } from '../models/update-user.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import * as bcrypt from 'bcryptjs'; // Import bcrypt
+import * as bcrypt from 'bcryptjs'; 
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-edit-user',
@@ -26,7 +28,8 @@ export class EditUserComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private dialogRef: MatDialogRef<EditUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { user: User },
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private cdRef: ChangeDetectorRef
   ) {
     this.user = { ...data.user }; // Clone the user data for editing
   }
@@ -135,5 +138,6 @@ export class EditUserComponent implements OnInit, OnDestroy {
       this.showPassword = false; // Reset password visibility
       this.showConfirmPassword = false; // Reset confirm password visibility
     }
+    this.cdRef.detectChanges();
   }
 }

@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnInit } from '@angular/core'; 
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostService } from 'src/app/features/blog-post/services/post.service';
 import { PostPhotoService } from '../services/post-photo.service';
 import { AuthService } from '../../auth/services/auth.service';
+import { ConfirmDialogService } from '../../user/services/confirm-dialog.service';
 import { PostPhotoDto } from '../models/add-post-photo.model';
 import { Post } from '../models/post.model';
+import { BlogComment } from '../models/comment.model';
+import { CreateComment } from '../models/create-comment.model';
+import { UserService } from '../../user/services/user.service'; 
 
 @Component({
   selector: 'app-post-page',
@@ -12,7 +16,7 @@ import { Post } from '../models/post.model';
   styleUrls: ['./post-page.component.css']
 })
 export class PostPageComponent implements OnInit {
-   post: Post | null = null; // Use your Post model instead of any
+  post: Post | null = null;
   postImages: string[] = [];
   postFiles: { name: string; content: string; type: string }[] = [];
   isModalOpen: boolean = false;
@@ -21,12 +25,22 @@ export class PostPageComponent implements OnInit {
   canEditPost: boolean = false; 
   isEditModalOpen: boolean = false;
   selectedPost: Post | null = null;
+  comments: BlogComment[] = []; // Store comments
+  newComment: CreateComment = { Content: '', UserId: '', PostId: '' };
+
+  isCommentModalOpen: boolean = false;
+  newCommentContent: string = ''; // Store new comment content
+
+  users: { [key: string]: string } = {};
 
   constructor(
     private route: ActivatedRoute,
     private postService: PostService,
     private postPhotoService: PostPhotoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private confirmDialogService: ConfirmDialogService,
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -38,8 +52,9 @@ export class PostPageComponent implements OnInit {
     if (postId) {
       this.postService.getPostById(postId).subscribe((data: Post) => {
         this.post = data;
-        this.loadFilesForPost(postId); // Load images and files after post data is loaded
-        this.checkEditPermission(); // Check if the user can edit the post
+        this.loadFilesForPost(postId);
+        this.loadComments(postId);
+        this.checkEditPermission();
       });
     }
   }
@@ -69,16 +84,43 @@ export class PostPageComponent implements OnInit {
     });
   }
 
+  loadComments(postId: string): void {
+    this.postService.getCommentsByPostId(postId).subscribe((data: any[]) => {
+      this.comments = data.map(item => ({
+        CommentId: item.CommentId,
+        Content: item.Content,
+        CreatedAt: new Date(item.CreatedAt),
+        UserId: item.UserId,
+        PostId: item.PostId,
+        UserName: ''
+        
+      }));
+      
+
+      this.comments.forEach(comment => {
+        this.userService.getUserById(comment.UserId).subscribe(user => {
+          this.users[comment.UserId] = user.Name; // Assuming user has a 'name' field
+          comment.UserName = user.Name; // Set the UserName in the comment
+        });
+      });
+
+    }, (error) => {
+      console.error('Error fetching comments:', error);
+    });
+  }
+  
+  
+
   checkEditPermission(): void {
     const currentUserId = this.authService.getUserIdFromToken();
     const currentUserRole = this.authService.getRoleFromToken();
 
     if (this.post && currentUserId) {
-        this.canEditPost = (currentUserId === this.post.UserId || currentUserRole === 'admin');
+      this.canEditPost = (currentUserId === this.post.UserId || currentUserRole === 'admin');
     } else {
-        this.canEditPost = false;
+      this.canEditPost = false;
     }
-}
+  }
 
   openImage(image: string) {
     this.selectedImage = image;
@@ -107,17 +149,46 @@ export class PostPageComponent implements OnInit {
     this.selectedPost = null;
   }
 
-  handlePostUpdated(event: any): void { // Use 'any' or a more appropriate type if needed
-    const updatedPost = event as Post; // Cast it to 'Post' if you know it's of this type
-  
+  handlePostUpdated(event: any): void {
+    const updatedPost = event as Post;
     if (updatedPost) {
       this.post = updatedPost;
       this.closeEditPostModal();
     } else {
       console.error('Updated post is null or invalid');
     }
-
     this.closeEditPostModal();
   }
-  
+
+  async deletePost(): Promise<void> {
+    const confirmed = await this.confirmDialogService.confirm('Are you sure you want to delete this post?');
+    if (confirmed && this.post) {
+      this.postService.deletePost(this.post.PostId).subscribe(() => {
+        this.router.navigate(['/posts']);
+      }, (error) => {
+        console.error('Error deleting post:', error);
+      });
+    }
+  }
+
+ 
+
+  addComment(): void {
+    if (this.post) {
+        this.newComment = {
+            Content: this.newCommentContent, 
+            UserId: this.authService.getUserIdFromToken(),
+            PostId: this.post.PostId
+        };
+        
+        this.postService.addComment(this.newComment).subscribe((addedComment: BlogComment) => {
+            this.comments.push(addedComment);
+            this.newCommentContent = ''; // Reset the comment input field
+        }, (error) => {
+            console.error('Error adding comment:', error);
+        });
+    }
+
+
+}
 }

@@ -24,6 +24,11 @@ export class UserService {
   updateUser(id: string, updateUser: UpdateUser): Observable<User> {
     return this.http.put<User>(`${environment.apiBaseUrl}/api/User/${id}`, updateUser);
   }
+
+  addUser(userData: User): Observable<any> {
+    return this.http.post(`${this.baseUrl}`, userData);
+  }
+  
   
  // Method to get users by page for pagination
  getUsersByPage(page: number, pageSize: number): Observable<User[]> {

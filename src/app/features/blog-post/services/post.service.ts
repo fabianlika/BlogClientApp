@@ -4,12 +4,15 @@ import { Observable } from 'rxjs';
 import { CreatePostDto } from 'src/app/features/blog-post/models/create-post.dto.model';
 import { environment } from 'src/environments/environment.development';
 import { Post } from '../models/post.model';
+import { CreateComment } from '../models/create-comment.model';
+import { BlogComment } from '../models/comment.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PostService {
   private apiUrl = `${environment.apiBaseUrl}/api/Post`;
+  private apiUrl2 = `${environment.apiBaseUrl}/api/Comment`;
 
   constructor(private http: HttpClient) {}
 
@@ -29,6 +32,23 @@ export class PostService {
   updatePost(post: Post): Observable<Post> {
     return this.http.put<Post>(`${this.apiUrl}/${post.PostId}`, post);
   }
+
+  deletePost(id: string): Observable<Post> {
+    return this.http.delete<Post>(`${this.apiUrl}/${id}`);
+  }
+
+  
+  getCommentsByPostId(postId: string): Observable<Comment[]> {
+    return this.http.get<Comment[]>(`${this.apiUrl2}/post/${postId}`);
+  }
+
+  addComment(comment: CreateComment): Observable<BlogComment> {
+    return this.http.post<BlogComment>(`${this.apiUrl2}`, comment);
+  }
+
+
+  
+  
   
 
   getCategories(): Observable<{ CategoryId: string; Name: string; Url: string }[]> {

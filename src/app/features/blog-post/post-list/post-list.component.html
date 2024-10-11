@@ -25,8 +25,8 @@
   <!-- Post List -->
   <div class="row">
     <div *ngFor="let post of paginatedPosts" class="col-md-6 mb-4">
-      <div class="post-card h-100 shadow border-0 rounded">
-        <div class="card-body">
+      <div class="post-card h-100 shadow border-0 rounded d-flex flex-column">
+        <div class="card-body flex-grow-1">
           <h2 class="card-title text-center text-secondary">{{ post.Title }}</h2>
           <p class="card-text text-center">
             <small class="text-muted d-block">
@@ -36,17 +36,18 @@
               <i class="fas fa-user"></i> By: {{ post.Author }}
             </small>
           </p>
-          <div class="post-images mb-3 d-flex justify-content-center" *ngIf="postImages[post.PostId] && postImages[post.PostId].length > 0">
-            <img 
-              [src]="postImages[post.PostId][0]" 
-              alt="{{ post.Title }} Image" 
-              class="img-fluid rounded single-large-image" 
-              (click)="openImage(postImages[post.PostId][0])" />
-          </div>
           <p class="post-content text-justify">{{ post.Content | stripHtml | slice:0:150 }}...</p>
-          <div class="text-center">
-            <button class="view-post-btn btn btn-primary" (click)="viewPost(post.PostId)">View Post</button>
-          </div>
+        </div>
+        <div class="post-images mb-3 d-flex justify-content-center" *ngIf="postImages[post.PostId] && postImages[post.PostId].length > 0">
+          <img 
+            [src]="postImages[post.PostId][0]" 
+            alt="{{ post.Title }} Image" 
+            class="img-fluid rounded single-large-image" 
+            style="width: 300px; height: 200px; object-fit: cover;" 
+            (click)="openImage(postImages[post.PostId][0])" />
+        </div>
+        <div class="text-center mb-3">
+          <button class="view-post-btn btn btn-primary" (click)="viewPost(post.PostId)">View Post</button>
         </div>
       </div>
     </div>

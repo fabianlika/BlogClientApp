@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../services/category.service';
 import { Category } from '../models/category.model';
-import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { EditCategoryComponent } from '../edit-category/edit-category.component';
@@ -13,16 +12,40 @@ import { AddCategoryComponent } from '../add-category/add-category.component';
   styleUrls: ['./category-list.component.css']
 })
 export class CategoryListComponent implements OnInit {
-  categories$?: Observable<Category[]>;
+  categories: Category[] = [];
+  pagedCategories: Category[] = [];
+  currentPage: number = 1;
+  itemsPerPage: number = 5;
+  totalPages: number = 0;
 
   constructor(private categoryService: CategoryService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.loadCategories(); // Load categories initially
+    this.loadCategories();
   }
 
   loadCategories(): void {
-    this.categories$ = this.categoryService.getAllCategories(); // Fetch categories
+    this.categoryService.getAllCategories().subscribe({
+      next: (data) => {
+        this.categories = data;
+        this.totalPages = Math.ceil(this.categories.length / this.itemsPerPage);
+        this.updatePagedCategories();
+      },
+      error: (err) => {
+        console.error('Error loading categories', err);
+      }
+    });
+  }
+
+  updatePagedCategories(): void {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.pagedCategories = this.categories.slice(startIndex, endIndex);
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePagedCategories();
   }
 
   openEditDialog(category: Category): void {
@@ -32,7 +55,7 @@ export class CategoryListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.loadCategories(); // Refresh the list after editing
+      this.loadCategories();
     });
   }
 
@@ -43,17 +66,13 @@ export class CategoryListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        // User confirmed deletion
         this.categoryService.deleteCategory(categoryId).subscribe({
           next: () => {
-            // Display success message inside the dialog
             const successDialog = this.dialog.open(ConfirmDialogComponent, {
               width: '300px'
             });
             successDialog.componentInstance.showSuccess('Category deleted successfully.');
-            
-            // Refresh the list after deletion
-            this.loadCategories(); // Load categories again
+            this.loadCategories();
           },
           error: (err) => {
             console.error('Error deleting category', err);
@@ -65,12 +84,11 @@ export class CategoryListComponent implements OnInit {
 
   openAddDialog(): void {
     const dialogRef = this.dialog.open(AddCategoryComponent, {
-      width: '500px', // Adjust modal width as needed
+      width: '500px'
     });
 
-    // Subscribe to categoryAdded event from AddCategoryComponent
     dialogRef.componentInstance.categoryAdded.subscribe(() => {
-      this.loadCategories(); // Reload categories on successful addition
+      this.loadCategories();
     });
   }
 }

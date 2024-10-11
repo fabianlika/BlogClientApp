@@ -12,16 +12,17 @@
           <li class="nav-item">
             <a class="nav-link" [routerLink]="['']">Home</a>
           </li>
-          <li class="nav-item" *ngIf="!isLoggedIn()">
-            <a class="nav-link" [routerLink]="['/login']">Login</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="postsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Posts
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="postsDropdown">
+              <li><a class="dropdown-item" [routerLink]="['/posts']">Posts List</a></li>
+              <li><a class="dropdown-item" [routerLink]="['/admin/blogposts/add']">Add Post</a></li>
+              <li><a class="dropdown-item" [routerLink]="['/add-photo']">Add Photo</a></li>
+            </ul>
           </li>
-          <li class="nav-item" *ngIf="!isLoggedIn()">
-            <a class="nav-link" [routerLink]="['/signup']">Signup</a>
-          </li>
-          <li class="nav-item" *ngIf="isLoggedIn()">
-            <a class="nav-link" (click)="logout()">Logout</a>
-          </li>
-          <li class="nav-item dropdown" *ngIf="isAdmin() && isLoggedIn()"   >
+          <li class="nav-item dropdown" *ngIf="isAdmin() && isLoggedIn()">
             <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Admin Panel
             </a>
@@ -32,25 +33,18 @@
               <li><a class="dropdown-item" [routerLink]="['/posts-table']">Posts Table</a></li>
             </ul>
           </li>
-          <li class="nav-item" *ngIf="isLoggedIn()">
-            <a class="nav-link" [routerLink]="['/admin/blogposts/add']">Add Posts</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user-circle"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
+              <li *ngIf="isLoggedIn()"><a class="dropdown-item" [routerLink]="['/my-profile']">My Profile</a></li>
+              <li *ngIf="!isLoggedIn()"><a class="dropdown-item" [routerLink]="['/login']">Login</a></li>
+              <li *ngIf="!isLoggedIn()"><a class="dropdown-item" [routerLink]="['/signup']">Signup</a></li>
+              <li *ngIf="isLoggedIn()"><a class="dropdown-item" (click)="logout()">Logout</a></li>
+            </ul>
           </li>
-          <li class="nav-item" *ngIf="isLoggedIn()">
-            <a class="nav-link" [routerLink]="['/posts']">Posts List</a>
-          </li>
-          <li class="nav-item" *ngIf="isLoggedIn()">
-            <a class="nav-link" [routerLink]="['/add-photo']">Add Photo</a>
-          </li>
-
-          <li class="nav-item" *ngIf="isLoggedIn()">
-            <a class="nav-link" [routerLink]="['/my-profile']">My Profile</a>
-          </li>
-          
-
         </ul>
-
-
-
       </div>
     </div>
   </nav>

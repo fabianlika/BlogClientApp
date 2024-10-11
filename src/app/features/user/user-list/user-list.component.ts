@@ -5,6 +5,7 @@ import { UserService } from '../services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EditUserComponent } from '../edit-user/edit-user.component';
 import { ConfirmDialogService } from 'src/app/features/user/services/confirm-dialog.service';
+import { AddUserComponent } from '../add-user/add-user.component';
 
 @Component({
   selector: 'app-user-list',
@@ -84,4 +85,19 @@ export class UserListComponent implements OnInit {
         }
       });
   }
+
+  openAddUserDialog(): void {
+    const dialogRef = this.dialog.open(AddUserComponent, {
+      width: '400px',
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadUsers(); 
+      }
+    });
+  }
+  
+
+
 }

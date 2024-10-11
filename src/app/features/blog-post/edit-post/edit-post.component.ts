@@ -52,6 +52,6 @@ export class EditPostComponent implements OnInit, AfterViewInit {
   }
 
   closeModal() {
-    this.closeEditModal.emit(); // Use the renamed EventEmitter here
+    this.closeEditModal.emit(); 
   }
 }

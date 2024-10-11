@@ -6,6 +6,7 @@ import { User } from '../models/user.model';
 import { UpdateUser } from '../models/update-user.model';
 import { UserService } from '../services/user.service';
 import * as bcrypt from 'bcryptjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-my-profile',
@@ -19,12 +20,15 @@ export class MyProfileComponent implements OnInit {
   passwordMismatch: boolean = false;
   confirmPasswordTouched: boolean = false;
   validationErrors: { email?: string; tel?: string } = {};
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    
   ) {}
 
   ngOnInit(): void {
@@ -79,6 +83,14 @@ export class MyProfileComponent implements OnInit {
     this.isEditingPassword = !this.isEditingPassword;
     if (!this.isEditingPassword) {
       this.userForm.patchValue({ PasswordHash: '', ConfirmPassword: '' });
+    }
+  }
+
+  togglePasswordVisibility(type: string) {
+    if (type === 'new') {
+      this.showPassword = !this.showPassword;
+    } else if (type === 'confirm') {
+      this.showConfirmPassword = !this.showConfirmPassword;
     }
   }
 

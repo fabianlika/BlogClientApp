@@ -82,20 +82,53 @@
     </div>
   </div>
 
- <!-- Display Comments -->
+ 
+<!-- Display Comments -->
 <div *ngIf="comments.length" class="comments-section mt-4">
   <h5 class="text-secondary">Comments ({{ comments.length }}):</h5>
   <ul class="list-group">
-    <li *ngFor="let comment of comments" class="list-group-item mb-3">
+    <li *ngFor="let comment of comments; let i = index" class="list-group-item mb-3">
       <div class="d-flex justify-content-between align-items-start">
         <p class="mb-1">
-          <strong>{{ comment.UserName }}</strong> <small class="text-muted">- {{ comment.CreatedAt | date:'medium' }}</small>
+          <strong>{{ comment.UserName }}</strong> 
+          <small class="text-muted">- {{ comment.CreatedAt | date: 'medium' }}</small>
         </p>
+
+        <!-- Edit and Delete Buttons -->
+        <div *ngIf="canEditComment(comment)" class="ms-auto">
+          <button class="btn btn-sm btn-warning me-2" (click)="startEditingComment(i)">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" (click)="deleteComment(comment.CommentId)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
       </div>
-      <p class="mb-0">{{ comment.Content }}</p>
+
+      <!-- Display comment content or edit input based on editing state -->
+      <div *ngIf="editingCommentIndex !== i; else editMode">
+        <p class="mb-0">{{ comment.Content }}</p>
+      </div>
+
+      <!-- Inline edit mode -->
+      <ng-template #editMode>
+        <textarea 
+          [(ngModel)]="editCommentContent" 
+          class="form-control mb-2" 
+          rows="3"
+        ></textarea>
+        <button class="btn btn-success btn-sm" (click)="updateComment(i)">
+          Save
+        </button>
+        <button class="btn btn-secondary btn-sm ms-2" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </ng-template>
     </li>
   </ul>
 </div>
+
+
 
 <!-- Add Comment Form -->
 <div class="add-comment mt-4">

@@ -33,8 +33,17 @@ export class PostService {
     return this.http.put<Post>(`${this.apiUrl}/${post.PostId}`, post);
   }
 
+  updateComment(comment: BlogComment): Observable<BlogComment> {
+    return this.http.put<BlogComment>(`${this.apiUrl2}/${comment.CommentId}`, comment);
+  }
+  
+
   deletePost(id: string): Observable<Post> {
     return this.http.delete<Post>(`${this.apiUrl}/${id}`);
+  }
+
+  deleteComment(id: string): Observable<Comment> {
+    return this.http.delete<Comment>(`${this.apiUrl2}/${id}`);
   }
 
   

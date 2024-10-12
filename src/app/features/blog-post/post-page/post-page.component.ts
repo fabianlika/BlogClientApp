@@ -27,6 +27,8 @@ export class PostPageComponent implements OnInit {
   selectedPost: Post | null = null;
   comments: BlogComment[] = []; // Store comments
   newComment: CreateComment = { Content: '', UserId: '', PostId: '' };
+  editingCommentIndex: number | null = null; // Track which comment is being edited
+  editCommentContent: string = '';
 
   isCommentModalOpen: boolean = false;
   newCommentContent: string = ''; // Store new comment content
@@ -106,6 +108,62 @@ export class PostPageComponent implements OnInit {
 
     }, (error) => {
       console.error('Error fetching comments:', error);
+    });
+  }
+  
+  // Method to check if the user can edit or delete the comment
+  canEditComment(comment: BlogComment): boolean {
+    const currentUserId = this.authService.getUserIdFromToken();
+    const currentUserRole = this.authService.getRoleFromToken();
+    return comment.UserId === currentUserId || currentUserRole === 'admin';
+  }
+
+  startEditingComment(index: number): void {
+    this.editingCommentIndex = index;
+    this.editCommentContent = this.comments[index].Content;
+  }
+
+  cancelEdit(): void {
+    this.editingCommentIndex = null;
+    this.editCommentContent = '';
+  }
+
+  openEditCommentModal(comment: BlogComment): void {
+    // Open the modal for editing the comment (similar to the post editing logic)
+    // Set up logic for editing the comment
+    console.log('Editing comment:', comment);
+    // Logic for opening the modal goes here
+  }
+
+  updateComment(index: number): void {
+    if (this.editCommentContent.trim()) {
+      const updatedComment = { 
+        ...this.comments[index], 
+        Content: this.editCommentContent 
+      };
+  
+      this.postService.updateComment(updatedComment).subscribe(
+        (updatedComment) => {
+          this.comments[index] = updatedComment;
+          this.cancelEdit();
+        },
+        (error) => {
+          console.error('Error updating comment:', error);
+        }
+      );
+    }
+  }
+  
+
+  deleteComment(commentId: string): void {
+    this.confirmDialogService.confirm('Are you sure you want to delete this comment?').then((confirmed) => {
+      if (confirmed) {
+        this.postService.deleteComment(commentId).subscribe(() => {
+          this.comments = this.comments.filter(comment => comment.CommentId !== commentId);
+        }, (error) => {
+          console.error('Error deleting comment:', error);
+        });
+      }
     });
   }
   

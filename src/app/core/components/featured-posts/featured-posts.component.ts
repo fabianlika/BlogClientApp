@@ -11,6 +11,7 @@ import { PostPhotoDto } from 'src/app/features/blog-post/models/add-post-photo.m
 })
 export class FeaturedPostsComponent implements OnInit {
   featuredPosts: Post[] = [];
+  filteredPosts: Post[] = []; // Array to hold posts with images
   postImages: { [key: string]: string[] } = {};
   currentIndex: number = 0;  // Tracks the active carousel item
   postsPerPage: number = 3;   // Number of posts to display at once
@@ -50,19 +51,32 @@ export class FeaturedPostsComponent implements OnInit {
           this.postImages[postId].push(url);
         }
       });
+
+      // Check for images after loading them
+      this.updateFilteredPosts();
     }, (error) => {
       console.error('Error fetching images for post:', error);
     });
   }
 
+  // Update the filteredPosts array based on posts that have images
+  updateFilteredPosts(): void {
+    this.filteredPosts = this.featuredPosts.filter(post => this.hasImages(post.PostId));
+  }
+
+  // Check if the post has images
+  hasImages(postId: string): boolean {
+    return this.postImages[postId] && this.postImages[postId].length > 0;
+  }
+
   // Get the current group of posts to display
   get displayedPosts(): Post[] {
-    return this.featuredPosts.slice(this.currentIndex, this.currentIndex + this.postsPerPage);
+    return this.filteredPosts.slice(this.currentIndex, this.currentIndex + this.postsPerPage);
   }
 
   // Move to the next group of posts
   nextGroup(): void {
-    if (this.currentIndex + this.postsPerPage < this.featuredPosts.length) {
+    if (this.currentIndex + this.postsPerPage < this.filteredPosts.length) {
       this.currentIndex += this.postsPerPage;
     }
   }

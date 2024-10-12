@@ -1,53 +1,66 @@
-/* Style for fixed image size */
+
 .fixed-image-size {
-    width: 100%;
-    height: 200px; /* Adjust height as needed */
-    object-fit: cover; /* Ensures the image covers the area */
-  }
-  
-  /* Card styles */
-  .card {
-    transition: transform 0.2s, box-shadow 0.3s; /* Smooth hover effect */
-    border: none; /* Remove default border */
-  }
-  
-  .card:hover {
-    transform: scale(1.05); /* Slightly enlarge on hover */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
-  }
-  
-  /* Style for the navigation buttons */
+  width: 100%;
+  height: 200px; 
+  object-fit: cover; 
+}
+
+
+.card {
+  transition: transform 0.2s, box-shadow 0.3s;
+  border: none; 
+}
+
+.card:hover {
+  transform: scale(1.05); 
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); 
+}
+
+
+h3 {
+  font-size: 2rem; 
+  font-weight: bold; 
+}
+
+
+.btn {
+  font-size: 1.5rem; 
+  height: 50px;
+  transition: background-color 0.3s ease, border-color 0.3s ease; 
+}
+
+
+.d-flex {
+  margin-bottom: 20px;
+  align-items: center;
+  justify-content: center; 
+}
+
+
+.card-title {
+  margin-bottom: 10px; 
+}
+
+
+.card-body {
+  padding: 1.5rem; 
+}
+
+
+@media (max-width: 768px) {
   .btn {
-    font-size: 1.5rem; /* Adjust font size for better visibility */
-    width: 50px; /* Set a fixed width for buttons */
-    height: 50px; /* Set a fixed height for buttons */
+    font-size: 1.2rem; 
+    height: 40px; 
   }
-  
-  /* Center the navigation buttons */
-  .d-flex {
-    margin-bottom: 20px; /* Space below the buttons */
+
+  .fixed-image-size {
+    height: 150px; 
   }
-  
-  /* Additional spacing for card titles */
-  .card-title {
-    margin-bottom: 15px; /* Space between title and content */
-  }
-  
-  /* Ensure that card content has consistent spacing */
-  .card-body {
-    padding: 1.5rem; /* Adjust padding as needed */
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .btn {
-      font-size: 1.2rem; /* Smaller font size on mobile */
-      width: 40px; /* Smaller width on mobile */
-      height: 40px; /* Smaller height on mobile */
-    }
-  
-    .fixed-image-size {
-      height: 150px; /* Smaller height on mobile */
-    }
-  }
-  
+}
+
+
+.btn-sm {
+  font-size: 1rem; 
+  padding: 0.5rem 1rem; 
+  height: auto; 
+}

@@ -3,6 +3,7 @@ import { PostService } from 'src/app/features/blog-post/services/post.service';
 import { PostPhotoService } from 'src/app/features/blog-post/services/post-photo.service';
 import { Post } from 'src/app/features/blog-post/models/post.model';
 import { PostPhotoDto } from 'src/app/features/blog-post/models/add-post-photo.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-featured-posts',
@@ -18,7 +19,8 @@ export class FeaturedPostsComponent implements OnInit {
 
   constructor(
     private postService: PostService,
-    private postPhotoService: PostPhotoService
+    private postPhotoService: PostPhotoService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +34,10 @@ export class FeaturedPostsComponent implements OnInit {
     }, (error) => {
       console.error('Error loading featured posts:', error);
     });
+  }
+
+  viewPost(postId: string): void {
+    this.router.navigate(['/posts', postId]);
   }
 
   loadImagesForPost(postId: string): void {

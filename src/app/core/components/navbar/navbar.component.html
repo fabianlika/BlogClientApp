@@ -17,7 +17,6 @@
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="postsDropdown">
               <li><a class="dropdown-item" [routerLink]="['/posts']">Posts List</a></li>
               <li><a class="dropdown-item" [routerLink]="['/admin/blogposts/add']">Add Post</a></li>
-              <li><a class="dropdown-item" [routerLink]="['/add-photo']">Add Photo</a></li>
             </ul>
           </li>
           <li class="nav-item dropdown" *ngIf="isAdmin() && isLoggedIn()">

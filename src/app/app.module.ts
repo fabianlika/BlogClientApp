@@ -27,7 +27,6 @@ import { EditorModule } from '@tinymce/tinymce-angular';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { StripHtmlPipe } from './core/components/pipes/strip-html.pipe';
-import { UploadPostPhotoComponent } from './features/blog-post/post-photo/upload-post-photo/upload-post-photo.component';
 import { PaginationComponent } from './features/tablePagination/pagination/pagination.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
@@ -62,7 +61,6 @@ import { AddUserComponent } from './features/user/add-user/add-user.component';
     EditUserComponent,
     UserRoleComponent,
     StripHtmlPipe,
-    UploadPostPhotoComponent,
     LoginComponent,
     DashboardComponent,
     MyProfileComponent,

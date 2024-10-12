@@ -8,7 +8,6 @@ import { AddPostComponent } from './features/blog-post/add-post/add-post.compone
 import { HomepageComponent } from './features/homepage/homepage/homepage.component';
 import { UserListComponent } from './features/user/user-list/user-list.component';
 import { UserRoleComponent } from './features/user-role/user-role/user-role.component';
-import { UploadPostPhotoComponent } from './features/blog-post/post-photo/upload-post-photo/upload-post-photo.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { AuthGuard } from './core/guards/auth.guard'; // Import the AuthGuard
@@ -88,13 +87,7 @@ const routes: Routes = [
     path: 'edit-post',
     component: EditPostComponent
   },
-
-
-  {
-    path: 'add-photo',
-    component: UploadPostPhotoComponent,
-    //canActivate: [AuthGuard] // Protect this route
-  },
+  
   {
     path: 'login',
     component: LoginComponent // Login route

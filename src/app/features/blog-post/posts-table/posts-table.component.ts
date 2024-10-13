@@ -12,9 +12,11 @@ import { DatePipe } from '@angular/common';
 export class PostsTableComponent implements OnInit {
   unapprovedPosts: any[] = [];
   approvedPosts: any[] = [];
+  displayedUnapprovedPosts: any[] = [];
+  displayedApprovedPosts: any[] = [];
   currentPage: number = 1;
   itemsPerPage: number = 5;
-  totalPages: number = 1;
+  totalPagesApproved: number = 1;
 
   constructor(
     private postService: PostService,
@@ -30,18 +32,23 @@ export class PostsTableComponent implements OnInit {
   loadUnapprovedPosts() {
     this.postService.getUnapprovedPosts().subscribe((data) => {
       this.unapprovedPosts = data.sort((a, b) => new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime());
-      this.totalPages = Math.ceil(this.unapprovedPosts.length / this.itemsPerPage);
+      this.displayedUnapprovedPosts = this.unapprovedPosts; // Initially, display all unapproved posts
+      this.updateDisplayedPosts();
     });
   }
 
   loadApprovedPosts() {
     this.postService.getAllPosts().subscribe((data) => {
       this.approvedPosts = data; // No need to filter since getAllPosts returns only approved posts
-    }, (error) => {
-      console.error('Error loading approved posts:', error);
+      this.updateDisplayedPosts();
     });
-}
+  }
 
+  updateDisplayedPosts() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    this.displayedApprovedPosts = this.approvedPosts.slice(startIndex, startIndex + this.itemsPerPage);
+    this.totalPagesApproved = Math.ceil(this.approvedPosts.length / this.itemsPerPage);
+  }
 
   approvePost(postId: string) {
     this.postService.approvePost(postId).subscribe(
@@ -49,7 +56,6 @@ export class PostsTableComponent implements OnInit {
         this.snackBar.open('Post approved successfully!', 'Close', { duration: 3000 });
         this.unapprovedPosts = this.unapprovedPosts.filter(post => post.PostId !== postId);
         this.loadApprovedPosts(); // Refresh the approved posts list
-        this.totalPages = Math.ceil(this.unapprovedPosts.length / this.itemsPerPage);
       },
       (error) => {
         console.error('Error approving post:', error);
@@ -63,6 +69,7 @@ export class PostsTableComponent implements OnInit {
       () => {
         this.snackBar.open('Post deleted successfully!', 'Close', { duration: 3000 });
         this.approvedPosts = this.approvedPosts.filter(post => post.PostId !== postId);
+        this.updateDisplayedPosts(); // Update the displayed posts after deletion
       },
       (error) => {
         console.error('Error deleting post:', error);
@@ -73,11 +80,7 @@ export class PostsTableComponent implements OnInit {
 
   onPageChange(page: number) {
     this.currentPage = page;
-  }
-
-  get displayedPosts() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.unapprovedPosts.slice(startIndex, startIndex + this.itemsPerPage);
+    this.updateDisplayedPosts(); // Refresh displayed posts on page change
   }
 
   formatDate(dateString: string) {

@@ -11,7 +11,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let post of unapprovedPosts">
+        <!-- Display All Unapproved Posts First -->
+        <tr *ngFor="let post of displayedUnapprovedPosts">
           <td>{{ post.Title }}</td>
           <td>{{ post.Author }}</td>
           <td>{{ formatDate(post.CreatedAt) }}</td>
@@ -19,7 +20,8 @@
             <button (click)="approvePost(post.PostId)" class="btn btn-success btn-sm">Approve</button>
           </td>
         </tr>
-        <tr *ngFor="let post of approvedPosts">
+        <!-- Display Approved Posts -->
+        <tr *ngFor="let post of displayedApprovedPosts">
           <td>{{ post.Title }}</td>
           <td>{{ post.Author }}</td>
           <td>{{ formatDate(post.CreatedAt) }}</td>
@@ -29,11 +31,11 @@
         </tr>
       </tbody>
     </table>
-  </div>
 
-  <app-pagination
-    [currentPage]="currentPage"
-    [totalPages]="totalPages"
-    (pageChange)="onPageChange($event)">
-  </app-pagination>
+    <app-pagination
+      [currentPage]="currentPage"
+      [totalPages]="totalPagesApproved"
+      (pageChange)="onPageChange($event)">
+    </app-pagination>
+  </div>
 </div>

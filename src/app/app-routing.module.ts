@@ -10,7 +10,8 @@ import { UserListComponent } from './features/user/user-list/user-list.component
 import { UserRoleComponent } from './features/user-role/user-role/user-role.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
-import { AuthGuard } from './core/guards/auth.guard'; // Import the AuthGuard
+import { AuthGuard } from './core/guards/auth.guard'; 
+import { AdminGuard } from './core/guards/admin.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { MyProfileComponent } from './features/user/my-profile/my-profile.component';
 import { PostsTableComponent } from './features/blog-post/posts-table/posts-table.component';
@@ -22,27 +23,27 @@ const routes: Routes = [
   {
     path: 'admin/categories',
     component: CategoryListComponent,
-  //  canActivate: [AuthGuard] // Protect this route
+   canActivate: [AdminGuard]
   },
   {
     path: 'admin/categories/add',
     component: AddCategoryComponent,
-  //  canActivate: [AuthGuard] // Protect this route
+    canActivate: [AdminGuard]
   },
   {
     path: 'admin/categories/:id',
     component: EditCategoryComponent,
-   // canActivate: [AuthGuard] // Protect this route
+    canActivate: [AdminGuard]
   },
   {
     path: 'admin/blogposts',
     component: PostListComponent,
-   // canActivate: [AuthGuard] // Protect this route
+    canActivate: [AdminGuard]
   },
   {
     path: 'admin/blogposts/add',
     component: AddPostComponent,
-  //  canActivate: [AuthGuard] // Protect this route
+    canActivate: [AdminGuard]
   },
   {
     path: '',
@@ -51,30 +52,30 @@ const routes: Routes = [
   {
     path: 'user-list',
     component: UserListComponent,
-  //  canActivate: [AuthGuard] // Protect this route
+    canActivate: [AdminGuard]
   },
   {
     path: 'user-roles',
     component: UserRoleComponent,
-   // canActivate: [AuthGuard] // Protect this route
+    canActivate: [AdminGuard]
   },
 
   {
     path: 'user-posts',
     component: UserPostsComponent,
-   // canActivate: [AuthGuard] // Protect this route
+    canActivate: [AuthGuard] 
   },
 
   {
     path: 'posts',
     component: PostListComponent,
-   // canActivate: [AuthGuard] // Protect this route
+    canActivate: [AuthGuard]
   },
 
   {
     path: 'my-profile',
     component: MyProfileComponent,
-   // canActivate: [AuthGuard] // Protect this route
+    canActivate: [AuthGuard] 
   },
 
   {
@@ -84,25 +85,28 @@ const routes: Routes = [
 
   {
     path: 'posts-table',
-    component: PostsTableComponent
+    component: PostsTableComponent,
+    canActivate: [AdminGuard]
   },
 
   {
     path: 'posts/:id',
-    component: PostPageComponent
+    component: PostPageComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'edit-post',
-    component: EditPostComponent
+    component: EditPostComponent,
+    canActivate: [AuthGuard]
   },
   
   {
     path: 'login',
-    component: LoginComponent // Login route
+    component: LoginComponent
   },
   {
     path: 'signup',
-    component: SignupComponent // Sign-up route
+    component: SignupComponent 
   },
   {
     path: '**',

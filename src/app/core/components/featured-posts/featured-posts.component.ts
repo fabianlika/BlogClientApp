@@ -4,6 +4,7 @@ import { PostPhotoService } from 'src/app/features/blog-post/services/post-photo
 import { Post } from 'src/app/features/blog-post/models/post.model';
 import { PostPhotoDto } from 'src/app/features/blog-post/models/add-post-photo.model';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/features/auth/services/auth.service';
 
 @Component({
   selector: 'app-featured-posts',
@@ -20,7 +21,8 @@ export class FeaturedPostsComponent implements OnInit {
   constructor(
     private postService: PostService,
     private postPhotoService: PostPhotoService,
-    private router: Router
+    private router: Router, 
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -37,7 +39,11 @@ export class FeaturedPostsComponent implements OnInit {
   }
 
   viewPost(postId: string): void {
-    this.router.navigate(['/posts', postId]);
+    if (this.authService.isLoggedIn()) { // Check if user is logged in
+      this.router.navigate(['/posts', postId]);
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
   loadImagesForPost(postId: string): void {

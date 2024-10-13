@@ -38,6 +38,7 @@ import { ImageModalComponent } from './features/blog-post/image-modal/image-moda
 import { PostPageComponent } from './features/blog-post/post-page/post-page.component';
 import { EditPostComponent } from './features/blog-post/edit-post/edit-post.component';
 import { AddUserComponent } from './features/user/add-user/add-user.component';
+import { UserPostsComponent } from './features/blog-post/user-posts/user-posts.component';
 
 
 
@@ -68,6 +69,7 @@ import { AddUserComponent } from './features/user/add-user/add-user.component';
     ImageModalComponent,
     PostPageComponent,
     EditPostComponent,
+    UserPostsComponent,
   
     //SignupComponent,
      // Ensure PaginationComponent is declared here,

@@ -1,0 +1,91 @@
+.post-list-container {
+    max-width: 1400px; /* Increased for larger container */
+    margin: 20px auto;
+    padding: 40px;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Georgia', serif;
+    text-align: center;
+  }
+  
+  .post-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin: 0 auto;
+  }
+  
+  .post-card {
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .post-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+  }
+  
+  .post-card h2 {
+    font-size: 2.5rem; /* Increased font size for the title */
+    color: #343a40;
+    font-weight: 700; /* Bolder font for better emphasis */
+    margin-bottom: 15px;
+  }
+  
+  .post-content {
+    font-size: 1.2rem;
+    color: #495057;
+    line-height: 1.6;
+    margin: 20px 0;
+    flex-grow: 1; /* Ensures this grows to fill space */
+  }
+  
+  .post-images {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+  
+  .single-large-image {
+    width: 300px; /* Set a default width for symmetry */
+    height: 200px; /* Fixed height for uniformity */
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    object-fit: cover; /* Maintain aspect ratio */
+    transition: transform 0.3s ease;
+  }
+  
+  .single-large-image:hover {
+    transform: scale(1.05);
+  }
+  
+  .view-post-btn {
+    padding: 14px 30px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 1.1rem; /* Slightly larger font for the button */
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Margin to separate from the bottom */
+  }
+  
+  .view-post-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+  

@@ -16,6 +16,7 @@ import { MyProfileComponent } from './features/user/my-profile/my-profile.compon
 import { PostsTableComponent } from './features/blog-post/posts-table/posts-table.component';
 import { PostPageComponent } from './features/blog-post/post-page/post-page.component';
 import { EditPostComponent } from './features/blog-post/edit-post/edit-post.component';
+import { UserPostsComponent } from './features/blog-post/user-posts/user-posts.component';
 
 const routes: Routes = [
   {
@@ -57,6 +58,13 @@ const routes: Routes = [
     component: UserRoleComponent,
    // canActivate: [AuthGuard] // Protect this route
   },
+
+  {
+    path: 'user-posts',
+    component: UserPostsComponent,
+   // canActivate: [AuthGuard] // Protect this route
+  },
+
   {
     path: 'posts',
     component: PostListComponent,

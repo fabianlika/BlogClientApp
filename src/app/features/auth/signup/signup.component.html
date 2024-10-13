@@ -72,26 +72,29 @@
             </div>
           </div>
 
-          <!-- Password Input -->
-          <div class="form-group mb-3">
-            <label for="password" class="text-muted">Password <span class="text-danger">*</span></label>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <span class="input-group-text bg-light border-0">
-                  <i class="fa fa-lock text-primary"></i>
-                </span>
-              </div>
-              <input id="password" formControlName="PasswordHash" [type]="passwordType" class="form-control" placeholder="Enter your password" />
-              <div class="input-group-append">
-                <span class="input-group-text bg-light border-0" (click)="togglePasswordVisibility()">
-                  <i [ngClass]="passwordIcon"></i>
-                </span>
-              </div>
-            </div>
-            <div *ngIf="signUpForm.get('PasswordHash')?.invalid && (signUpForm.get('PasswordHash')?.dirty || signUpForm.get('PasswordHash')?.touched)">
-              <small class="text-danger" *ngIf="signUpForm.get('PasswordHash')?.hasError('required')">Password is required</small>
-            </div>
-          </div>
+         
+         <!-- Password Input -->
+<div class="form-group mb-3">
+  <label for="password" class="text-muted">Password <span class="text-danger">*</span></label>
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <span class="input-group-text bg-light border-0">
+        <i class="fa fa-lock text-primary"></i>
+      </span>
+    </div>
+    <input id="password" formControlName="PasswordHash" [type]="passwordType" class="form-control" placeholder="Enter your password" />
+    <div class="input-group-append">
+      <span class="input-group-text bg-light border-0" (click)="togglePasswordVisibility()">
+        <i [ngClass]="passwordIcon"></i>
+      </span>
+    </div>
+  </div>
+  <div *ngIf="signUpForm.get('PasswordHash')?.invalid && (signUpForm.get('PasswordHash')?.dirty || signUpForm.get('PasswordHash')?.touched)">
+    <small class="text-danger" *ngIf="signUpForm.get('PasswordHash')?.hasError('required')">Password is required</small>
+    <small class="text-danger" *ngIf="signUpForm.get('PasswordHash')?.hasError('invalidPassword')">Password must be at least 8 characters long and contain at least one number and one special character.</small>
+  </div>
+</div>
+
 
           <!-- Repeat Password Input -->
           <div class="form-group mb-3">

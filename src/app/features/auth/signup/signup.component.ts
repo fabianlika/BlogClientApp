@@ -4,6 +4,8 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import ValidateForm from 'src/app/core/helpers/validateForm';
 import { CommonModule } from '@angular/common';
@@ -44,10 +46,17 @@ export class SignupComponent implements OnInit {
       Username: ['', Validators.required],
       Email: ['', [Validators.required, Validators.email]],
       PhoneNumber: ['', [Validators.required, this.validatePhoneNumber.bind(this)]],
-      PasswordHash: ['', Validators.required],
+      PasswordHash: ['', [Validators.required, this.passwordValidator.bind(this)]],
       RepeatPassword: ['', Validators.required],
       Birthday: ['', Validators.required],
     }, { validators: this.passwordMatchValidator });
+  }
+
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.value;
+    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/; // At least 8 characters, one number, and one special character
+
+    return password && !passwordPattern.test(password) ? { invalidPassword: true } : null;
   }
 
   passwordMatchValidator(form: FormGroup) {

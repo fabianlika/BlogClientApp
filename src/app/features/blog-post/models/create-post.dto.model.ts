@@ -5,5 +5,5 @@ export interface CreatePostDto {
   Author: string;
   CategoryId: string; 
   UserId: string;
-  isAproved?: boolean;
+  isApproved?: boolean;
 }

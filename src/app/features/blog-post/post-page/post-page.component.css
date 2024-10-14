@@ -66,4 +66,27 @@
   .post-files ul {
     padding-left: 0;
   }
-  
+  .author-info {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.profile-icon {
+  font-size: 24px; 
+  margin-right: 8px; 
+  color: #007bff; 
+}
+
+
+.author-name {
+    font-size: 1.2em; 
+    font-weight: bold;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.author-name:hover {
+    text-decoration: underline;
+}

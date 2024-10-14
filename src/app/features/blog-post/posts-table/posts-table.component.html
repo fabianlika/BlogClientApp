@@ -1,5 +1,39 @@
 <div class="container mt-5">
   <h1 class="text-center">Manage Posts</h1>
+
+  <!-- Unapproved Posts Table -->
+  <h3>Unapproved Posts</h3>
+  <div class="table-responsive mb-4">
+    <table class="table table-striped table-hover">
+      <thead class="thead-light">
+        <tr>
+          <th>Name</th>
+          <th>Author</th>
+          <th>Upload Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let post of displayedUnapprovedPosts">
+          <td>{{ post.Title }}</td>
+          <td>{{ post.Author }}</td>
+          <td>{{ formatDate(post.CreatedAt) }}</td>
+          <td>
+            <button (click)="approvePost(post.PostId)" class="btn btn-success btn-sm">Approve</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <app-pagination
+      [currentPage]="currentPageUnapproved"
+      [totalPages]="totalPagesUnapproved"
+      (pageChange)="onUnapprovedPageChange($event)">
+    </app-pagination>
+  </div>
+
+  <!-- Approved Posts Table -->
+  <h3>Approved Posts</h3>
   <div class="table-responsive">
     <table class="table table-striped table-hover">
       <thead class="thead-light">
@@ -11,16 +45,6 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Display All Unapproved Posts First -->
-        <tr *ngFor="let post of displayedUnapprovedPosts">
-          <td>{{ post.Title }}</td>
-          <td>{{ post.Author }}</td>
-          <td>{{ formatDate(post.CreatedAt) }}</td>
-          <td>
-            <button (click)="approvePost(post.PostId)" class="btn btn-success btn-sm">Approve</button>
-          </td>
-        </tr>
-        <!-- Display Approved Posts -->
         <tr *ngFor="let post of displayedApprovedPosts">
           <td>{{ post.Title }}</td>
           <td>{{ post.Author }}</td>
@@ -33,9 +57,9 @@
     </table>
 
     <app-pagination
-      [currentPage]="currentPage"
+      [currentPage]="currentPageApproved"
       [totalPages]="totalPagesApproved"
-      (pageChange)="onPageChange($event)">
+      (pageChange)="onApprovedPageChange($event)">
     </app-pagination>
   </div>
 </div>

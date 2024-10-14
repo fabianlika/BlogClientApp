@@ -92,10 +92,10 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   async onSubmit() {
     if (!this.post.Author) this.post.Author = 'Default Author';
     if (!this.post.Url) this.post.Url = 'http://defaulturl.com';
-
+  
     const isAdmin = this.authService.isAdmin(); 
     this.post.isApproved = isAdmin;
-
+  
     const postCreationData = new FormData();
     postCreationData.append('Title', this.post.Title || '');
     postCreationData.append('Content', this.post.Content || '');
@@ -104,11 +104,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     postCreationData.append('CategoryId', this.post.CategoryId || '');
     postCreationData.append('UserId', this.post.UserId || '');
     postCreationData.append('isApproved', this.post.isApproved.toString());
-
+  
     try {
       const newPost = await this.postService.addPost(postCreationData).toPromise();
       this.snackBar.open('Post added successfully!', 'Close', { duration: 3000 });
-
+  
       if (newPost && newPost.PostId && this.selectedFiles.length > 0) {
         for (const file of this.selectedFiles) {
           const photoFormData = new FormData();
@@ -118,7 +118,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           photoFormData.append('PostId', newPost.PostId);
           const isImage = file.type.startsWith('image/') ? 1 : 0;
           photoFormData.append('IsImage', isImage.toString());
-
+  
           try {
             await this.postPhotoService.uploadPostPhoto(photoFormData).toPromise();
           } catch (uploadError: any) {
@@ -129,6 +129,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
         this.snackBar.open('Images uploaded successfully!', 'Close', { duration: 3000 });
       }
+  
+      // Redirect to post list after successful post creation and image upload
+      this.router.navigate(['/posts']);
     } catch (error: any) {
       if (error.status === 400 && error.error.errors) {
         console.error('Validation errors:', error.error.errors);
@@ -136,6 +139,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.snackBar.open('Failed to add post or upload images. Please check your input.', 'Close', { duration: 3000 });
     }
   }
+  
 
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;

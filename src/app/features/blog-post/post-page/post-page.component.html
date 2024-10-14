@@ -30,6 +30,13 @@
     </div>
   </div>
 
+  <div class="author-info">
+    <i class="bi bi-person-circle profile-icon"></i>
+    <a *ngIf="post && post.UserId" (click)="navigateToUserPosts(post.UserId)" class="author-name">{{ post.Author }}</a>
+</div>
+
+
+
   <!-- Author and Date -->
   <p class="text-muted mb-4">
     <small>By: <strong>{{ post?.Author }}</strong></small> | 

@@ -14,8 +14,15 @@ export class PostsTableComponent implements OnInit {
   approvedPosts: any[] = [];
   displayedUnapprovedPosts: any[] = [];
   displayedApprovedPosts: any[] = [];
-  currentPage: number = 1;
-  itemsPerPage: number = 5;
+
+  // Pagination states for unapproved posts
+  currentPageUnapproved: number = 1;
+  itemsPerPageUnapproved: number = 5;
+  totalPagesUnapproved: number = 1;
+
+  // Pagination states for approved posts
+  currentPageApproved: number = 1;
+  itemsPerPageApproved: number = 5;
   totalPagesApproved: number = 1;
 
   constructor(
@@ -32,22 +39,27 @@ export class PostsTableComponent implements OnInit {
   loadUnapprovedPosts() {
     this.postService.getUnapprovedPosts().subscribe((data) => {
       this.unapprovedPosts = data.sort((a, b) => new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime());
-      this.displayedUnapprovedPosts = this.unapprovedPosts; // Initially, display all unapproved posts
-      this.updateDisplayedPosts();
+      this.totalPagesUnapproved = Math.ceil(this.unapprovedPosts.length / this.itemsPerPageUnapproved);
+      this.updateDisplayedUnapprovedPosts();
     });
   }
 
   loadApprovedPosts() {
     this.postService.getAllPosts().subscribe((data) => {
       this.approvedPosts = data; // No need to filter since getAllPosts returns only approved posts
-      this.updateDisplayedPosts();
+      this.totalPagesApproved = Math.ceil(this.approvedPosts.length / this.itemsPerPageApproved);
+      this.updateDisplayedApprovedPosts();
     });
   }
 
-  updateDisplayedPosts() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    this.displayedApprovedPosts = this.approvedPosts.slice(startIndex, startIndex + this.itemsPerPage);
-    this.totalPagesApproved = Math.ceil(this.approvedPosts.length / this.itemsPerPage);
+  updateDisplayedUnapprovedPosts() {
+    const startIndex = (this.currentPageUnapproved - 1) * this.itemsPerPageUnapproved;
+    this.displayedUnapprovedPosts = this.unapprovedPosts.slice(startIndex, startIndex + this.itemsPerPageUnapproved);
+  }
+
+  updateDisplayedApprovedPosts() {
+    const startIndex = (this.currentPageApproved - 1) * this.itemsPerPageApproved;
+    this.displayedApprovedPosts = this.approvedPosts.slice(startIndex, startIndex + this.itemsPerPageApproved);
   }
 
   approvePost(postId: string) {
@@ -56,6 +68,7 @@ export class PostsTableComponent implements OnInit {
         this.snackBar.open('Post approved successfully!', 'Close', { duration: 3000 });
         this.unapprovedPosts = this.unapprovedPosts.filter(post => post.PostId !== postId);
         this.loadApprovedPosts(); // Refresh the approved posts list
+        this.updateDisplayedUnapprovedPosts();
       },
       (error) => {
         console.error('Error approving post:', error);
@@ -69,7 +82,7 @@ export class PostsTableComponent implements OnInit {
       () => {
         this.snackBar.open('Post deleted successfully!', 'Close', { duration: 3000 });
         this.approvedPosts = this.approvedPosts.filter(post => post.PostId !== postId);
-        this.updateDisplayedPosts(); // Update the displayed posts after deletion
+        this.updateDisplayedApprovedPosts();
       },
       (error) => {
         console.error('Error deleting post:', error);
@@ -78,9 +91,14 @@ export class PostsTableComponent implements OnInit {
     );
   }
 
-  onPageChange(page: number) {
-    this.currentPage = page;
-    this.updateDisplayedPosts(); // Refresh displayed posts on page change
+  onUnapprovedPageChange(page: number) {
+    this.currentPageUnapproved = page;
+    this.updateDisplayedUnapprovedPosts();
+  }
+
+  onApprovedPageChange(page: number) {
+    this.currentPageApproved = page;
+    this.updateDisplayedApprovedPosts();
   }
 
   formatDate(dateString: string) {

@@ -5,4 +5,9 @@
   }
   
  
+  .scrollable-form {
+    max-height: 500px;  /* Set a maximum height for the form container */
+    overflow-y: auto;   /* Enable vertical scrolling */
+    padding-right: 15px; /* To avoid content hiding behind scrollbar */
+  }
   

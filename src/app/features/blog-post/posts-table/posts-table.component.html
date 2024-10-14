@@ -19,7 +19,9 @@
           <td>{{ post.Author }}</td>
           <td>{{ formatDate(post.CreatedAt) }}</td>
           <td>
-            <button (click)="approvePost(post.PostId)" class="btn btn-success btn-sm">Approve</button>
+            <button (click)="approvePost(post.PostId)" class="btn btn-success btn-sm" title="Approve">
+              <i class="fas fa-check"></i>
+            </button>
           </td>
         </tr>
       </tbody>
@@ -50,7 +52,9 @@
           <td>{{ post.Author }}</td>
           <td>{{ formatDate(post.CreatedAt) }}</td>
           <td>
-            <button (click)="deletePost(post.PostId)" class="btn btn-danger btn-sm">Delete</button>
+            <button (click)="deletePost(post.PostId)" class="btn btn-danger btn-sm" title="Delete">
+              <i class="fas fa-trash-alt"></i>
+            </button>
           </td>
         </tr>
       </tbody>

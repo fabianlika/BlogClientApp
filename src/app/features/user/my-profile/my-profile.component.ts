@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { AuthService } from '../../auth/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from '../models/user.model';
@@ -19,7 +19,7 @@ export class MyProfileComponent implements OnInit {
   isEditingPassword: boolean = false;
   passwordMismatch: boolean = false;
   confirmPasswordTouched: boolean = false;
-  validationErrors: { email?: string; tel?: string } = {};
+  validationErrors: { email?: string; tel?: string; passwordStrength?: boolean; passwordMismatch?: boolean } = {};
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
 
@@ -27,8 +27,7 @@ export class MyProfileComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private userService: UserService,
-    private snackBar: MatSnackBar,
-    
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -43,7 +42,7 @@ export class MyProfileComponent implements OnInit {
       Email: ['', [Validators.required, Validators.email]],
       PhoneNumber: ['', Validators.required],
       Birthday: ['', Validators.required],
-      PasswordHash: [''],  // Password is optional until edited
+      PasswordHash: ['', this.passwordValidator],  // Password validator added
       ConfirmPassword: ['']
     });
 
@@ -55,7 +54,7 @@ export class MyProfileComponent implements OnInit {
     this.userForm.get('ConfirmPassword')?.valueChanges.subscribe(() => {
       this.checkPasswords();
     });
-
+    
     // Listen for email and phone number input changes
     this.userForm.get('Email')?.valueChanges.subscribe(() => {
       this.onInputEmail();
@@ -77,6 +76,23 @@ export class MyProfileComponent implements OnInit {
         console.error('Error fetching user data:', err);
       }
     });
+  }
+
+  private passwordValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const password = control.value;
+
+    if (password) {
+      const minLength = 8;
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasLowerCase = /[a-z]/.test(password);
+      const hasNumbers = /\d/.test(password);
+      const hasSpecialChars = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+      const valid = password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChars;
+
+      return valid ? null : { passwordStrength: true };
+    }
+    return null; // return null if no password is provided
   }
 
   toggleEditPassword() {
@@ -115,7 +131,7 @@ export class MyProfileComponent implements OnInit {
     const pattern2: RegExp = /^([0][6][7-9][0-9]{7}){1}$/i;
     const pattern3: RegExp = /^(\+[3][5][5][4-5][0-9]{7}){1}$/i;
     const pattern4: RegExp = /^([0][4-5][0-9]{7}){1}$/i;
-    const pattern5: RegExp = /^([6][7-9][0-9]{7}){1}$/i;;
+    const pattern5: RegExp = /^([6][7-9][0-9]{7}){1}$/i;
 
     if (val) {
       const isMatch = pattern1.test(val) || pattern2.test(val) || pattern3.test(val) || pattern4.test(val) || pattern5.test(val);
@@ -128,7 +144,6 @@ export class MyProfileComponent implements OnInit {
     this.validationErrors.tel = 'Please enter a valid number in the format: "+3556xxxxxxxx/06xxxxxxxx/+355xxxxxxxx/0xxxxxxxx"!';
     return false;
   }
-
   updateUser() {
     const userId = this.authService.getUserIdFromToken();
     const updatedUserData: UpdateUser = { ...this.userForm.value };
@@ -138,43 +153,55 @@ export class MyProfileComponent implements OnInit {
 
     // If editing password
     if (this.isEditingPassword) {
-      if (this.passwordMismatch) {
-        this.openSnackBar('Passwords do not match. Please correct.', 'Close');
-        return;
-      }
-
-      // Only hash the password if it is filled
-      if (PasswordHash) {
-        updatedUserData.PasswordHash = bcrypt.hashSync(PasswordHash, 10);
-      } else {
-        // If not filling password, don't include it in the update
-        delete updatedUserData.PasswordHash; // Ensure it's removed
-      }
+        this.validationErrors.passwordMismatch = false; // Reset the error
+        if (this.passwordMismatch) {
+            this.validationErrors.passwordMismatch = true; // Set mismatch error
+        } else {
+            // Only hash the password if it is filled
+            if (PasswordHash) {
+                updatedUserData.PasswordHash = bcrypt.hashSync(PasswordHash, 10);
+            } else {
+                // If not filling password, don't include it in the update
+                delete updatedUserData.PasswordHash; // Ensure it's removed
+            }
+        }
     } else {
-      // If not editing password, ensure PasswordHash is removed
-      delete updatedUserData.PasswordHash;
+        // If not editing password, ensure PasswordHash is removed
+        delete updatedUserData.PasswordHash;
     }
 
     // Prepare final data for the update
     const finalUpdateData = { ...rest };
 
     // Check if there are validation errors
-    if (this.validationErrors.email || this.validationErrors.tel) {
-      this.openSnackBar('Please fix the validation errors.', 'Close');
-      return;
+    this.validationErrors.email = '';
+    this.validationErrors.tel = '';
+    this.validationErrors.passwordStrength = false;
+
+    this.onInputEmail(); // Validate email
+    this.checkTel(); // Validate phone number
+
+    if (this.userForm.get('PasswordHash')?.errors?.['passwordStrength']) {
+        this.validationErrors.passwordStrength = true; // Set password strength error
+    }
+
+    // If there are any errors, do not proceed with the update
+    if (this.validationErrors.email || this.validationErrors.tel || this.validationErrors.passwordStrength || this.validationErrors.passwordMismatch) {
+        return; // Stop execution if validation errors exist
     }
 
     this.userService.updateUser(userId, finalUpdateData).subscribe({
-      next: (response) => {
-        console.log('User updated successfully', response);
-        this.openSnackBar('User data updated successfully', 'Close');
-      },
-      error: (err) => {
-        console.error('Error updating user:', err);
-        this.openSnackBar('Failed to update user data', 'Close');
-      }
+        next: (response) => {
+            console.log('User updated successfully', response);
+            this.openSnackBar('User data updated successfully', 'Close');
+        },
+        error: (err) => {
+            console.error('Error updating user:', err);
+            this.openSnackBar('Failed to update user data', 'Close');
+        }
     });
-  }
+}
+
 
   private openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {

@@ -16,17 +16,17 @@ import { MatDialogRef } from '@angular/material/dialog';
 
     <div mat-dialog-actions class="d-flex justify-content-center" *ngIf="!successMessage">
       <button mat-button (click)="onConfirm()" class="btn btn-danger">
-        <i class="bi bi-check-circle"></i> <!-- Yes Icon -->
+        <i class="bi bi-check-circle"></i> 
         Yes
       </button>
       <button mat-button (click)="onDismiss()" class="btn btn-secondary ms-2">
-        <i class="bi bi-x-circle"></i> <!-- No Icon -->
+        <i class="bi bi-x-circle"></i> 
         No
       </button>
     </div>
     <div mat-dialog-actions class="d-flex justify-content-center" *ngIf="successMessage">
       <button mat-button (click)="onClose()" class="btn btn-primary">
-        <i class="bi bi-check-circle"></i> <!-- Close Icon -->
+        <i class="bi bi-check-circle"></i> 
         Close
       </button>
     </div>

@@ -1,10 +1,11 @@
 <div class="outer">
-    <div class="container d-flex justify-content-center align-items-center" id="add-user-container">
-      <div class="card shadow-lg p-4" id="add-user-card">
-        <div class="card-header text-center bg-transparent border-0 mb-4">
-          <h3 class="font-weight-bold text-primary">Add New User</h3>
-        </div>
-        <div class="card-body">
+  <div class="container d-flex justify-content-center align-items-center" id="add-user-container">
+    <div class="card shadow-lg p-4" id="add-user-card">
+      <div class="card-header text-center bg-transparent border-0 mb-4">
+        <h3 class="font-weight-bold text-primary">Add New User</h3>
+      </div>
+      <div class="card-body">
+        <div class="scrollable-form">
           <form [formGroup]="addUserForm" (ngSubmit)="onAddUser()">
             <!-- Name Input -->
             <div class="form-group mb-3">
@@ -14,7 +15,7 @@
                 <small class="text-danger" *ngIf="addUserForm.get('Name')?.hasError('required')">Name is required</small>
               </div>
             </div>
-  
+
             <!-- Username Input -->
             <div class="form-group mb-3">
               <label for="username" class="text-muted">Username <span class="text-danger">*</span></label>
@@ -23,7 +24,7 @@
                 <small class="text-danger" *ngIf="addUserForm.get('Username')?.hasError('required')">Username is required</small>
               </div>
             </div>
-  
+
             <!-- Email Input -->
             <div class="form-group mb-3">
               <label for="email" class="text-muted">Email <span class="text-danger">*</span></label>
@@ -33,7 +34,7 @@
                 <small class="text-danger" *ngIf="addUserForm.get('Email')?.hasError('email')">Enter a valid email</small>
               </div>
             </div>
-  
+
             <!-- Phone Number Input -->
             <div class="form-group mb-3">
               <label for="phone" class="text-muted">Phone Number <span class="text-danger">*</span></label>
@@ -44,38 +45,34 @@
               </div>
             </div>
 
+            <!-- Password Input -->
+            <div class="form-group mb-3 position-relative">
+              <label for="password" class="text-muted">Password <span class="text-danger">*</span></label>
+              <input id="password" formControlName="PasswordHash" [type]="passwordType" class="form-control" placeholder="Enter your password" />
+              <span class="input-group-text position-absolute end-0" (click)="togglePasswordVisibility()" style="cursor: pointer;">
+                <i [ngClass]="passwordIcon"></i>
+              </span>
+              <div *ngIf="addUserForm.get('PasswordHash')?.invalid && (addUserForm.get('PasswordHash')?.dirty || addUserForm.get('PasswordHash')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('PasswordHash')?.hasError('required')">Password is required</small>
+                <small class="text-danger" *ngIf="addUserForm.get('PasswordHash')?.hasError('invalidPassword')">Password must be at least 8 characters long, include at least one uppercase letter, one number, and one special character.</small>
+              </div>
+            </div>
 
-  <!-- Password Input -->
-<div class="form-group mb-3 position-relative">
-  <label for="password" class="text-muted">Password <span class="text-danger">*</span></label>
-  <input id="password" formControlName="PasswordHash" [type]="passwordType" class="form-control" placeholder="Enter your password" />
-  <span class="input-group-text position-absolute end-0" (click)="togglePasswordVisibility()" style="cursor: pointer;">
-    <i [ngClass]="passwordIcon"></i>
-  </span>
-  <div *ngIf="addUserForm.get('PasswordHash')?.invalid && (addUserForm.get('PasswordHash')?.dirty || addUserForm.get('PasswordHash')?.touched)">
-    <small class="text-danger" *ngIf="addUserForm.get('PasswordHash')?.hasError('required')">Password is required</small>
-    <small class="text-danger" *ngIf="addUserForm.get('PasswordHash')?.hasError('invalidPassword')">Password must be at least 8 characters long, include at least one uppercase letter, one number, and one special character.</small>
-  </div>
-</div>
+            <!-- Repeat Password Input -->
+            <div class="form-group mb-3 position-relative">
+              <label for="repeatPassword" class="text-muted">Confirm Password <span class="text-danger">*</span></label>
+              <input id="repeatPassword" formControlName="RepeatPassword" [type]="repeatPasswordType" class="form-control" placeholder="Confirm your password" />
+              <span class="input-group-text position-absolute end-0" (click)="toggleRepeatPasswordVisibility()" style="cursor: pointer;">
+                <i [ngClass]="repeatPasswordIcon"></i>
+              </span>
+              <div *ngIf="addUserForm.get('RepeatPassword')?.dirty && addUserForm.hasError('mismatch')">
+                <small class="text-danger">Passwords must match</small>
+              </div>
+              <div *ngIf="addUserForm.get('RepeatPassword')?.invalid && (addUserForm.get('RepeatPassword')?.dirty || addUserForm.get('RepeatPassword')?.touched)">
+                <small class="text-danger" *ngIf="addUserForm.get('RepeatPassword')?.hasError('required')">Confirm Password is required</small>
+              </div>
+            </div>
 
-  
-         <!-- Repeat Password Input -->
-<div class="form-group mb-3 position-relative">
-  <label for="repeatPassword" class="text-muted">Confirm Password <span class="text-danger">*</span></label>
-  <input id="repeatPassword" formControlName="RepeatPassword" [type]="repeatPasswordType" class="form-control" placeholder="Confirm your password" />
-  <span class="input-group-text position-absolute end-0" (click)="toggleRepeatPasswordVisibility()" style="cursor: pointer;">
-    <i [ngClass]="repeatPasswordIcon"></i>
-  </span>
-  <!-- Show the mismatch error only when the user has interacted with the Confirm Password field -->
-  <div *ngIf="addUserForm.get('RepeatPassword')?.dirty && addUserForm.hasError('mismatch')">
-    <small class="text-danger">Passwords must match</small>
-  </div>
-  <div *ngIf="addUserForm.get('RepeatPassword')?.invalid && (addUserForm.get('RepeatPassword')?.dirty || addUserForm.get('RepeatPassword')?.touched)">
-    <small class="text-danger" *ngIf="addUserForm.get('RepeatPassword')?.hasError('required')">Confirm Password is required</small>
-  </div>
-</div>
-
-  
             <!-- Birthday Input -->
             <div class="form-group mb-3">
               <label for="birthday" class="text-muted">Birthday <span class="text-danger">*</span></label>
@@ -84,12 +81,12 @@
                 <small class="text-danger" *ngIf="addUserForm.get('Birthday')?.hasError('required')">Birthday is required</small>
               </div>
             </div>
-  
+
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary btn-block" [disabled]="addUserForm.invalid">Add User</button>
           </form>
-        </div>
+        </div> <!-- End of scrollable-form -->
       </div>
     </div>
   </div>
-  
+</div>

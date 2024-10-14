@@ -32,7 +32,6 @@ export class PostPageComponent implements OnInit {
 
   isCommentModalOpen: boolean = false;
   newCommentContent: string = ''; // Store new comment content
-  commentErrorMessage: string | null = null;
 
   users: { [key: string]: string } = {};
 
@@ -233,45 +232,21 @@ export class PostPageComponent implements OnInit {
  
 
   addComment(): void {
-    const userId = this.authService.getUserIdFromToken();
-    const postId = this.post?.PostId || '';
-
-    // Reset the error message before checking
-    this.commentErrorMessage = null;
-
-    if (this.newCommentContent.trim()) {
-      const newComment: CreateComment = {
-        Content: this.newCommentContent,
-        UserId: userId,
-        PostId: postId
-      };
-
-      this.postService.addComment(newComment).subscribe(
-        (createdComment) => {
-          this.userService.getUserById(userId).subscribe(user => {
-            const newCommentWithUserName: BlogComment = {
-              ...createdComment,
-              UserName: user.Name,
-              CreatedAt: new Date(createdComment.CreatedAt)
-            };
-            this.comments.push(newCommentWithUserName);
-            this.newCommentContent = ''; // Reset the input field
-          });
-        },
-        (error) => {
-          console.error('Error adding comment:', error);
-        }
-      );
-    } else {
-      this.commentErrorMessage = 'Comment cannot be blank'; // Set the error message
+    if (this.post) {
+        this.newComment = {
+            Content: this.newCommentContent, 
+            UserId: this.authService.getUserIdFromToken(),
+            PostId: this.post.PostId
+        };
+        
+        this.postService.addComment(this.newComment).subscribe((addedComment: BlogComment) => {
+            this.comments.push(addedComment);
+            this.newCommentContent = ''; // Reset the comment input field
+        }, (error) => {
+            console.error('Error adding comment:', error);
+        });
     }
-  }
 
-  navigateToUserPosts(userId: string): void {
-    this.router.navigate(['/user-posts', userId]);
+
 }
-
-  
-
-
 }

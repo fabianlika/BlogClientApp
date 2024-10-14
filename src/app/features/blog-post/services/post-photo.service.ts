@@ -21,6 +21,10 @@ export class PostPhotoService {
     return this.http.get<PostPhotoDto[]>(`${this.apiUrl}/post/${postId}`);
   }
 
+  deletePhoto(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
 
 
     

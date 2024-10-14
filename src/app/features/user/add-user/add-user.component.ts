@@ -4,6 +4,8 @@ import {
   FormGroup,
   Validators,
   ReactiveFormsModule,
+  AbstractControl,
+  ValidationErrors,
 } from '@angular/forms';
 import ValidateForm from 'src/app/core/helpers/validateForm';
 import { CommonModule } from '@angular/common';
@@ -11,6 +13,7 @@ import { UserService } from '../services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import * as bcrypt from 'bcryptjs'; 
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-user',
@@ -36,7 +39,8 @@ export class AddUserComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialogRef: MatDialogRef<AddUserComponent> 
   ) {}
 
   ngOnInit(): void {
@@ -45,10 +49,18 @@ export class AddUserComponent implements OnInit {
       Username: ['', Validators.required],
       Email: ['', [Validators.required, Validators.email]],
       PhoneNumber: ['', [Validators.required, this.validatePhoneNumber.bind(this)]],
-      PasswordHash: ['', Validators.required],
+      PasswordHash: ['', [Validators.required, this.passwordValidator]], // Apply password validator here
       RepeatPassword: ['', Validators.required],
       Birthday: ['', Validators.required],
     }, { validators: this.passwordMatchValidator });
+  }
+
+  // Password Validator Function
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.value;
+    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[A-Z])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/; // At least 8 characters, one number, one special character, and one capitalized letter
+
+    return password && !passwordPattern.test(password) ? { invalidPassword: true } : null;
   }
 
   passwordMatchValidator(form: FormGroup) {
@@ -85,7 +97,9 @@ export class AddUserComponent implements OnInit {
           this.snackBar.open('User added successfully!', 'Close', {
             duration: 3000,
           });
-          this.router.navigate(['/user-list']); // Redirect after success
+
+          // Close the modal after successful addition
+          this.dialogRef.close(true);
         },
         error: (err) => {
           console.error('Error adding user:', err);
@@ -98,6 +112,7 @@ export class AddUserComponent implements OnInit {
       ValidateForm.validateAllFormFields(this.addUserForm);
     }
   }
+  
 
   hashPassword(password: string): string {
     const salt = bcrypt.genSaltSync(10); // Generate a salt

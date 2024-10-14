@@ -1,46 +1,56 @@
 <div class="container post-list-container mt-4">
-    <h1 class="text-center text-primary mb-4"> Posts</h1>
-  
-    <!-- Search Bar -->
-    <div class="search-bar mb-4">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Search your posts..."
-        [(ngModel)]="searchTerm"
-        (input)="onSearch()"
-      />
-    </div>
-  
-    <!-- Post List -->
-    <div class="row">
-      <div *ngFor="let post of paginatedPosts" class="col-md-6 mb-4">
-        <div class="post-card h-100 shadow border-0 rounded d-flex flex-column">
-          <div class="card-body flex-grow-1">
-            <h2 class="card-title text-center text-secondary">{{ post.Title }}</h2>
-            <p class="card-text text-center">
-              <small class="text-muted d-block">
-                <i class="fas fa-calendar-alt"></i> {{ post.CreatedAt | date: 'mediumDate' }}
-              </small>
-              <small class="text-muted">
-                <i class="fas fa-user"></i> By: {{ post.Author }}
-              </small>
-            </p>
-            <p class="post-content text-justify">{{ post.Content | stripHtml | slice:0:150 }}...</p>
-          </div>
-          <div class="text-center mb-3">
-            <button class="view-post-btn btn btn-primary" (click)="viewPost(post.PostId)">View Post</button>
-          </div>
+  <h1 class="text-center text-primary mb-4">My Posts</h1>
+
+  <!-- Search Bar -->
+  <div class="search-bar mb-4">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search your posts..."
+      [(ngModel)]="searchTerm"
+      (input)="onSearch()"
+    />
+  </div>
+
+  <!-- Post List -->
+  <div class="row">
+    <div *ngFor="let post of paginatedPosts" class="col-md-6 mb-4">
+      <div class="post-card h-100 shadow border-0 rounded d-flex flex-column">
+        <div class="card-body flex-grow-1">
+          <h2 class="card-title text-center text-secondary">{{ post.Title }}</h2>
+          <p class="card-text text-center">
+            <small class="text-muted d-block">
+              <i class="fas fa-calendar-alt"></i> {{ post.CreatedAt | date: 'mediumDate' }}
+            </small>
+            <small class="text-muted">
+              <i class="fas fa-user"></i> By: {{ post.Author }}
+            </small>
+          </p>
+          <p class="post-content text-justify">{{ post.Content | stripHtml | slice:0:150 }}...</p>
+        </div>
+
+        <!-- Post Image -->
+        <div class="post-images mb-3 d-flex justify-content-center" *ngIf="postImages[post.PostId] && postImages[post.PostId].length > 0">
+          <img 
+            [src]="postImages[post.PostId][0]" 
+            alt="{{ post.Title }} Image" 
+            class="img-fluid rounded single-large-image" 
+            style="width: 300px; height: 200px; object-fit: cover;" 
+             />
+        </div>
+
+        <div class="text-center mb-3">
+          <button class="view-post-btn btn btn-primary" (click)="viewPost(post.PostId)">View Post</button>
         </div>
       </div>
     </div>
-  
-    <!-- Pagination Component -->
-    <app-pagination
-      [currentPage]="currentPage"
-      [totalPages]="totalPages"
-      (pageChange)="onPageChange($event)"
-      class="mt-4"
-    ></app-pagination>
   </div>
-  
+
+  <!-- Pagination Component -->
+  <app-pagination
+    [currentPage]="currentPage"
+    [totalPages]="totalPages"
+    (pageChange)="onPageChange($event)"
+    class="mt-4"
+  ></app-pagination>
+</div>

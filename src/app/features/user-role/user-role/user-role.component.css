@@ -1,0 +1,24 @@
+.table {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  }
+  
+  .table tbody tr:hover {
+    background-color: #e0e0e0; /* Darker grey on hover for rows */
+  }
+  .spinner-border {
+    width: 1.5rem; /* Increase spinner size */
+    height: 1.5rem; /* Increase spinner size */
+    border-width: 0.2em; /* Make the spinner border a bit thicker */
+  }
+  
+  /* Optional: Custom color for the spinner */
+  .spinner-border {
+    color: #007bff; /* Bootstrap primary color, adjust as needed */
+  }
+  
+  
+
+  
+ 
+
+  

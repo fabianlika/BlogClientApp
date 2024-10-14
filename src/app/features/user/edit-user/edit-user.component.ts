@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService } from '../services/user.service';
 import { User } from '../models/user.model';
@@ -6,8 +6,6 @@ import { UpdateUser } from '../models/update-user.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as bcrypt from 'bcryptjs'; 
-import { ChangeDetectorRef } from '@angular/core';
-
 
 @Component({
   selector: 'app-edit-user',
@@ -15,10 +13,9 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./edit-user.component.css']
 })
 export class EditUserComponent implements OnInit, OnDestroy {
-
   private editUserSubscription?: Subscription;
   user: User;
-  validationErrors: any = { email: '', tel: '' };
+  validationErrors: { email: string; tel: string; password: string; confirmPassword: string } = { email: '', tel: '', password: '', confirmPassword: '' };
   editPassword: boolean = false; // Track if editing password
   confirmPassword: string = ''; // Store confirm password input
   showPassword: boolean = false; // Track new password visibility
@@ -46,12 +43,12 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
   onFormSubmit(): void {
     // Check for validation errors before proceeding
-    if (this.validationErrors.email || this.validationErrors.tel) {
+    if (this.validationErrors.email || this.validationErrors.tel || this.validationErrors.password || this.validationErrors.confirmPassword) {
       this.snackBar.open('Please fix the validation errors before saving.', 'Close', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'bottom',
-        panelClass: 'custom-snackbar-error' // Add error class here
+        panelClass: 'custom-snackbar-error'
       });
       return; // Exit if there are validation errors
     }
@@ -67,7 +64,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
         });
         return; // Exit if passwords do not match
       }
-      
+
       // Hash the new password
       this.user.PasswordHash = bcrypt.hashSync(this.confirmPassword, 10); // Hash the password
     }
@@ -83,7 +80,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
     this.editUserSubscription = this.userService.updateUser(this.user.UserId.toString(), updateUser)
       .subscribe({
-        next: (response) => {
+        next: () => {
           this.snackBar.open('User updated successfully', 'Close', {
             duration: 5000,
             horizontalPosition: 'center',
@@ -92,7 +89,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           });
           this.dialogRef.close(true);
         },
-        error: (err) => {
+        error: () => {
           this.snackBar.open('Failed to update user', 'Close', {
             duration: 3000,
             horizontalPosition: 'right',
@@ -104,30 +101,52 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   onInputEmail(): void {
-    if (this.user.Email && !/^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/.test(this.user.Email)) {
-      this.validationErrors.email = "The allowed email format is: email@domain.com!";
-    } else {
-      this.validationErrors.email = '';
-    }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email regex pattern
+    this.validationErrors.email = this.user.Email && !emailPattern.test(this.user.Email)
+      ? "The allowed email format is: email@domain.com!"
+      : '';
   }
 
   checkTel(): boolean {
     const val = this.user.PhoneNumber?.toString();
-    const pattern1: RegExp = /^(\+[3][5][5][6][7-9][0-9]{7}){1}$/i;
-    const pattern2: RegExp = /^([0][6][7-9][0-9]{7}){1}$/i;
-    const pattern3: RegExp = /^(\+[3][5][5][4-5][0-9]{7}){1}$/i;
-    const pattern4: RegExp = /^([0][4-5][0-9]{7}){1}$/i;
+    const patterns: RegExp[] = [
+      /^\+35567[0-9]{7}$/, // Match +35567xxxxxxxx
+      /^06[7-9][0-9]{7}$/, // Match 06xxxxxxxx
+      /^\+355[4-5][0-9]{7}$/, // Match +3554xxxxxxxx
+      /^0[4-5][0-9]{7}$/ // Match 0xxxxxxxx
+    ];
 
-    if (val) {
-      const isMatch = pattern1.test(val) || pattern2.test(val) || pattern3.test(val) || pattern4.test(val);
-      if (isMatch) {
-        this.validationErrors.tel = '';
-        return true;
-      }
+    const isMatch = patterns.some(pattern => pattern.test(val!));
+    this.validationErrors.tel = isMatch ? '' : 'Please enter a valid number in the format: "+3556xxxxxxxx/06xxxxxxxx/+355xxxxxxxx/0xxxxxxxx"!';
+
+    return isMatch;
+  }
+
+  validatePassword(): void {
+    // Password regex: At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    this.validationErrors.password = this.user.PasswordHash && !passwordPattern.test(this.user.PasswordHash)
+      ? 'Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character!'
+      : '';
+
+    // Check if passwords match after validating the pattern
+    this.checkPasswordMatch();
+  }
+
+  checkPasswordMatch(): void {
+    if (this.editPassword && this.confirmPassword) {
+      // Validate that the confirm password matches the new password
+      this.validationErrors.confirmPassword = this.user.PasswordHash !== this.confirmPassword
+        ? 'Passwords do not match!'
+        : '';
+    } else {
+      this.validationErrors.confirmPassword = '';
     }
+  }
 
-    this.validationErrors.tel = 'Please enter a valid number in the format: "+3556xxxxxxxx/06xxxxxxxx/+355xxxxxxxx/0xxxxxxxx"!';
-    return false;
+  onConfirmPasswordInput(): void {
+    // Call checkPasswordMatch whenever the user types in the confirm password field
+    this.checkPasswordMatch();
   }
 
   toggleEditPassword(): void {

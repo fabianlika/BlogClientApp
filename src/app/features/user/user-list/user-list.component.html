@@ -2,7 +2,16 @@
   <div class="container mt-4">
     <h2 class="title text-center mb-4">User List</h2>
     
-    <div class="d-flex justify-content-end mb-3">
+    <div class="d-flex justify-content-between mb-3">
+      <div>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search by name..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+        />
+      </div>
       <button class="btn btn-primary" (click)="openAddUserDialog()">Add User</button>
     </div>
     
@@ -14,7 +23,7 @@
           <th>Email</th>
           <th>Birthday</th>
           <th>Phone Number</th>
-          <th class="text-center">Modify</th>
+          <th class="text-center"></th>
         </tr>
       </thead>
       <tbody>
@@ -26,8 +35,12 @@
           <td>{{ user.PhoneNumber }}</td>
           <td>
             <div class="d-flex justify-content-center">
-              <button class="btn btn-success btn-sm me-1" (click)="openEditDialog(user)">Edit</button>
-              <button class="btn btn-danger btn-sm" (click)="deleteUser(user.UserId)">Delete</button>
+              <button class="btn btn-success btn-sm me-1" (click)="openEditDialog(user)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="deleteUser(user.UserId)">
+                <i class="fas fa-trash-alt"></i>
+              </button>
             </div>
           </td>
         </tr>

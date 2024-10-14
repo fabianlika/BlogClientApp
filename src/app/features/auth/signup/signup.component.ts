@@ -54,10 +54,11 @@ export class SignupComponent implements OnInit {
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.value;
-    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/; // At least 8 characters, one number, and one special character
+    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>])(?=.*[A-Z])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/; // At least 8 characters, one number, one special character, and one capitalized letter
 
     return password && !passwordPattern.test(password) ? { invalidPassword: true } : null;
-  }
+}
+
 
   passwordMatchValidator(form: FormGroup) {
     return form.get('PasswordHash')?.value === form.get('RepeatPassword')?.value

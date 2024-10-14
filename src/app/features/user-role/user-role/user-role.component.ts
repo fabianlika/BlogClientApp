@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserRoleService } from '../services/user-role.service';
 import { UserRoleDetail } from '../models/user-role-details.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-role',
@@ -10,30 +9,36 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class UserRoleComponent implements OnInit {
 
+  loading: boolean = false;
   userRoles: UserRoleDetail[] = [];
   pagedUserRoles: UserRoleDetail[] = [];
   errorMessage: string = '';
+  successMessage: string = ''; // Added to hold success messages
   dropdownStates: { [userId: string]: boolean } = {};
   
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 0;
 
-  constructor(private userRoleService: UserRoleService, private snackBar: MatSnackBar) {}
+  constructor(private userRoleService: UserRoleService) {}
 
   ngOnInit(): void {
     this.loadUserRoles();
   }
 
   loadUserRoles(): void {
+    this.loading = true; // Start loading
     this.userRoleService.getAllUserRoles().subscribe({
       next: (data) => {
         this.userRoles = data;
+        this.loading = false; // Stop loading
         this.totalPages = Math.ceil(this.userRoles.length / this.itemsPerPage);
         this.updatePagedUserRoles();
       },
       error: (err) => {
+        this.loading = false; // Stop loading on error
         this.errorMessage = 'Failed to load user roles';
+        this.successMessage = '';
       }
     });
   }
@@ -60,15 +65,16 @@ export class UserRoleComponent implements OnInit {
   updateRole(userRole: UserRoleDetail): void {
     this.userRoleService.updateUserRole(userRole.UserId, userRole.selectedRole).subscribe({
       next: () => {
-        this.snackBar.open('Role updated successfully', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.successMessage = 'Role updated successfully'; // Set success message
+        this.errorMessage = ''; // Clear error messages on success
       },
       error: () => {
         this.errorMessage = 'Failed to update role.';
+        this.successMessage = ''; // Clear success messages on error
       }
     });
   }
+
+ 
+  
 }

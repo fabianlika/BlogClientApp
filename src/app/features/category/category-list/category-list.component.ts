@@ -61,7 +61,8 @@ export class CategoryListComponent implements OnInit {
 
   deleteCategory(categoryId: string): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '300px'
+      width: '600px',  
+      height: '200px'
     });
 
     dialogRef.afterClosed().subscribe(result => {

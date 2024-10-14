@@ -4,22 +4,31 @@ import { MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-confirm-dialog',
   template: `
-    <h1 mat-dialog-title *ngIf="!successMessage">Confirm</h1>
-    <h1 mat-dialog-title *ngIf="successMessage">Success</h1>
+    <h1 mat-dialog-title *ngIf="!successMessage" class="text-center">Confirm</h1>
+    <h1 mat-dialog-title *ngIf="successMessage" class="text-center">Success</h1>
 
-    <div mat-dialog-content *ngIf="!successMessage">
+    <div mat-dialog-content *ngIf="!successMessage" class="text-center" style="font-size: 1.2rem;">
       <p>Are you sure you want to delete this category?</p>
     </div>
-    <div mat-dialog-content *ngIf="successMessage">
+    <div mat-dialog-content *ngIf="successMessage" class="text-center" style="font-size: 1.2rem;">
       <p>{{successMessage}}</p>
     </div>
 
-    <div mat-dialog-actions *ngIf="!successMessage">
-      <button mat-button (click)="onConfirm()">Yes</button>
-      <button mat-button (click)="onDismiss()">No</button>
+    <div mat-dialog-actions class="d-flex justify-content-center" *ngIf="!successMessage">
+      <button mat-button (click)="onConfirm()" class="btn btn-danger">
+        <i class="bi bi-check-circle"></i> <!-- Yes Icon -->
+        Yes
+      </button>
+      <button mat-button (click)="onDismiss()" class="btn btn-secondary ms-2">
+        <i class="bi bi-x-circle"></i> <!-- No Icon -->
+        No
+      </button>
     </div>
-    <div mat-dialog-actions *ngIf="successMessage">
-      <button mat-button (click)="onClose()">Close</button>
+    <div mat-dialog-actions class="d-flex justify-content-center" *ngIf="successMessage">
+      <button mat-button (click)="onClose()" class="btn btn-primary">
+        <i class="bi bi-check-circle"></i> <!-- Close Icon -->
+        Close
+      </button>
     </div>
   `,
 })

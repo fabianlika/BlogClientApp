@@ -2,7 +2,9 @@
   <h1 class="text-center title mb-4">Category List</h1>
 
   <div class="d-flex justify-content-end mb-3">
-    <button class="btn btn-primary" (click)="openAddDialog()">Add Category</button>
+    <button class="btn btn-primary" (click)="openAddDialog()">
+      <i class="bi bi-plus-circle"></i> <!-- Add Category Icon -->
+    </button>
   </div>
 
   <table class="table table-striped table-bordered mt-3" *ngIf="pagedCategories.length > 0">
@@ -10,7 +12,7 @@
       <tr>
         <th>Name</th>
         <th>Description</th>
-        <th class="text-center">Modify</th> <!-- Added a column for actions -->
+        <th class="text-center">Modify</th>
       </tr>
     </thead>
     <tbody>
@@ -19,8 +21,12 @@
         <td>{{ category.Url }}</td>
         <td class="text-center">
           <div class="d-flex justify-content-center align-items-center">
-            <button class="btn btn-success btn-sm me-1" (click)="openEditDialog(category)">Edit</button>
-            <button class="btn btn-danger btn-sm" (click)="deleteCategory(category.CategoryId)">Delete</button>
+            <button class="btn btn-success btn-sm me-1" (click)="openEditDialog(category)">
+              <i class="bi bi-pencil-square"></i> <!-- Edit Icon -->
+            </button>
+            <button class="btn btn-danger btn-sm" (click)="deleteCategory(category.CategoryId)">
+              <i class="bi bi-trash"></i> <!-- Delete Icon -->
+            </button>
           </div>
         </td>
       </tr>

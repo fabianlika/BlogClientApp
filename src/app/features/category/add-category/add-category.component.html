@@ -15,8 +15,12 @@
         <input type="text" id="categoryUrl" class="form-control" name="categoryUrl" [(ngModel)]="model.url" required>
       </div>
       <div class="mt-4 d-flex justify-content-center">
-        <button type="submit" class="btn btn-primary btn-save">Save</button>
-        <button type="button" class="btn btn-danger ms-3 btn-cancel" (click)="closeDialog()">Cancel</button>
+        <button type="submit" class="btn btn-primary btn-save">
+          <i class="bi bi-save"></i> <!-- Save Icon -->
+        </button>
+        <button type="button" class="btn btn-danger ms-3 btn-cancel" (click)="closeDialog()">
+          <i class="bi bi-x-circle"></i> <!-- Cancel Icon -->
+        </button>
       </div>
     </div>
   </form>

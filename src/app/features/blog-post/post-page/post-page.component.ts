@@ -32,6 +32,7 @@ export class PostPageComponent implements OnInit {
 
   isCommentModalOpen: boolean = false;
   newCommentContent: string = ''; // Store new comment content
+  commentErrorMessage: string | null = null;
 
   users: { [key: string]: string } = {};
 
@@ -234,17 +235,19 @@ export class PostPageComponent implements OnInit {
   addComment(): void {
     const userId = this.authService.getUserIdFromToken();
     const postId = this.post?.PostId || '';
-  
+
+    // Reset the error message before checking
+    this.commentErrorMessage = null;
+
     if (this.newCommentContent.trim()) {
       const newComment: CreateComment = {
         Content: this.newCommentContent,
         UserId: userId,
         PostId: postId
       };
-  
+
       this.postService.addComment(newComment).subscribe(
         (createdComment) => {
-          // Set the username for the comment immediately after it's created
           this.userService.getUserById(userId).subscribe(user => {
             const newCommentWithUserName: BlogComment = {
               ...createdComment,
@@ -259,6 +262,8 @@ export class PostPageComponent implements OnInit {
           console.error('Error adding comment:', error);
         }
       );
+    } else {
+      this.commentErrorMessage = 'Comment cannot be blank'; // Set the error message
     }
   }
 

@@ -33,10 +33,10 @@ export class UserRoleComponent implements OnInit {
         this.userRoles = data;
         this.loading = false; // Stop loading
         this.totalPages = Math.ceil(this.userRoles.length / this.itemsPerPage);
-        this.updatePagedUserRoles();
+        this.updatePagedUserRoles(); 
       },
       error: (err) => {
-        this.loading = false; // Stop loading on error
+        this.loading = false; 
         this.errorMessage = 'Failed to load user roles';
         this.successMessage = '';
       }
@@ -74,7 +74,4 @@ export class UserRoleComponent implements OnInit {
       }
     });
   }
-
- 
-  
 }

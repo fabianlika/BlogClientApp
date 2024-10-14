@@ -1,12 +1,19 @@
+/* confirm-dialog.component.css */
 .dialog-title {
-  font-weight: bold;
+  font-size: 1.5rem; /* Keep a larger title font */
+}
+
+.dialog-content {
+  font-size: 1rem; /* Adjust body font size for better fit */
+  text-align: center; /* Center the text */
+  max-height: 100px; /* Limit max height to keep it compact */
+  overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
 .dialog-actions {
-  margin-top: 20px; /* Adjust the value as needed for desired spacing */
+  justify-content: space-between; /* Align buttons with space */
 }
 
-
-.dialog-actions .btn {
-  width: 100px; /* Optional: Set a fixed width for buttons */
+.dialog-actions button {
+  margin: 0 5px; /* Add margin for spacing between buttons */
 }

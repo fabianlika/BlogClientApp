@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
 import { environment } from 'src/environments/environment.development';
@@ -25,9 +25,13 @@ export class UserService {
     return this.http.put<User>(`${environment.apiBaseUrl}/api/User/${id}`, updateUser);
   }
 
-  addUser(userData: User): Observable<any> {
-    return this.http.post(`${this.baseUrl}`, userData);
-  }
+  
+  addUser(formValue: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}`, formValue).pipe(
+        map((response: any) => response.userId) // Assuming your API returns the created user's ID
+    );
+}
+
   
   
  // Method to get users by page for pagination

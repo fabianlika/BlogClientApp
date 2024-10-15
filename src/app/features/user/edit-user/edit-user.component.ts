@@ -1,6 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService } from '../services/user.service';
+import { UserRoleService } from '../../user-role/services/user-role.service';
 import { User } from '../models/user.model';
 import { UpdateUser } from '../models/update-user.model';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -14,6 +15,7 @@ import * as bcrypt from 'bcryptjs';
 })
 export class EditUserComponent implements OnInit, OnDestroy {
   private editUserSubscription?: Subscription;
+  private userRoleSubscription?: Subscription;
   user: User;
   validationErrors: { email: string; tel: string; password: string; confirmPassword: string } = { email: '', tel: '', password: '', confirmPassword: '' };
   editPassword: boolean = false; // Track if editing password
@@ -21,20 +23,26 @@ export class EditUserComponent implements OnInit, OnDestroy {
   showPassword: boolean = false; // Track new password visibility
   showConfirmPassword: boolean = false; // Track confirm password visibility
 
+  roles: string[] = ['user', 'admin']; // Available roles
+  selectedRole: string;
+
   constructor(
     private userService: UserService,
+    private userRoleService: UserRoleService,
     private dialogRef: MatDialogRef<EditUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { user: User },
     private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef
   ) {
-    this.user = { ...data.user }; // Clone the user data for editing
+    this.user = { ...data.user }; 
+    this.selectedRole = this.user.Role || 'User';
   }
 
   ngOnInit(): void {}
 
   ngOnDestroy(): void {
     this.editUserSubscription?.unsubscribe();
+    this.userRoleSubscription?.unsubscribe();
   }
 
   closeDialog(): void {
@@ -75,30 +83,45 @@ export class EditUserComponent implements OnInit, OnDestroy {
       Email: this.user.Email,
       Birthday: this.user.Birthday,
       PhoneNumber: this.user.PhoneNumber,
-      PasswordHash: this.user.PasswordHash // This will be the hashed password
+      PasswordHash: this.user.PasswordHash ,
+      Role: this.selectedRole
     };
 
     this.editUserSubscription = this.userService.updateUser(this.user.UserId.toString(), updateUser)
-      .subscribe({
-        next: () => {
-          this.snackBar.open('User updated successfully', 'Close', {
-            duration: 5000,
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            panelClass: ['custom-snackbar']
+    .subscribe({
+      next: () => {
+        // After successfully updating user details, update the user role
+        this.userRoleSubscription = this.userRoleService.updateUserRole(this.user.UserId.toString(), this.selectedRole)
+          .subscribe({
+            next: () => {
+              this.snackBar.open('User role updated successfully', 'Close', {
+                duration: 3000,
+                horizontalPosition: 'center',
+                verticalPosition: 'bottom',
+                panelClass: ['custom-snackbar']
+              });
+              this.dialogRef.close(true);
+            },
+            error: () => {
+              this.snackBar.open('Failed to update user role', 'Close', {
+                duration: 3000,
+                horizontalPosition: 'right',
+                verticalPosition: 'top',
+                panelClass: 'custom-snackbar-error'
+              });
+            }
           });
-          this.dialogRef.close(true);
-        },
-        error: () => {
-          this.snackBar.open('Failed to update user', 'Close', {
-            duration: 3000,
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-            panelClass: 'custom-snackbar-error'
-          });
-        }
-      });
-  }
+      },
+      error: () => {
+        this.snackBar.open('Failed to update user', 'Close', {
+          duration: 3000,
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
+          panelClass: 'custom-snackbar-error'
+        });
+      }
+    });
+}
 
   onInputEmail(): void {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email regex pattern

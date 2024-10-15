@@ -32,6 +32,14 @@
             <div class="text-danger" *ngIf="validationErrors.tel">{{ validationErrors.tel }}</div>
           </div>
           
+
+          <div class="mb-3">
+            <label class="form-label" for="userRole">Role</label>
+            <select id="userRole" class="form-control stylish-input" [(ngModel)]="selectedRole" name="userRole" required>
+              <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+            </select>
+          </div>
+
           <div class="mb-3">
             <input type="checkbox" id="editPassword" [(ngModel)]="editPassword" (change)="toggleEditPassword()" />
             <label for="editPassword">Edit Password</label>

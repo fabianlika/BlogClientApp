@@ -19,8 +19,8 @@ export class UserRoleService {
 
 
   updateUserRole(userId: string, role: string): Observable<any> {
-    const updatePayload = { roles: role };
-    return this.http.put(`${this.apiUrl2}/${userId}`, updatePayload);
+
+    return this.http.put(`${this.apiUrl2}/${userId}`, { userId, roles: role });
   }
 
   deleteUserRole(userId: string): Observable<any> {
@@ -28,9 +28,10 @@ export class UserRoleService {
   }
 
   addUserRole(userId: string, role: string): Observable<any> {
-    const addPayload = { userId, roles: role };
+    const addPayload = { UserId: userId, Roles: role }; // Use uppercase keys
     return this.http.post(`${this.apiUrl2}`, addPayload);
-  }
+}
+
 
   updateUserRoles(userId: string, roles: string[]): Observable<any> {
     const updatePayload = { roles };

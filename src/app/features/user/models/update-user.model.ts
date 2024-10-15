@@ -6,6 +6,6 @@ export interface UpdateUser{
     Email: string;
     PasswordHash?: string;
     ConfirmPassword?: string;
-
+    Role?: string;
 
 }

@@ -20,6 +20,9 @@ export class EditPostComponent implements OnInit, AfterViewInit {
   @Output() closeEditModal: EventEmitter<void> = new EventEmitter<void>();
 
   selectedFiles: File[] = [];
+  readonly MAX_TITLE_LENGTH = 100;
+  readonly MAX_CONTENT_LENGTH = 5000;
+  readonly MAX_FILE_SIZE_MB = 5;
 
   constructor(
     private postService: PostService,
@@ -44,7 +47,13 @@ export class EditPostComponent implements OnInit, AfterViewInit {
       height: 300,
       setup: (editor: any) => {
         editor.on('change', () => {
-          this.post.Content = editor.getContent();
+          const content = editor.getContent();
+          if (content.length > this.MAX_CONTENT_LENGTH) {
+            this.setMessage(`Content cannot exceed ${this.MAX_CONTENT_LENGTH} characters.`, 'error');
+            editor.setContent(content.substring(0, this.MAX_CONTENT_LENGTH));
+          } else {
+            this.post.Content = content;
+          }
         });
         editor.setContent(this.post.Content);
       }
@@ -52,6 +61,11 @@ export class EditPostComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit(): void {
+    if (this.post.Title.length > this.MAX_TITLE_LENGTH) {
+      this.setMessage(`Title cannot exceed ${this.MAX_TITLE_LENGTH} characters.`, 'error');
+      return;
+    }
+
     this.postService.updatePost(this.post).subscribe({
       next: () => {
         this.setMessage('Post updated successfully!', 'success');
@@ -76,7 +90,15 @@ export class EditPostComponent implements OnInit, AfterViewInit {
   onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
-      this.selectedFiles.push(...Array.from(input.files));
+      const files = Array.from(input.files);
+      const validFiles = files.filter(file => {
+        if (file.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
+          this.setMessage(`File ${file.name} is too large. Maximum allowed size is ${this.MAX_FILE_SIZE_MB} MB.`, 'error');
+          return false;
+        }
+        return true;
+      });
+      this.selectedFiles.push(...validFiles);
     }
   }
 

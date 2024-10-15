@@ -3,12 +3,14 @@
     <h1 class="form-title">Add New Post</h1>
     <div class="form-group">
       <label for="title" class="form-label">Title</label>
-      <input type="text" id="title" name="title" [(ngModel)]="post.Title" required class="form-control">
+      <input type="text" id="title" name="title" [(ngModel)]="post.Title" required class="form-control" maxlength="100">
+   
     </div>
 
     <div class="form-group">
       <label for="content" class="form-label">Content</label>
-      <textarea id="content" name="content" [(ngModel)]="post.Content" required class="form-control"></textarea>
+      <textarea id="content" name="content" [(ngModel)]="post.Content" required class="form-control" maxlength="5000"></textarea>
+   
     </div>
 
     <div class="form-group custom-dropdown">
@@ -23,7 +25,7 @@
       </div>
       <input type="hidden" name="category" [(ngModel)]="post.CategoryId" />
     </div>
-    
+
     <div class="form-group mt-3">
       <label for="file" class="form-label">Upload Files</label>
       <input 
@@ -34,6 +36,9 @@
         accept="image/*" 
         multiple 
       />
+      <div *ngIf="fileWarning" class="alert alert-danger mt-2">
+        {{ fileWarning }}
+      </div>
       <div *ngIf="selectedFiles.length > 0" class="mt-2">
         <h6>Selected Files:</h6>
         <ul class="list-group">
@@ -41,8 +46,6 @@
         </ul>
       </div>
     </div>
-    
-    
 
     <button type="submit" class="btn btn-submit" [disabled]="!postForm.valid">Add Post</button>
   </form>

@@ -20,6 +20,7 @@ export class UserService {
   getUserById(id: string): Observable<User> {
     return this.http.get<User>(`${this.baseUrl}/${id}`);
   }
+  
 
   updateUser(id: string, updateUser: UpdateUser): Observable<User> {
     return this.http.put<User>(`${environment.apiBaseUrl}/api/User/${id}`, updateUser);

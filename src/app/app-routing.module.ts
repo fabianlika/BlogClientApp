@@ -18,6 +18,7 @@ import { PostsTableComponent } from './features/blog-post/posts-table/posts-tabl
 import { PostPageComponent } from './features/blog-post/post-page/post-page.component';
 import { EditPostComponent } from './features/blog-post/edit-post/edit-post.component';
 import { UserPostsComponent } from './features/blog-post/user-posts/user-posts.component';
+import { RandomUserPostsComponent } from './features/blog-post/random-user-posts/random-user-posts.component';
 
 const routes: Routes = [
   {
@@ -43,7 +44,7 @@ const routes: Routes = [
   {
     path: 'admin/blogposts/add',
     component: AddPostComponent,
-    canActivate: [AdminGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: '',
@@ -65,6 +66,14 @@ const routes: Routes = [
     component: UserPostsComponent,
     canActivate: [AuthGuard] 
   },
+
+  {
+    path: 'random-user-posts/:userId',
+    component: RandomUserPostsComponent,
+    canActivate: [AuthGuard] 
+  },
+
+
 
   {
     path: 'posts',

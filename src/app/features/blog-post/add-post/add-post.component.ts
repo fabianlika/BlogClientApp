@@ -36,6 +36,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
   selectedCategory: string | null = null;
   isDropdownOpen: boolean = false;
+  fileWarning: string = '';
+
+  maxTitleLength = 100; 
+  maxContentLength = 5000;
+  maxFileSize = 5 * 1024 * 1024; // 5 MB
 
   constructor(
     private postService: PostService,
@@ -90,6 +95,24 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   }
 
   async onSubmit() {
+
+    if (this.post.Title.length > this.maxTitleLength) {
+      this.snackBar.open(`Title cannot exceed ${this.maxTitleLength} characters.`, 'Close', { duration: 3000 });
+      return;
+    }
+
+    if (this.post.Content.length > this.maxContentLength) {
+      this.snackBar.open(`Content cannot exceed ${this.maxContentLength} characters.`, 'Close', { duration: 3000 });
+      return;
+    }
+
+    const oversizedFiles = this.selectedFiles.filter(file => file.size > this.maxFileSize);
+    if (oversizedFiles.length > 0) {
+      this.snackBar.open(`Files cannot exceed ${this.maxFileSize / (1024 * 1024)} MB.`, 'Close', { duration: 3000 });
+      return;
+    }
+
+
     if (!this.post.Author) this.post.Author = 'Default Author';
     if (!this.post.Url) this.post.Url = 'http://defaulturl.com';
   
@@ -140,11 +163,19 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     }
   }
   
-
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const newFiles = Array.from(input.files);
+      this.fileWarning = ''; // Clear previous warnings
+
+      for (const file of newFiles) {
+        if (file.size > this.maxFileSize) {
+          this.fileWarning = `${file.name} exceeds the 5MB size limit.`;
+          return; // Exit if any file exceeds the limit
+        }
+      }
+
       this.selectedFiles = [...this.selectedFiles, ...newFiles];
     }
   }

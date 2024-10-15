@@ -39,6 +39,7 @@ import { PostPageComponent } from './features/blog-post/post-page/post-page.comp
 import { EditPostComponent } from './features/blog-post/edit-post/edit-post.component';
 import { AddUserComponent } from './features/user/add-user/add-user.component';
 import { UserPostsComponent } from './features/blog-post/user-posts/user-posts.component';
+import { RandomUserPostsComponent } from './features/blog-post/random-user-posts/random-user-posts.component';
 
 
 
@@ -70,6 +71,7 @@ import { UserPostsComponent } from './features/blog-post/user-posts/user-posts.c
     PostPageComponent,
     EditPostComponent,
     UserPostsComponent,
+    RandomUserPostsComponent,
   
     //SignupComponent,
      // Ensure PaginationComponent is declared here,

@@ -1,40 +1,76 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { PostService } from 'src/app/features/blog-post/services/post.service';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/features/auth/services/auth.service';
+import { UserService } from 'src/app/features/user/services/user.service';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PostPhotoService } from '../services/post-photo.service';
 import { PostPhotoDto } from '../models/add-post-photo.model';
+import { User } from '../../user/models/user.model';
 
 @Component({
-  selector: 'app-user-posts',
-  templateUrl: './user-posts.component.html',
-  styleUrls: ['./user-posts.component.css']
+  selector: 'app-random-user-posts',
+  templateUrl: './random-user-posts.component.html',
+  styleUrls: ['./random-user-posts.component.css']
 })
-export class UserPostsComponent implements OnInit {
+export class RandomUserPostsComponent implements OnInit {
   posts: any[] = [];
   filteredPosts: any[] = [];
   searchTerm: string = '';
   currentPage: number = 1;
   itemsPerPage: number = 4; // Display 4 items per page
   postImages: { [key: string]: string[] } = {}; // Store images for each post
+  authorId: string = '';
+  authorName: string = ''; // Store author's name
+  loading: boolean = true; // Add a loading state
+
+  @Input() authorIdInput: string = ''; // Assuming this will be passed as input if using the component directly
 
   constructor(
     private postService: PostService,
-    private authService: AuthService,
     private postPhotoService: PostPhotoService,
-    private router: Router
+    private userService: UserService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.loadUserPosts();
+    // If authorId is not passed as an input, get it from the route parameters
+    if (!this.authorIdInput) {
+      this.route.paramMap.subscribe(params => {
+        this.authorId = params.get('userId') || '';
+        this.loadAuthorName(); // Load the author's name
+        this.loadAuthorPosts();
+      });
+    } else {
+      this.authorId = this.authorIdInput;
+      this.loadAuthorName(); // Load the author's name
+      this.loadAuthorPosts();
+    }
   }
 
-  loadUserPosts(): void {
-    const userId = this.authService.getUserIdFromToken(); 
+  loadAuthorName(): void {
+    console.log('Fetching user with ID:', this.authorId); // Debug log
+    this.userService.getUserById(this.authorId).subscribe(
+      (user: User) => {
+        if (user) {
+          this.authorName = user.Name; // Set the author's name
+          console.log('Author name loaded:', this.authorName); // Debug log
+        } else {
+          console.warn('User not found for ID:', this.authorId); // Log if user is not found
+          this.authorName = 'Author Not Found'; // Default message if not found
+        }
+      },
+      error => {
+        console.error('Error fetching author name:', error);
+        this.authorName = 'Author Not Found'; // Default message on error
+      }
+    );
+  }
+  
+  
+  loadAuthorPosts(): void {
     this.postService.getAllPosts().subscribe((data) => {
-      // Filter posts to only include those created by the logged-in user
-      this.posts = data.filter(post => post.UserId === userId);
-      this.filteredPosts = [...this.posts]; // Initialize filteredPosts with user posts
+      this.posts = data.filter(post => post.UserId === this.authorId);
+      this.filteredPosts = [...this.posts]; // Initialize filteredPosts with author posts
 
       // Sort posts by CreatedAt (most recent first)
       this.posts.sort((a, b) => new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime());

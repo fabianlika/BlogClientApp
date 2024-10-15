@@ -29,6 +29,10 @@ export class PostPageComponent implements OnInit {
   newComment: CreateComment = { Content: '', UserId: '', PostId: '' };
   editingCommentIndex: number | null = null; // Track which comment is being edited
   editCommentContent: string = '';
+  message: string = '';
+messageType: 'success' | 'error' = 'success';
+commentMessage: string | null = null;
+commentMessageClass: string = '';
 
   isCommentModalOpen: boolean = false;
   newCommentContent: string = ''; // Store new comment content
@@ -86,30 +90,7 @@ export class PostPageComponent implements OnInit {
     });
   }
 
-  loadComments(postId: string): void {
-    this.postService.getCommentsByPostId(postId).subscribe((data: any[]) => {
-      this.comments = data.map(item => ({
-        CommentId: item.CommentId,
-        Content: item.Content,
-        CreatedAt: new Date(item.CreatedAt),
-        UserId: item.UserId,
-        PostId: item.PostId,
-        UserName: ''
-        
-      }));
-      
 
-      this.comments.forEach(comment => {
-        this.userService.getUserById(comment.UserId).subscribe(user => {
-          this.users[comment.UserId] = user.Name; // Assuming user has a 'name' field
-          comment.UserName = user.Name; // Set the UserName in the comment
-        });
-      });
-
-    }, (error) => {
-      console.error('Error fetching comments:', error);
-    });
-  }
   
   // Method to check if the user can edit or delete the comment
   canEditComment(comment: BlogComment): boolean {
@@ -128,12 +109,7 @@ export class PostPageComponent implements OnInit {
     this.editCommentContent = '';
   }
 
-  openEditCommentModal(comment: BlogComment): void {
-    // Open the modal for editing the comment (similar to the post editing logic)
-    // Set up logic for editing the comment
-    console.log('Editing comment:', comment);
-    // Logic for opening the modal goes here
-  }
+  
 
   updateComment(index: number): void {
     if (this.editCommentContent.trim()) {
@@ -205,6 +181,8 @@ export class PostPageComponent implements OnInit {
   closeEditPostModal() {
     this.isEditModalOpen = false;
     this.selectedPost = null;
+    this.loadPost();
+    this.loadFilesForPost(this.post?.PostId || '');
   }
 
   handlePostUpdated(event: any): void {
@@ -229,24 +207,73 @@ export class PostPageComponent implements OnInit {
     }
   }
 
- 
-
+  displayCommentMessage(message: string, isSuccess: boolean): void {
+    this.commentMessage = message;
+    this.commentMessageClass = isSuccess ? 'alert alert-success' : 'alert alert-danger';
+  }
+  
+  // Method to clear the message
+  clearCommentMessage(): void {
+    this.commentMessage = null;
+    this.commentMessageClass = '';
+  }
+  
   addComment(): void {
-    if (this.post) {
+    if (this.newCommentContent.trim()) {
+      if (this.post) {
         this.newComment = {
-            Content: this.newCommentContent, 
-            UserId: this.authService.getUserIdFromToken(),
-            PostId: this.post.PostId
+          Content: this.newCommentContent.trim(),
+          UserId: this.authService.getUserIdFromToken(),
+          PostId: this.post.PostId,
         };
         
         this.postService.addComment(this.newComment).subscribe((addedComment: BlogComment) => {
-            this.comments.push(addedComment);
-            this.newCommentContent = ''; // Reset the comment input field
+          // Immediately set the author's name
+          addedComment.UserName = this.users[this.newComment.UserId] || 'Anonymous';
+  
+          this.comments.push(addedComment);
+          this.newCommentContent = ''; // Reset the comment input field
+          this.displayCommentMessage('Comment added successfully.', true);
+          this.loadComments(this.post?.PostId || '');
         }, (error) => {
-            console.error('Error adding comment:', error);
+          console.error('Error adding comment:', error);
+          this.displayCommentMessage('Error adding comment. Please try again.', false);
         });
+      }
+    } else {
+      this.displayCommentMessage('Comment cannot be blank.', false);
     }
+  }
+  
+  // Make sure when the component loads, to fetch the user data properly
+  loadComments(postId: string): void {
+    this.postService.getCommentsByPostId(postId).subscribe((data: any[]) => {
+      this.comments = data.map(item => ({
+        CommentId: item.CommentId,
+        Content: item.Content,
+        CreatedAt: new Date(item.CreatedAt),
+        UserId: item.UserId,
+        PostId: item.PostId,
+        UserName: this.users[item.UserId] || ''
+      }));
+  
+      
+      this.comments.forEach(comment => {
+        if (!comment.UserName) {
+          this.userService.getUserById(comment.UserId).subscribe(user => {
+            this.users[comment.UserId] = user.Name; 
+            comment.UserName = user.Name; 
+          });
+        }
+      });
+  
+    }, (error) => {
+      console.error('Error fetching comments:', error);
+    });
+  }
+  
+  
+  
 
 
-}
 }

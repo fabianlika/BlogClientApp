@@ -23,6 +23,7 @@
           <th>Email</th>
           <th>Birthday</th>
           <th>Phone Number</th>
+          <th>Role</th> 
           <th class="text-center"></th>
         </tr>
       </thead>
@@ -33,6 +34,7 @@
           <td>{{ user.Email }}</td>
           <td>{{ user.Birthday | date:'shortDate' }}</td>
           <td>{{ user.PhoneNumber }}</td>
+          <td>{{ user.Role || 'No Role Assigned' }}</td> 
           <td>
             <div class="d-flex justify-content-center">
               <button class="btn btn-success btn-sm me-1" (click)="openEditDialog(user)">
@@ -49,8 +51,9 @@
   </div>
 </ng-container>
 
+
 <app-pagination
-  [currentPage]="currentPage"
-  [totalPages]="totalPages"
-  (pageChange)="onPageChange($event)">
+[currentPage]="currentPage"
+[totalPages]="totalPages"
+(pageChange)="onPageChange($event)">
 </app-pagination>

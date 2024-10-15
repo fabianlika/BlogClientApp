@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
+import { UserRoleService } from '../../user-role/services/user-role.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EditUserComponent } from '../edit-user/edit-user.component';
 import { ConfirmDialogService } from 'src/app/features/user/services/confirm-dialog.service';
 import { AddUserComponent } from '../add-user/add-user.component';
+import { UserRoleDetail } from 'src/app/features/user-role/models/user-role-details.model';
 
 @Component({
   selector: 'app-user-list',
@@ -13,28 +15,31 @@ import { AddUserComponent } from '../add-user/add-user.component';
 })
 export class UserListComponent implements OnInit {
 
-  users: User[] = [];          // Store all users
-  paginatedUsers: User[] = []; // Users for the current page
-  currentPage: number = 1;     // Track the current page
-  pageSize: number = 10;       // Number of users per page
-  totalPages: number = 1;      // Total number of pages
-  searchTerm: string = '';      // For the search functionality
+  users: User[] = [];          
+  paginatedUsers: User[] = []; 
+  currentPage: number = 1;     
+  pageSize: number = 10;       
+  totalPages: number = 1;      
+  searchTerm: string = '';  
+  userRoles: { [key: string]: string } = {};     
 
   constructor(
     private userService: UserService,
+    private userRoleService: UserRoleService,
     private dialog: MatDialog,
     private confirmDialogService: ConfirmDialogService
   ) {}
 
   ngOnInit(): void {
-    this.loadUsers(); // Load all users when the component initializes
+    this.loadUsers(); 
   }
 
   loadUsers(): void {
     this.userService.getAllUsers().subscribe({
       next: (response: User[]) => {
         this.users = response;
-        this.filterAndPaginateUsers(); // Filter and paginate users
+        this.loadUserRoles();
+        this.filterAndPaginateUsers(); 
       },
       error: (err) => {
         console.error('Error fetching users:', err);
@@ -42,15 +47,35 @@ export class UserListComponent implements OnInit {
     });
   }
 
-  // Filter and paginate users based on the current search term and current page
+  loadUserRoles(): void {
+    this.userRoleService.getAllUserRoles().subscribe({
+      next: (roles: UserRoleDetail[]) => {
+        roles.forEach(role => {
+          this.userRoles[role.UserId] = role.Roles; 
+        });
+        this.mapRolesToUsers(); 
+      },
+      error: (err) => {
+        console.error('Error fetching user roles:', err);
+      },
+    });
+  }
+
+  mapRolesToUsers(): void {
+    this.users.forEach(user => {
+      user.Role = this.userRoles[user.UserId] || 'No Role Assigned'; 
+    });
+    this.filterAndPaginateUsers();
+  }
+  
   filterAndPaginateUsers(): void {
-    // Filter users based on the search term
+    
     const filteredUsers = this.users.filter(user => 
       user.Name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
 
-    this.totalPages = Math.ceil(filteredUsers.length / this.pageSize); // Calculate total pages
-    this.paginateUsers(this.currentPage, filteredUsers); // Update paginated users
+    this.totalPages = Math.ceil(filteredUsers.length / this.pageSize); 
+    this.paginateUsers(this.currentPage, filteredUsers); 
   }
 
   // Paginate users for the current page
@@ -63,24 +88,24 @@ export class UserListComponent implements OnInit {
   // Method to handle pagination change
   onPageChange(newPage: number): void {
     this.currentPage = newPage;
-    this.filterAndPaginateUsers(); // Reapply filtering and paginate
+    this.filterAndPaginateUsers(); 
   }
 
   // Filter users based on the search term when user types in the search input
   onSearch(): void {
-    this.currentPage = 1; // Reset to first page
-    this.filterAndPaginateUsers(); // Reapply filtering and paginate
+    this.currentPage = 1; 
+    this.filterAndPaginateUsers(); 
   }
 
   openEditDialog(user: User): void {
     const dialogRef = this.dialog.open(EditUserComponent, {
       width: '400px',
-      data: { user } // Pass user data to the dialog
+      data: { user } 
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.loadUsers(); // Refresh the list after editing
+        this.loadUsers(); 
       }
     });
   }
@@ -91,7 +116,7 @@ export class UserListComponent implements OnInit {
         if (confirmed) {
           this.userService.deleteUser(userId).subscribe({
             next: () => {
-              this.loadUsers(); // Refresh users after deletion
+              this.loadUsers(); 
             },
             error: (err) => {
               console.error('Error deleting user', err);

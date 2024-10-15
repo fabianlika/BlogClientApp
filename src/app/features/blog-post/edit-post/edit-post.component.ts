@@ -2,8 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, Input, Output, EventEmitte
 import { NgForm } from '@angular/forms';
 import { PostService } from '../services/post.service';
 import { Post } from '../models/post.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { PostPhotoService } from '../services/post-photo.service'; // Import your post photo service
+import { PostPhotoService } from '../services/post-photo.service';
 
 declare var tinymce: any;
 
@@ -13,16 +12,18 @@ declare var tinymce: any;
   styleUrls: ['./edit-post.component.css'],
 })
 export class EditPostComponent implements OnInit, AfterViewInit {
+  message: string = '';
+  messageType: 'success' | 'error' = 'success';
+
   @ViewChild('postForm', { static: false }) postForm!: NgForm;
   @Input() post!: Post;
-  @Output() closeEditModal: EventEmitter<void> = new EventEmitter<void>(); // Renamed EventEmitter
+  @Output() closeEditModal: EventEmitter<void> = new EventEmitter<void>();
 
-  selectedFiles: File[] = []; // Store selected files
+  selectedFiles: File[] = [];
 
   constructor(
     private postService: PostService,
-    private postPhotoService: PostPhotoService, // Inject the post photo service
-    private snackBar: MatSnackBar
+    private postPhotoService: PostPhotoService
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +33,10 @@ export class EditPostComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.initializeTinyMCE();
+  }
+
+  private initializeTinyMCE(): void {
     tinymce.init({
       selector: 'textarea',
       plugins: 'link image lists',
@@ -46,56 +51,67 @@ export class EditPostComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSubmit() {
-    // First update the post
-    this.postService.updatePost(this.post).subscribe(() => {
-      this.snackBar.open('Post updated successfully!', 'Close', { duration: 3000 });
-      
-      // After updating the post, upload the files
-      this.uploadFiles();
-    }, (error) => {
-      console.error('Error updating post:', error);
-      this.snackBar.open('Failed to update post.', 'Close', { duration: 3000 });
+  onSubmit(): void {
+    this.postService.updatePost(this.post).subscribe({
+      next: () => {
+        this.setMessage('Post updated successfully!', 'success');
+        this.uploadFiles();
+      },
+      error: (error) => {
+        console.error('Error updating post:', error);
+        this.setMessage('Failed to update post.', 'error');
+      }
     });
   }
 
-  closeModal() {
+  closeModal(): void {
     this.closeEditModal.emit(); 
   }
 
-  replaceFiles() {
-    // Trigger the file input to open the file explorer
-    const fileInput = document.querySelector('input[type="file"]');
-    if (fileInput) {
-      (fileInput as HTMLInputElement).click();
-    }
+  replaceFiles(): void {
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    fileInput?.click();
   }
 
-  onFilesSelected(event: Event) {
+  onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
-      // Add selected files to the existing selectedFiles array
-      this.selectedFiles = [...this.selectedFiles, ...Array.from(input.files)];
+      this.selectedFiles.push(...Array.from(input.files));
     }
   }
 
-  uploadFiles() {
-    // Ensure no duplicate uploads by clearing any previous upload results
-    for (const file of this.selectedFiles) {
-      const formData = new FormData();
-      formData.append('FileName', file.name);
-      formData.append('FileType', file.type);
-      formData.append('FileContent', file);
-      formData.append('PostId', this.post.PostId);
-
-      this.postPhotoService.uploadPostPhoto(formData).subscribe(() => {
-        this.snackBar.open('Files uploaded successfully!', 'Close', { duration: 3000 });
-      }, (error) => {
+  private uploadFiles(): void {
+    const uploadRequests = this.selectedFiles.map(file => this.uploadFile(file));
+    Promise.all(uploadRequests)
+      .then(() => this.setMessage('Post updated successfully!', 'success'))
+      .catch(error => {
         console.error('Error uploading files:', error);
-        this.snackBar.open('Failed to upload files.', 'Close', { duration: 3000 });
+        this.setMessage('Failed to upload files.', 'error');
+      })
+      .finally(() => this.selectedFiles = []); // Clear selected files after upload
+  }
+
+  private uploadFile(file: File): Promise<void> {
+    const formData = new FormData();
+    formData.append('FileName', file.name);
+    formData.append('FileType', file.type);
+    formData.append('FileContent', file);
+    formData.append('PostId', this.post.PostId);
+
+    return new Promise((resolve, reject) => {
+      this.postPhotoService.uploadPostPhoto(formData).subscribe({
+        next: () => resolve(),
+        error: (error) => reject(error)
       });
-    }
-    // Optionally clear the selected files after upload if needed
-    this.selectedFiles = []; // Clear selected files after upload
+    });
+  }
+
+  private setMessage(message: string, type: 'success' | 'error'): void {
+    this.message = message;
+    this.messageType = type;
+  }
+
+  clearMessage(): void {
+    this.message = '';
   }
 }

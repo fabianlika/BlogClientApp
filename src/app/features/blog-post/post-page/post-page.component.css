@@ -103,3 +103,18 @@
 .comment-action-buttons button {
   margin: 0 4px; 
 }
+
+.comment-username {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit color from parent */
+}
+
+.comment-username:hover {
+  text-decoration: underline; /* Add underline on hover for better UX */
+}
+
+.comment-username i {
+  font-size: 1.5rem; /* Adjust size here if needed */
+}

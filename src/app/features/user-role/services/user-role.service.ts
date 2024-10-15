@@ -23,4 +23,22 @@ export class UserRoleService {
     return this.http.put(`${this.apiUrl2}/${userId}`, updatePayload);
   }
 
+  deleteUserRole(userId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl2}/${userId}`);
+  }
+
+  addUserRole(userId: string, role: string): Observable<any> {
+    const addPayload = { userId, roles: role };
+    return this.http.post(`${this.apiUrl2}`, addPayload);
+  }
+
+  updateUserRoles(userId: string, roles: string[]): Observable<any> {
+    const updatePayload = { roles };
+    return this.http.put(`${this.apiUrl2}/${userId}`, updatePayload);
+  }
+
+  getUserRolebyUserId(userId: string): Observable<UserRoleDetail> {
+    return this.http.get<UserRoleDetail>(`${this.apiUrl2}/${userId}`);
+  }
+
 }

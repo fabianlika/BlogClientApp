@@ -1,47 +1,34 @@
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-3">
-    <div>
-      <!-- Back to Posts Button (on the left) -->
-      <a routerLink="/posts" class="btn btn-outline-secondary btn-sm">
-        <i class="fas fa-arrow-left me-2"></i>
-      </a>
-    </div>
-    <div>
-      <h2 class="text-primary mb-0">{{ post?.Title }}</h2>
-    </div>
-    <div>
-      <!-- Edit Post Button with Edit Icon -->
-      <button 
-        *ngIf="canEditPost && post" 
-        class="btn btn-warning btn-sm ms-2" 
-        (click)="openEditPostModal(post)" 
-      >
+    <a routerLink="/posts" class="btn btn-outline-secondary btn-sm">
+      <i class="fas fa-arrow-left me-2"></i>
+    </a>
+    <h2 class="text-primary mb-0">{{ post?.Title }}</h2>
+    <div *ngIf="canEditPost && post">
+      <button class="btn btn-warning btn-sm ms-2" (click)="openEditPostModal(post)">
         <i class="fas fa-edit"></i>
       </button>
-
-      <!-- Delete Post Button with Trash Icon -->
-      <button
-        *ngIf="canEditPost && post"
-        class="btn btn-danger btn-sm ms-2"
-        (click)="deletePost()"
-      >
+      <button class="btn btn-danger btn-sm ms-2" (click)="deletePost()">
         <i class="fas fa-trash"></i>
       </button>
     </div>
   </div>
 
-  <!-- Author and Date -->
   <p class="text-muted mb-4">
-    <small>By: <strong>{{ post?.Author }}</strong></small> | 
+    <small class="d-flex align-items-center">
+      <i class="fas fa-user-circle me-2" style="font-size: 1.5rem;"></i> <!-- Increased size of the profile icon -->
+      <a [routerLink]="['/user-posts', post?.UserId]" class="text-decoration-none" style="font-size: 1.2rem;"><strong>{{ post?.Author }}</strong></a> <!-- Increased font size of the author's name -->
+    </small> | 
     <small>{{ post?.CreatedAt | date: 'mediumDate' }}</small>
   </p>
+  
+  
+  
 
-  <!-- Post Content -->
   <div class="post-content border-bottom pb-4 mb-4">
     <div [innerHTML]="post?.Content" class="content-body"></div>
   </div>
 
-  <!-- Images Carousel -->
   <div *ngIf="postImages.length" class="post-image-container mt-4">
     <div class="d-flex justify-content-center align-items-center mb-3">
       <button (click)="previousImage()" class="btn btn-outline-primary btn-sm me-2">&lt;</button>
@@ -56,7 +43,6 @@
     <p class="text-muted text-center">{{ currentImageIndex + 1 }} of {{ postImages.length }}</p>
   </div>
 
-  <!-- Files Section -->
   <div *ngIf="postFiles.length" class="post-files mt-4">
     <h5 class="text-secondary">Attachments:</h5>
     <ul class="list-group list-group-flush">
@@ -68,7 +54,6 @@
     </ul>
   </div>
 
-  <!-- Edit Post Modal -->
   <div *ngIf="isEditModalOpen" class="modal fade show d-block">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -82,30 +67,54 @@
     </div>
   </div>
 
- <!-- Display Comments -->
-<div *ngIf="comments.length" class="comments-section mt-4">
-  <h5 class="text-secondary">Comments ({{ comments.length }}):</h5>
-  <ul class="list-group">
-    <li *ngFor="let comment of comments" class="list-group-item mb-3">
-      <div class="d-flex justify-content-between align-items-start">
-        <p class="mb-1">
-          <strong>{{ comment.UserName }}</strong> <small class="text-muted">- {{ comment.CreatedAt | date:'medium' }}</small>
-        </p>
-      </div>
-      <p class="mb-0">{{ comment.Content }}</p>
-    </li>
-  </ul>
-</div>
+  <div *ngIf="comments.length" class="comments-section mt-4">
+    <h5 class="text-secondary">Comments ({{ comments.length }}):</h5>
+    <ul class="list-group">
+      <li *ngFor="let comment of comments; let i = index" class="list-group-item mb-3">
+        <div *ngIf="editingCommentIndex !== i">
+          <div class="d-flex justify-content-between align-items-start">
+            <p class="mb-1 d-flex align-items-center">
+              <a [routerLink]="['/user-posts', comment.UserId]" class="comment-username d-flex align-items-center">
+                <i class="fas fa-user-circle me-2" style="font-size: 1.5rem;"></i> <!-- Profile icon -->
+                {{ comment.UserName }}
+              </a>
+              <small class="text-muted">- {{ comment.CreatedAt | date:'medium' }}</small>
+            </p>
+          </div>
+          <p class="mb-0">{{ comment.Content }}</p>
+          <div *ngIf="canEditComment(comment)" class="d-flex justify-content-end mt-2">
+            <button class="btn btn-sm btn-primary me-2" (click)="startEditingComment(i)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger" (click)="deleteComment(comment.CommentId)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="editingCommentIndex === i">
+          <textarea [(ngModel)]="editCommentContent" class="form-control mb-2" rows="3"></textarea>
+          <div class="d-flex justify-content-end mt-2">
+            <button class="btn btn-sm btn-success me-2" (click)="updateComment(i)">
+              Save
+            </button>
+            <button class="btn btn-sm btn-secondary" (click)="cancelEdit()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  
 
-<!-- Add Comment Form -->
-<div class="add-comment mt-4">
-  <h5 class="text-secondary">Add Comment:</h5>
-  <textarea 
-    [(ngModel)]="newCommentContent" 
-    class="form-control mb-2" 
-    rows="3" 
-    placeholder="Enter your comment here"
-  ></textarea>
-  <button class="btn btn-primary" (click)="addComment()">Submit Comment</button>
-</div>
+  <div *ngIf="commentMessage" [class]="commentMessageClass" role="alert" class="alert alert-dismissible mt-3">
+    {{ commentMessage }}
+    <button type="button" class="btn-close" aria-label="Close" (click)="clearCommentMessage()"></button>
+  </div>
 
+  <div class="add-comment mt-4">
+    <h5 class="text-secondary">Add Comment:</h5>
+    <textarea [(ngModel)]="newCommentContent" class="form-control mb-2" rows="3" placeholder="Enter your comment here"></textarea>
+    <button class="btn btn-primary" (click)="addComment()">Submit Comment</button>
+  </div>
+</div>

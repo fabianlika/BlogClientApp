@@ -30,6 +30,13 @@
                 </ul>
             </div>
         </div>
+
+        
+        <div *ngIf="message" [ngClass]="{'alert-success': messageType === 'success', 'alert-danger': messageType === 'error'}" class="alert mt-3">
+            {{ message }}
+            <button type="button" class="btn-close" aria-label="Close" (click)="clearMessage()"></button>
+          </div>
+          
         
 
         <button type="submit" class="btn btn-submit" [disabled]="!postForm.valid">Update Post</button>

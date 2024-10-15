@@ -65,8 +65,9 @@ export class UserRoleComponent implements OnInit {
   updateRole(userRole: UserRoleDetail): void {
     this.userRoleService.updateUserRole(userRole.UserId, userRole.selectedRole).subscribe({
       next: () => {
-        this.successMessage = 'Role updated successfully'; // Set success message
-        this.errorMessage = ''; // Clear error messages on success
+        this.successMessage = 'Role updated successfully'; 
+        this.errorMessage = ''; 
+        this.loadUserRoles(); 
       },
       error: () => {
         this.errorMessage = 'Failed to update role.';

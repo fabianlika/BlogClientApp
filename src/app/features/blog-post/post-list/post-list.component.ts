@@ -21,6 +21,8 @@ export class PostListComponent implements OnInit {
   postImages: { [key: string]: string[] } = {};
   isModalOpen: boolean = false; // For modal visibility
   selectedImage: string = ''; // For the selected image URL
+  selectedCategory: string | null = null; // Holds the currently selected category
+
 
   constructor(
     private postService: PostService,
@@ -97,23 +99,29 @@ export class PostListComponent implements OnInit {
   
 
   onSearch(): void {
-    this.filteredPosts = this.posts.filter(post =>
-      post.Title.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-    this.currentPage = 1;
+    // Check if a category is selected, filter by category and then by search term
+    this.filteredPosts = this.posts.filter(post => {
+      const matchesCategory = !this.selectedCategory || post.CategoryId === this.selectedCategory;
+      const matchesSearchTerm = post.Title.toLowerCase().includes(this.searchTerm.toLowerCase());
+      return matchesCategory && matchesSearchTerm;
+    });
+    this.currentPage = 1; // Reset to first page on search
   }
+  
 
   viewPost(postId: number): void {
     this.router.navigate(['/posts', postId]);
   }
 
   filterByCategory(event: any): void {
-    const selectedCategoryId = event.target.value;
+    this.selectedCategory = event.target.value; // Store selected category
+    const selectedCategoryId = this.selectedCategory;
     this.filteredPosts = selectedCategoryId
       ? this.posts.filter(post => post.CategoryId === selectedCategoryId)
       : this.posts;
-    this.currentPage = 1;
+    this.currentPage = 1; // Reset to first page on category change
   }
+  
 
   onPageChange(page: number): void {
     this.currentPage = page;

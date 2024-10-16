@@ -2,21 +2,21 @@
   <h1 class="text-center text-primary mb-4">Post List</h1>
 
   <!-- Add Post Button -->
-  <div class="text-center mb-4">
+  <div class="d-flex justify-content-end mb-4">
     <button class="btn btn-success" (click)="navigateToAddPost()">
       <i class="fas fa-plus"></i> <!-- Font Awesome icon -->
     </button>
   </div>
 
   <!-- Search Bar -->
-  <div class="search-bar mb-4">
+  <div class="search-bar mb-4 d-flex">
     <input
       type="text"
-      class="form-control"
+      class="form-control me-2" 
       placeholder="Search posts..."
       [(ngModel)]="searchTerm"
-      (input)="onSearch()"
     />
+    <button class="btn btn-primary" (click)="onSearch()">Search</button> <!-- Search Button -->
   </div>
 
   <!-- Category Filter -->
@@ -30,6 +30,12 @@
   </div>
 
   <!-- Post List -->
+
+  <div class="row">
+    <div *ngIf="paginatedPosts.length === 0" class="col-12 text-center text-danger mb-4">
+      <h4>No posts available.</h4> <!-- Message when no posts are found -->
+    </div>
+    
   <div class="row">
     <div *ngFor="let post of paginatedPosts" class="col-md-6 mb-4">
       <div class="post-card h-100 shadow border-0 rounded d-flex flex-column">

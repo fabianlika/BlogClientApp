@@ -1,19 +1,44 @@
-/* confirm-dialog.component.css */
 .dialog-title {
-  font-size: 1.5rem; /* Keep a larger title font */
+  font-size: 1.75rem; /* A larger, bold title for emphasis */
+  font-weight: 600;
 }
 
 .dialog-content {
-  font-size: 1rem; /* Adjust body font size for better fit */
-  text-align: center; /* Center the text */
-  max-height: 100px; /* Limit max height to keep it compact */
-  overflow-y: auto; /* Allow scrolling if content overflows */
+  font-size: 1rem;
+  text-align: center;
+  max-height: 150px; /* Increased height for more space */
+  padding: 15px 20px; /* Added padding for better appearance */
+  overflow-y: auto;
 }
 
 .dialog-actions {
-  justify-content: space-between; /* Align buttons with space */
+  justify-content: center; /* Center buttons */
+  gap: 20px; /* Space between buttons */
+  margin-top: 20px;  /* Add space above the buttons */
 }
 
 .dialog-actions button {
-  margin: 0 5px; /* Add margin for spacing between buttons */
+  min-width: 100px; /* Ensure buttons have consistent width */
+  padding: 0.5rem 1.5rem; /* Add padding for larger clickable area */
+  margin: 0 5px;
+}
+
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  transition: background-color 0.3s ease;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
 }

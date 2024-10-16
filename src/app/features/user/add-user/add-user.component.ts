@@ -113,6 +113,10 @@ export class AddUserComponent implements OnInit {
     }
   }
   
+  closeDialog(): void {
+    this.dialogRef.close(); // Close the dialog without saving
+  }
+
 
   hashPassword(password: string): string {
     const salt = bcrypt.genSaltSync(10); // Generate a salt

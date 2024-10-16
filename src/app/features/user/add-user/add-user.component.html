@@ -53,7 +53,13 @@
           <small class="text-danger" *ngIf="addUserForm.get('Email')?.hasError('required')">Email is required</small>
           <small class="text-danger" *ngIf="addUserForm.get('Email')?.hasError('email')">Enter a valid email</small>
         </div>
+
+        <div *ngIf="emailErrorMessage" class="alert alert-danger mt-2" role="alert">
+          {{ emailErrorMessage }}
+        </div>
+        
       </div>
+      
 
       <!-- Phone Number Input -->
       <div class="mb-3">

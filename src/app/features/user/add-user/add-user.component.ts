@@ -10,7 +10,6 @@ import {
 import ValidateForm from 'src/app/core/helpers/validateForm';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import * as bcrypt from 'bcryptjs'; 
 import { MatDialogRef } from '@angular/material/dialog';
@@ -34,11 +33,11 @@ export class AddUserComponent implements OnInit {
   repeatPasswordIcon: string = 'fa fa-eye-slash';
 
   addUserForm!: FormGroup;
+  emailErrorMessage: string = ''; // Error message property for email
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private snackBar: MatSnackBar,
     private router: Router,
     private dialogRef: MatDialogRef<AddUserComponent> 
   ) {}
@@ -83,30 +82,46 @@ export class AddUserComponent implements OnInit {
 
   onAddUser() {
     if (this.addUserForm.valid) {
-      const password = this.addUserForm.value.PasswordHash;
-      const hashedPassword = this.hashPassword(password);
+      const email = this.addUserForm.value.Email;
 
-      const formValue = {
-        ...this.addUserForm.value,
-        PasswordHash: hashedPassword,
-        Birthday: new Date(this.addUserForm.value.Birthday).toISOString()
-      };
+      // Check if the email is already in use
+      this.userService.getAllUsers().subscribe({
+        next: (users) => {
+          const emailExists = users.some(user => user.Email === email);
+          if (emailExists) {
+            // Set the error message if the email is already in use
+            this.emailErrorMessage = 'Email is already in use!';
+            return; // Stop further processing
+          } else {
+            // Clear the error message if the email is valid
+            this.emailErrorMessage = '';
+          }
 
-      this.userService.addUser(formValue).subscribe({
-        next: () => {
-          this.snackBar.open('User added successfully!', 'Close', {
-            duration: 3000,
+          // Proceed with user addition
+          const password = this.addUserForm.value.PasswordHash;
+          const hashedPassword = this.hashPassword(password);
+
+          const formValue = {
+            ...this.addUserForm.value,
+            PasswordHash: hashedPassword,
+            Birthday: new Date(this.addUserForm.value.Birthday).toISOString()
+          };
+
+          this.userService.addUser(formValue).subscribe({
+            next: () => {
+              // Close the modal after successful addition
+              this.dialogRef.close(true);
+            },
+            error: (err) => {
+              console.error('Error adding user:', err);
+              // Handle error for adding user
+            },
           });
-
-          // Close the modal after successful addition
-          this.dialogRef.close(true);
         },
         error: (err) => {
-          console.error('Error adding user:', err);
-          this.snackBar.open('Failed to add user', 'Close', {
-            duration: 3000,
-          });
-        },
+          console.error('Error fetching users:', err);
+          // Handle error for fetching users
+        }
       });
     } else {
       ValidateForm.validateAllFormFields(this.addUserForm);
@@ -116,7 +131,6 @@ export class AddUserComponent implements OnInit {
   closeDialog(): void {
     this.dialogRef.close(); // Close the dialog without saving
   }
-
 
   hashPassword(password: string): string {
     const salt = bcrypt.genSaltSync(10); // Generate a salt

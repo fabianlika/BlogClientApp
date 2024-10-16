@@ -50,3 +50,14 @@
     padding: 10px; /* Reduced padding on smaller screens */
   }
 }
+
+.snackbar-success {
+  background-color: green; /* Green background for success */
+  color: white; /* White text color */
+}
+
+/* Snackbar error message styling */
+.snackbar-error {
+  background-color: red; /* Red background for error */
+  color: white; /* White text color */
+}

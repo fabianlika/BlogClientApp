@@ -52,3 +52,30 @@
   border: 1px solid #ccc;
   border-radius: 8px;
 }
+
+/* Overrides for Material Snackbar */
+.mat-snack-bar-container {
+  background-color: transparent !important; /* Remove default background */
+  box-shadow: none !important; /* Remove default shadow */
+  padding: 0; /* Reset padding if necessary */
+  border-radius: 4px !important; /* Consistent border radius */
+}
+
+.error-message {
+  font-size: 0.9rem; /* Slightly smaller text */
+  font-weight: bold; /* Make the text bold */
+  margin-top: 0.5rem; /* Adjust margin if needed */
+}
+
+
+
+::ng-deep .snackbar-success {
+  background: #1abc9c !important;
+  color: white !important;
+}
+
+
+::ng-deep .snackbar-error {
+  background: #e74c3c !important;
+  color: white !important;
+}

@@ -36,6 +36,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   selectedCategory: string | null = null;
   isDropdownOpen: boolean = false;
   fileWarning: string = '';
+  validFiles: boolean = true;
 
   maxTitleLength = 100; 
   maxContentLength = 5000;
@@ -51,6 +52,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private snackBar: MatSnackBar
   ) {}
+
+
 
   ngOnInit(): void {
     this.loadCategories();
@@ -87,6 +90,23 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     });
   }
 
+  private showSuccessMessage(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+      panelClass: ['snackbar-success'], // Custom class for success snackbar
+    });
+  }
+
+  private showErrorMessage(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000,
+      verticalPosition: 'top',
+      horizontalPosition: 'right',
+      panelClass: ['snackbar-error'], // Custom class for error snackbar
+    });
+  }
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -99,27 +119,27 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
   async onSubmit() {
     if (this.post.Title.length > this.maxTitleLength) {
-      this.snackBar.open(`Title cannot exceed ${this.maxTitleLength} characters.`, 'Close', { duration: 3000 });
+      this.showErrorMessage(`Title cannot exceed ${this.maxTitleLength} characters.`);
       return;
     }
-
+  
     if (this.post.Content.length > this.maxContentLength) {
-      this.snackBar.open(`Content cannot exceed ${this.maxContentLength} characters.`, 'Close', { duration: 3000 });
+      this.showErrorMessage(`Content cannot exceed ${this.maxContentLength} characters.`);
       return;
     }
-
+  
     const oversizedFiles = this.selectedFiles.filter(file => file.size > this.maxFileSize);
     if (oversizedFiles.length > 0) {
-      this.snackBar.open(`Files cannot exceed ${this.maxFileSize / (1024 * 1024)} MB.`, 'Close', { duration: 3000 });
+      this.showErrorMessage(`Files cannot exceed ${this.maxFileSize / (1024 * 1024)} MB.`);
       return;
     }
-
+  
     if (!this.post.Author) this.post.Author = 'Default Author';
     if (!this.post.Url) this.post.Url = 'http://defaulturl.com';
-
-    const isAdmin = this.authService.isAdmin(); 
+  
+    const isAdmin = this.authService.isAdmin();
     this.post.isApproved = isAdmin;
-
+  
     const postCreationData = new FormData();
     postCreationData.append('Title', this.post.Title || '');
     postCreationData.append('Content', this.post.Content || '');
@@ -128,11 +148,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     postCreationData.append('CategoryId', this.post.CategoryId || '');
     postCreationData.append('UserId', this.post.UserId || '');
     postCreationData.append('isApproved', this.post.isApproved.toString());
-
+  
     try {
       const newPost = await this.postService.addPost(postCreationData).toPromise();
-      this.snackBar.open('Post added successfully!', 'Close', { duration: 3000 });
-
+      this.showSuccessMessage('Post added successfully!');
+  
       if (newPost && newPost.PostId && this.selectedFiles.length > 0) {
         for (const file of this.selectedFiles) {
           const photoFormData = new FormData();
@@ -142,36 +162,39 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           photoFormData.append('PostId', newPost.PostId);
           const isImage = file.type.startsWith('image/') ? 1 : 0;
           photoFormData.append('IsImage', isImage.toString());
-
+  
           try {
             await this.postPhotoService.uploadPostPhoto(photoFormData).toPromise();
           } catch (uploadError: any) {
             console.error('Error uploading photo:', uploadError);
             const errorMessage = uploadError?.message || 'Unknown error occurred';
-            this.snackBar.open('Error uploading image: ' + errorMessage, 'Close', { duration: 3000 });
+            this.showErrorMessage('Error uploading image: ' + errorMessage);
           }
         }
-        this.snackBar.open('Images uploaded successfully!', 'Close', { duration: 3000 });
+        this.showSuccessMessage('Images uploaded successfully!');
       }
-
+  
       this.router.navigate(['/posts']);
     } catch (error: any) {
       if (error.status === 400 && error.error.errors) {
         console.error('Validation errors:', error.error.errors);
       }
-      this.snackBar.open('Failed to add post or upload images. Please check your input.', 'Close', { duration: 3000 });
+      this.showErrorMessage('Failed to add post or upload images. Please check your input.');
     }
   }
+  
 
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       const newFiles = Array.from(input.files);
       this.fileWarning = ''; // Clear previous warnings
+      this.validFiles = true; // Reset validFiles before checking
 
       for (const file of newFiles) {
         if (file.size > this.maxFileSize) {
           this.fileWarning = `${file.name} exceeds the 5MB size limit.`;
+          this.validFiles = false; // Set validFiles to false if any file exceeds the limit
           return; // Exit if any file exceeds the limit
         }
       }
@@ -179,6 +202,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.selectedFiles = [...this.selectedFiles, ...newFiles];
     }
   }
+
 
   goBack(): void {
     this.router.navigate(['/posts']); // Navigate back to the post list

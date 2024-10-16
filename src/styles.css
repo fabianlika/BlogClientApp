@@ -142,4 +142,24 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+
+/* Success Snackbar */
+.success-snackbar {
+  --mdc-snackbar-container-color: #1abc9c !important; /* Green background for success */
+  --mdc-snackbar-supporting-text-color: white !important; /* White text for supporting text */
+  --mat-mdc-snack-bar-button-color: white !important; /* White text for buttons */
+  white-space: pre-wrap; /* Allow line breaks */
+}
+
+/* Error Snackbar */
+.error-snackbar {
+  --mdc-snackbar-container-color: #e74c3c !important; /* Red background for error */
+  --mdc-snackbar-supporting-text-color: white !important; /* White text for supporting text */
+  --mat-mdc-snack-bar-button-color: white !important; /* White text for buttons */
+  white-space: pre-wrap; /* Allow line breaks */
+}
+
+
+
+
 @import '~quill/dist/quill.snow.css';

@@ -24,6 +24,9 @@
             </button>
           </td>
         </tr>
+        <tr *ngIf="displayedUnapprovedPosts.length === 0">
+          <td colspan="4" class="text-muted">There are no posts to approve.</td>
+        </tr>
       </tbody>
     </table>
 
@@ -56,6 +59,9 @@
               <i class="fas fa-trash-alt"></i>
             </button>
           </td>
+        </tr>
+        <tr *ngIf="displayedApprovedPosts.length === 0">
+          <td colspan="4" class="text-muted">There are no posts to approve.</td>
         </tr>
       </tbody>
     </table>

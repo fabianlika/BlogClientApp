@@ -21,6 +21,8 @@ export class EditPostComponent implements OnInit, AfterViewInit {
   readonly MAX_TITLE_LENGTH = 100;
   readonly MAX_CONTENT_LENGTH = 5000;
   readonly MAX_FILE_SIZE_MB = 5;
+  fileErrorMessage: string | null = null;
+  validFiles: boolean = true;
 
   constructor(
     private postService: PostService,
@@ -93,11 +95,15 @@ export class EditPostComponent implements OnInit, AfterViewInit {
 
   onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
+    this.fileErrorMessage = null; // Reset error message before checking files
+    this.validFiles = true; // Reset validFiles before checking
+    
     if (input.files) {
       const files = Array.from(input.files);
       const validFiles = files.filter(file => {
         if (file.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
-          this.showSnackbar(`File ${file.name} is too large. Maximum allowed size is ${this.MAX_FILE_SIZE_MB} MB.`, 'error');
+          this.fileErrorMessage = `File ${file.name} is too large. Maximum allowed size is ${this.MAX_FILE_SIZE_MB} MB.`;
+          this.validFiles = false; // Set validFiles to false if any file is too large
           return false;
         }
         return true;
@@ -105,7 +111,6 @@ export class EditPostComponent implements OnInit, AfterViewInit {
       this.selectedFiles.push(...validFiles);
     }
   }
-
   private uploadFiles(): Promise<void> {
     if (this.selectedFiles.length === 0) {
       return Promise.resolve(); // If no files, resolve immediately

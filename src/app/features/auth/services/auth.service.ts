@@ -11,8 +11,8 @@ import { environment } from 'src/environments/environment.development';
   providedIn: 'root',
 })
 export class AuthService {
-  private baseUrl: string = 'https://localhost:7256/api/Auth/';
-  private baseUrl1: string = 'https://localhost:7256/api/User/';
+  private baseUrl: string = 'http://192.168.15.40:2398/api/Auth/';
+  private baseUrl1: string = 'http://192.168.15.40:2398/api/User/';
   private userPayload: any;
 
   constructor(private http: HttpClient, private router: Router) {

@@ -1,5 +1,6 @@
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { NgForm } from '@angular/forms'; 
+import Quill from 'quill';
 import { PostService } from '../services/post.service';
 import { CategoryService } from 'src/app/features/category/services/category.service';
 import { CreatePostDto } from 'src/app/features/blog-post/models/create-post.dto.model';
@@ -11,8 +12,6 @@ import { UserService } from '../../user/services/user.service';
 import { PostPhotoService } from '../services/post-photo.service';
 import { AuthService } from '../../auth/services/auth.service';
 
-declare var tinymce: any;
-
 @Component({
   selector: 'app-add-post',
   templateUrl: './add-post.component.html',
@@ -20,6 +19,7 @@ declare var tinymce: any;
 })
 export class AddPostComponent implements OnInit, AfterViewInit {
   @ViewChild('postForm', { static: false }) postForm!: NgForm;
+  @ViewChild('editor', { static: false }) editorElement!: ElementRef;
 
   post: CreatePostDto = {
     Title: '',
@@ -33,7 +33,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   categories: Category[] = [];
   users: User[] = [];
   selectedFiles: File[] = [];
-
   selectedCategory: string | null = null;
   isDropdownOpen: boolean = false;
   fileWarning: string = '';
@@ -41,6 +40,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   maxTitleLength = 100; 
   maxContentLength = 5000;
   maxFileSize = 5 * 1024 * 1024; // 5 MB
+  quill: Quill | undefined;
 
   constructor(
     private postService: PostService,
@@ -65,16 +65,19 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    tinymce.init({
-      selector: 'textarea',
-      plugins: 'link image lists',
-      toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | link image',
-      height: 300,
-      setup: (editor: any) => {
-        editor.on('change', () => {
-          this.post.Content = editor.getContent();
-        });
+    this.quill = new Quill(this.editorElement.nativeElement, {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+        ]
       }
+    });
+
+    this.quill.on('text-change', () => {
+      this.post.Content = this.quill?.root.innerHTML || '';
     });
   }
 
@@ -95,7 +98,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   }
 
   async onSubmit() {
-
     if (this.post.Title.length > this.maxTitleLength) {
       this.snackBar.open(`Title cannot exceed ${this.maxTitleLength} characters.`, 'Close', { duration: 3000 });
       return;
@@ -112,13 +114,12 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       return;
     }
 
-
     if (!this.post.Author) this.post.Author = 'Default Author';
     if (!this.post.Url) this.post.Url = 'http://defaulturl.com';
-  
+
     const isAdmin = this.authService.isAdmin(); 
     this.post.isApproved = isAdmin;
-  
+
     const postCreationData = new FormData();
     postCreationData.append('Title', this.post.Title || '');
     postCreationData.append('Content', this.post.Content || '');
@@ -127,11 +128,11 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     postCreationData.append('CategoryId', this.post.CategoryId || '');
     postCreationData.append('UserId', this.post.UserId || '');
     postCreationData.append('isApproved', this.post.isApproved.toString());
-  
+
     try {
       const newPost = await this.postService.addPost(postCreationData).toPromise();
       this.snackBar.open('Post added successfully!', 'Close', { duration: 3000 });
-  
+
       if (newPost && newPost.PostId && this.selectedFiles.length > 0) {
         for (const file of this.selectedFiles) {
           const photoFormData = new FormData();
@@ -141,7 +142,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           photoFormData.append('PostId', newPost.PostId);
           const isImage = file.type.startsWith('image/') ? 1 : 0;
           photoFormData.append('IsImage', isImage.toString());
-  
+
           try {
             await this.postPhotoService.uploadPostPhoto(photoFormData).toPromise();
           } catch (uploadError: any) {
@@ -152,8 +153,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
         }
         this.snackBar.open('Images uploaded successfully!', 'Close', { duration: 3000 });
       }
-  
-      // Redirect to post list after successful post creation and image upload
+
       this.router.navigate(['/posts']);
     } catch (error: any) {
       if (error.status === 400 && error.error.errors) {
@@ -162,7 +162,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.snackBar.open('Failed to add post or upload images. Please check your input.', 'Close', { duration: 3000 });
     }
   }
-  
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {

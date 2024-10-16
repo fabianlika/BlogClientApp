@@ -12,8 +12,13 @@
     />
   </div>
 
+  <!-- No Posts Message -->
+  <div *ngIf="filteredPosts.length === 0" class="text-center mt-5">
+    <h3 class="text-muted">No posts available</h3>
+  </div>
+
   <!-- Post List -->
-  <div class="row">
+  <div *ngIf="filteredPosts.length > 0" class="row">
     <div *ngFor="let post of paginatedPosts" class="col-md-6 mb-4">
       <div class="post-card h-100 shadow border-0 rounded d-flex flex-column">
         <div class="card-body flex-grow-1">
@@ -30,13 +35,16 @@
         </div>
 
         <!-- Post Image -->
-        <div class="post-images mb-3 d-flex justify-content-center" *ngIf="postImages[post.PostId] && postImages[post.PostId].length > 0">
-          <img 
-            [src]="postImages[post.PostId][0]" 
-            alt="{{ post.Title }} Image" 
-            class="img-fluid rounded single-large-image" 
-            style="width: 300px; height: 200px; object-fit: cover;" 
-             />
+        <div
+          class="post-images mb-3 d-flex justify-content-center"
+          *ngIf="postImages[post.PostId] && postImages[post.PostId].length > 0"
+        >
+          <img
+            [src]="postImages[post.PostId][0]"
+            alt="{{ post.Title }} Image"
+            class="img-fluid rounded single-large-image"
+            style="width: 300px; height: 200px; object-fit: cover;"
+          />
         </div>
 
         <div class="text-center mb-3">
@@ -48,6 +56,7 @@
 
   <!-- Pagination Component -->
   <app-pagination
+    *ngIf="filteredPosts.length > 0"
     [currentPage]="currentPage"
     [totalPages]="totalPages"
     (pageChange)="onPageChange($event)"

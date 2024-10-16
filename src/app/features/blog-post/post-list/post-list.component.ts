@@ -91,6 +91,10 @@ export class PostListComponent implements OnInit {
       this.categories = data;
     });
   }
+  navigateToAddPost(): void {
+    this.router.navigate(['/admin/blogposts/add']); // Adjust the path as necessary
+  }
+  
 
   onSearch(): void {
     this.filteredPosts = this.posts.filter(post =>

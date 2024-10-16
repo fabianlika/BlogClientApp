@@ -10,7 +10,7 @@ import { UpdateCategoryRequest } from '../models/update-category-request.model';
   providedIn: 'root'
 })
 export class CategoryService {
-  private baseUrl = 'https://localhost:7256/api/Category';
+  private baseUrl = 'http://192.168.15.40:2398/api/Category';
 
   constructor(private http: HttpClient) { }
 

@@ -3,8 +3,7 @@ import { NgForm } from '@angular/forms';
 import { PostService } from '../services/post.service';
 import { Post } from '../models/post.model';
 import { PostPhotoService } from '../services/post-photo.service';
-
-declare var tinymce: any;
+import Quill from 'quill';
 
 @Component({
   selector: 'app-edit-post',
@@ -20,6 +19,7 @@ export class EditPostComponent implements OnInit, AfterViewInit {
   @Output() closeEditModal: EventEmitter<void> = new EventEmitter<void>();
 
   selectedFiles: File[] = [];
+  quillEditor: any;
   readonly MAX_TITLE_LENGTH = 100;
   readonly MAX_CONTENT_LENGTH = 5000;
   readonly MAX_FILE_SIZE_MB = 5;
@@ -36,27 +36,26 @@ export class EditPostComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.initializeTinyMCE();
+    this.initializeQuill();
   }
 
-  private initializeTinyMCE(): void {
-    tinymce.init({
-      selector: 'textarea',
-      plugins: 'link image lists',
-      toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright | link image',
-      height: 300,
-      setup: (editor: any) => {
-        editor.on('change', () => {
-          const content = editor.getContent();
-          if (content.length > this.MAX_CONTENT_LENGTH) {
-            this.setMessage(`Content cannot exceed ${this.MAX_CONTENT_LENGTH} characters.`, 'error');
-            editor.setContent(content.substring(0, this.MAX_CONTENT_LENGTH));
-          } else {
-            this.post.Content = content;
-          }
-        });
-        editor.setContent(this.post.Content);
-      }
+  private initializeQuill(): void {
+    this.quillEditor = new Quill('#quill-editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: [
+          [{ header: [1, 2, false] }],
+          ['bold', 'italic', 'underline'],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          
+        ]
+      },
+      placeholder: 'Edit your content here...',
+    });
+
+    this.quillEditor.root.innerHTML = this.post.Content;
+    this.quillEditor.on('text-change', () => {
+      this.post.Content = this.quillEditor.root.innerHTML;
     });
   }
 
@@ -80,11 +79,6 @@ export class EditPostComponent implements OnInit, AfterViewInit {
 
   closeModal(): void {
     this.closeEditModal.emit(); 
-  }
-
-  replaceFiles(): void {
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    fileInput?.click();
   }
 
   onFilesSelected(event: Event): void {

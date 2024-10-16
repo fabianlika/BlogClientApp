@@ -127,8 +127,11 @@ commentMessageClass: string = '';
           console.error('Error updating comment:', error);
         }
       );
+    } else {
+      this.displayCommentMessage('Comment cannot be blank.', false);
     }
   }
+  
   
 
   deleteComment(commentId: string): void {

@@ -4,7 +4,7 @@
         <h1 class="form-title">Edit Post</h1>
 
         <div class="form-group">
-            <label for="title" class="form-label">Title</label>
+            <label for="title" class="form-label">Title <span class="required-field">*</span></label>
             <input 
                 type="text" 
                 id="title" 
@@ -17,7 +17,7 @@
         </div>
 
         <div class="form-group">
-            <label for="content" class="form-label">Content</label>
+            <label for="content" class="form-label">Content <span class="required-field">*</span></label>
             <div id="quill-editor" class="quill-editor"></div>
         </div>
 
@@ -37,11 +37,6 @@
                     <li *ngFor="let file of selectedFiles" class="list-group-item">{{ file.name }}</li>
                 </ul>
             </div>
-        </div>
-
-        <div *ngIf="message" [ngClass]="{'alert-success': messageType === 'success', 'alert-danger': messageType === 'error'}" class="alert mt-3">
-            {{ message }}
-            <button type="button" class="btn-close" aria-label="Close" (click)="clearMessage()"></button>
         </div>
 
         <button type="submit" class="btn btn-submit" [disabled]="!postForm.valid">Update Post</button>

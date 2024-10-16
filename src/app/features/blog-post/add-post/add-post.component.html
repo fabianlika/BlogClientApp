@@ -1,18 +1,25 @@
 <div class="container mt-5 form-container">
+  <div class="back-button">
+    <button class="btn btn-secondary" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+  </div>
+
+  <h1 class="form-title text-center">Add New Post <span class="text-danger">*</span></h1>
+  
   <form #postForm="ngForm" (ngSubmit)="onSubmit()" class="form-content">
-    <h1 class="form-title">Add New Post</h1>
     <div class="form-group">
-      <label for="title" class="form-label">Title</label>
+      <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
       <input type="text" id="title" name="title" [(ngModel)]="post.Title" required class="form-control" maxlength="100">
     </div>
 
     <div class="form-group">
-      <label for="content" class="form-label">Content</label>
+      <label for="content" class="form-label">Content <span class="text-danger">*</span></label>
       <div #editor class="form-control quill-editor"></div>
     </div>
 
     <div class="form-group custom-dropdown">
-      <label for="category" class="form-label">Category</label>
+      <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
       <div (click)="toggleDropdown()" class="dropdown-selected">
         {{ selectedCategory || 'Select a Category' }} <span class="arrow">{{ isDropdownOpen ? '▲' : '▼' }}</span>
       </div>
@@ -31,7 +38,7 @@
         id="file" 
         (change)="onFileChange($event)" 
         class="form-control file-input" 
-        accept="image/*" 
+        
         multiple 
       />
       <div *ngIf="fileWarning" class="alert alert-danger mt-2">
@@ -45,6 +52,6 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-submit" [disabled]="!postForm.valid">Add Post</button>
+    <button type="submit" class="btn btn-primary mt-4" [disabled]="!postForm.valid">Add Post</button>
   </form>
 </div>

@@ -1,0 +1,4 @@
+<div *ngIf="isVisible" [ngClass]="{ 'toast-success': toastType === 'success', 'toast-error': toastType === 'error' }" class="toast">
+    <span>{{ toastMessage }}</span>
+    <button (click)="closeToast()" class="close-button">&times;</button>
+</div>

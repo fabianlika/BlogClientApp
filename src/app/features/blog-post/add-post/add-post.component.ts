@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { NgForm } from '@angular/forms'; 
+import { NgForm } from '@angular/forms';
 import Quill from 'quill';
 import { PostService } from '../services/post.service';
 import { CategoryService } from 'src/app/features/category/services/category.service';
@@ -162,6 +162,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.snackBar.open('Failed to add post or upload images. Please check your input.', 'Close', { duration: 3000 });
     }
   }
+
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
@@ -177,5 +178,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
       this.selectedFiles = [...this.selectedFiles, ...newFiles];
     }
+  }
+
+  goBack(): void {
+    this.router.navigate(['/posts']); // Navigate back to the post list
   }
 }

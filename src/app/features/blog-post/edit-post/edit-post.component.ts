@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { PostService } from '../services/post.service';
 import { Post } from '../models/post.model';
 import { PostPhotoService } from '../services/post-photo.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import Quill from 'quill';
 
 @Component({
@@ -11,9 +12,6 @@ import Quill from 'quill';
   styleUrls: ['./edit-post.component.css'],
 })
 export class EditPostComponent implements OnInit, AfterViewInit {
-  message: string = '';
-  messageType: 'success' | 'error' = 'success';
-
   @ViewChild('postForm', { static: false }) postForm!: NgForm;
   @Input() post!: Post;
   @Output() closeEditModal: EventEmitter<void> = new EventEmitter<void>();
@@ -26,7 +24,8 @@ export class EditPostComponent implements OnInit, AfterViewInit {
 
   constructor(
     private postService: PostService,
-    private postPhotoService: PostPhotoService
+    private postPhotoService: PostPhotoService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -46,8 +45,7 @@ export class EditPostComponent implements OnInit, AfterViewInit {
         toolbar: [
           [{ header: [1, 2, false] }],
           ['bold', 'italic', 'underline'],
-          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-          
+          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
         ]
       },
       placeholder: 'Edit your content here...',
@@ -61,19 +59,31 @@ export class EditPostComponent implements OnInit, AfterViewInit {
 
   onSubmit(): void {
     if (this.post.Title.length > this.MAX_TITLE_LENGTH) {
-      this.setMessage(`Title cannot exceed ${this.MAX_TITLE_LENGTH} characters.`, 'error');
+      this.showSnackbar(`Title cannot exceed ${this.MAX_TITLE_LENGTH} characters.`, 'error');
       return;
     }
 
     this.postService.updatePost(this.post).subscribe({
       next: () => {
-        this.setMessage('Post updated successfully!', 'success');
-        this.uploadFiles();
+        this.uploadFiles().then(() => {
+          this.closeModal();
+          this.showSnackbar('Post updated successfully!', 'success');
+        });
       },
       error: (error) => {
         console.error('Error updating post:', error);
-        this.setMessage('Failed to update post.', 'error');
+        this.showSnackbar('Failed to update post.', 'error');
       }
+    });
+  }
+
+  private openSnackbar(message: string, type: 'success' | 'error'): void {
+    const snackbarClass = type === 'success' ? 'snackbar-success' : 'snackbar-error';
+    this.snackBar.open(message, '', {
+      duration: 3000,
+      panelClass: [snackbarClass],
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
     });
   }
 
@@ -87,7 +97,7 @@ export class EditPostComponent implements OnInit, AfterViewInit {
       const files = Array.from(input.files);
       const validFiles = files.filter(file => {
         if (file.size > this.MAX_FILE_SIZE_MB * 1024 * 1024) {
-          this.setMessage(`File ${file.name} is too large. Maximum allowed size is ${this.MAX_FILE_SIZE_MB} MB.`, 'error');
+          this.showSnackbar(`File ${file.name} is too large. Maximum allowed size is ${this.MAX_FILE_SIZE_MB} MB.`, 'error');
           return false;
         }
         return true;
@@ -96,17 +106,26 @@ export class EditPostComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private uploadFiles(): void {
+  private uploadFiles(): Promise<void> {
+    if (this.selectedFiles.length === 0) {
+      return Promise.resolve(); // If no files, resolve immediately
+    }
+  
     const uploadRequests = this.selectedFiles.map(file => this.uploadFile(file));
-    Promise.all(uploadRequests)
-      .then(() => this.setMessage('Post updated successfully!', 'success'))
+    
+    return Promise.all(uploadRequests)
+      .then(() => {
+        this.showSnackbar('Files uploaded successfully!', 'success');
+      })
       .catch(error => {
         console.error('Error uploading files:', error);
-        this.setMessage('Failed to upload files.', 'error');
+        this.showSnackbar('Failed to upload files.', 'error');
       })
-      .finally(() => this.selectedFiles = []); // Clear selected files after upload
+      .finally(() => {
+        this.selectedFiles = []; // Clear selected files after upload
+      });
   }
-
+  
   private uploadFile(file: File): Promise<void> {
     const formData = new FormData();
     formData.append('FileName', file.name);
@@ -122,12 +141,13 @@ export class EditPostComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private setMessage(message: string, type: 'success' | 'error'): void {
-    this.message = message;
-    this.messageType = type;
-  }
-
-  clearMessage(): void {
-    this.message = '';
+  private showSnackbar(message: string, type: 'success' | 'error'): void {
+    const snackbarClass = type === 'success' ? 'snackbar-success' : 'snackbar-error';
+    this.snackBar.open(message, '', {
+      duration: 3000,
+      panelClass: [snackbarClass],
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
   }
 }

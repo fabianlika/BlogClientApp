@@ -1,53 +1,37 @@
 .form-container {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
-
-.btn-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: transparent;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
+    max-width: 800px; /* Increased width for a wider layout */
+    margin: 0 auto; /* Center the container */
+    padding: 20px; /* Add some padding */
+    background-color: #f8f9fa; /* Light background for better contrast */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
   }
   
-  .btn-close:hover {
-    color: red;
+  .back-button {
+    margin-bottom: 20px; /* Space below the back button */
   }
   
-.form-title {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #007bff;
-}
-
-.form-control {
-    margin-bottom: 15px;
-    border-radius: 5px;
-    border: 1px solid #ced4da;
-}
-
-.btn-submit {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.btn-submit:disabled {
-    background-color: #6c757d;
-}
-
-.btn-submit:hover:not(:disabled) {
-    background-color: #0056b3;
-}
+  .form-title {
+    margin-bottom: 20px; /* Space below the title */
+  }
+  
+  .quill-editor {
+    height: 300px; /* Set a specific height for the Quill editor */
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .form-container {
+      padding: 10px; /* Reduced padding on smaller screens */
+    }
+  }
+  .snackbar-success {
+    background-color: green !important; /* Green background for success */
+    color: white !important; /* White text */
+  }
+  
+  .snackbar-error {
+    background-color: red !important; /* Red background for error */
+    color: white !important; /* White text */
+  }
+  

@@ -40,6 +40,7 @@ import { EditPostComponent } from './features/blog-post/edit-post/edit-post.comp
 import { AddUserComponent } from './features/user/add-user/add-user.component';
 import { UserPostsComponent } from './features/blog-post/user-posts/user-posts.component';
 import { RandomUserPostsComponent } from './features/blog-post/random-user-posts/random-user-posts.component';
+import { ToastComponent } from './features/blog-post/toast/toast.component';
 
 
 
@@ -72,10 +73,11 @@ import { RandomUserPostsComponent } from './features/blog-post/random-user-posts
     EditPostComponent,
     UserPostsComponent,
     RandomUserPostsComponent,
+    ToastComponent,
   
     //SignupComponent,
      // Ensure PaginationComponent is declared here,
-     
+
   ],
   imports: [
     BrowserModule,

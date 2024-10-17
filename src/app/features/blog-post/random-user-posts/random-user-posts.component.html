@@ -1,5 +1,13 @@
 <div class="container post-list-container mt-4">
-  <h1 class="text-center text-primary mb-4"> User's Posts</h1>
+  <div class="back-button">
+    <button class="btn btn-link" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+  </div>
+  
+  
+  
+  <h1 class="text-center text-primary mb-4">{{ authorName }}'s Posts</h1>
 
   <!-- Search Bar -->
   <div class="search-bar mb-4">

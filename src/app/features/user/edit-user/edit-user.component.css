@@ -66,3 +66,12 @@ h1 {
   border: 1px solid #ccc; /* Optional border */
   border-radius: 8px; /* Optional rounded corners */
 }
+.custom-snackbar {
+  background-color: green;
+  color: white;
+}
+
+.custom-snackbar-error {
+  background-color: red;
+  color: white;
+}

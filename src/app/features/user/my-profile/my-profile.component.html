@@ -1,98 +1,90 @@
-<div class="container">
-    <h2>My Profile</h2>
+<div class="container mt-5 mb-5 p-4 profile-container">
+    <h2 class="mb-4">My Profile</h2>
     <form [formGroup]="userForm" (ngSubmit)="updateUser()">
-        <div class="form-group">
-            <label for="name">Name</label>
+        <div class="form-group mb-3">
+            <label for="name" class="form-label">Name</label>
             <input id="name" formControlName="Name" required class="form-control" />
-            <div *ngIf="userForm.get('Name')?.invalid && userForm.get('Name')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('Name')?.invalid && userForm.get('Name')?.touched" class="text-danger mt-1">
                 <small>Name is required.</small>
             </div>
         </div>
-        <div class="form-group">
-            <label for="username">Username</label>
+        <div class="form-group mb-3">
+            <label for="username" class="form-label">Username</label>
             <input id="username" formControlName="Username" required class="form-control" />
-            <div *ngIf="userForm.get('Username')?.invalid && userForm.get('Username')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('Username')?.invalid && userForm.get('Username')?.touched" class="text-danger mt-1">
                 <small>Username is required.</small>
             </div>
         </div>
-        <div class="form-group">
-            <label for="email">Email</label>
+        <div class="form-group mb-3">
+            <label for="email" class="form-label">Email</label>
             <input id="email" formControlName="Email" required class="form-control" />
-            <div *ngIf="validationErrors.email" class="text-danger">
+            <div *ngIf="validationErrors.email" class="text-danger mt-1">
                 <small>{{ validationErrors.email }}</small>
             </div>
         </div>
-        <div class="form-group">
-            <label for="phone">Phone Number</label>
+        <div class="form-group mb-3">
+            <label for="phone" class="form-label">Phone Number</label>
             <input id="phone" formControlName="PhoneNumber" required class="form-control" />
-            <div *ngIf="validationErrors.tel" class="text-danger">
+            <div *ngIf="validationErrors.tel" class="text-danger mt-1">
                 <small>{{ validationErrors.tel }}</small>
             </div>
         </div>
-        <div class="form-group">
-            <label for="birthday">Birthday</label>
+        <div class="form-group mb-3">
+            <label for="birthday" class="form-label">Birthday</label>
             <input id="birthday" type="date" formControlName="Birthday" required class="form-control" />
-            <div *ngIf="userForm.get('Birthday')?.invalid && userForm.get('Birthday')?.touched" class="text-danger">
+            <div *ngIf="userForm.get('Birthday')?.invalid && userForm.get('Birthday')?.touched" class="text-danger mt-1">
                 <small>Birthday is required.</small>
             </div>
         </div>
-  
-        <!-- Checkbox for editing password -->
-        <div class="form-group">
-            <input type="checkbox" (change)="toggleEditPassword()" /> Edit Password
+
+        <div class="form-group form-check mb-3">
+            <input type="checkbox" class="form-check-input" (change)="toggleEditPassword()" />
+            <label class="form-check-label">Edit Password</label>
         </div>
-  
-        <!-- Password fields displayed when editing password -->
+
         <div *ngIf="isEditingPassword">
-          <div class="form-group">
-              <label for="password">New Password</label>
-              <div class="input-group">
-                  <input
-                      id="password"
-                      [type]="showPassword ? 'text' : 'password'"
-                      formControlName="PasswordHash"
-                      class="form-control"
-                      (input)="checkPasswords()"
-                  />
-                  <div class="input-group-append">
-                      <button
-                          type="button"
-                          class="btn btn-outline-secondary"
-                          (click)="togglePasswordVisibility('new')">
-                          <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
-                      </button>
-                  </div>
-              </div>
-              <div *ngIf="userForm.get('PasswordHash')?.errors?.['passwordStrength']" class="text-danger">
-                  <small>Password must be at least 8 characters long, contain upper and lower case letters, numbers, and special characters.</small>
-              </div>
-          </div>
-          <div class="form-group">
-              <label for="confirmPassword">Confirm Password</label>
-              <div class="input-group">
-                  <input
-                      id="confirmPassword"
-                      [type]="showConfirmPassword ? 'text' : 'password'"
-                      formControlName="ConfirmPassword"
-                      class="form-control"
-                      (input)="checkPasswords()"
-                  />
-                  <div class="input-group-append">
-                      <button
-                          type="button"
-                          class="btn btn-outline-secondary"
-                          (click)="togglePasswordVisibility('confirm')">
-                          <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
-                      </button>
-                  </div>
-              </div>
-              <div *ngIf="passwordMismatch && confirmPasswordTouched" class="text-danger">
-                  <small>Passwords do not match.</small>
-              </div>
-          </div>
-      </div>
-        
-        <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid">Update Profile</button>
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">New Password</label>
+                <div class="input-group">
+                    <input
+                        id="password"
+                        [type]="showPassword ? 'text' : 'password'"
+                        formControlName="PasswordHash"
+                        class="form-control"
+                        (input)="checkPasswords()"
+                    />
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility('new')">
+                            <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="userForm.get('PasswordHash')?.errors?.['passwordStrength']" class="text-danger mt-1">
+                    <small>Password must be at least 8 characters long, contain upper and lower case letters, numbers, and special characters.</small>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password</label>
+                <div class="input-group">
+                    <input
+                        id="confirmPassword"
+                        [type]="showConfirmPassword ? 'text' : 'password'"
+                        formControlName="ConfirmPassword"
+                        class="form-control"
+                        (input)="checkPasswords()"
+                    />
+                    <div class="input-group-append">
+                        <button type="button" class="btn btn-outline-secondary" (click)="togglePasswordVisibility('confirm')">
+                            <i class="fas" [class.fa-eye]="!showConfirmPassword" [class.fa-eye-slash]="showConfirmPassword"></i>
+                        </button>
+                    </div>
+                </div>
+                <div *ngIf="passwordMismatch && confirmPasswordTouched" class="text-danger mt-1">
+                    <small>Passwords do not match.</small>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4 w-100" [disabled]="userForm.invalid">Update Profile</button>
     </form>
-  </div>
-  
+</div>

@@ -7,18 +7,17 @@ import { PostListComponent } from './features/blog-post/post-list/post-list.comp
 import { AddPostComponent } from './features/blog-post/add-post/add-post.component';
 import { HomepageComponent } from './features/homepage/homepage/homepage.component';
 import { UserListComponent } from './features/user/user-list/user-list.component';
-import { UserRoleComponent } from './features/user-role/user-role/user-role.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { AuthGuard } from './core/guards/auth.guard'; 
 import { AdminGuard } from './core/guards/admin.guard';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { MyProfileComponent } from './features/user/my-profile/my-profile.component';
 import { PostsTableComponent } from './features/blog-post/posts-table/posts-table.component';
 import { PostPageComponent } from './features/blog-post/post-page/post-page.component';
 import { EditPostComponent } from './features/blog-post/edit-post/edit-post.component';
 import { UserPostsComponent } from './features/blog-post/user-posts/user-posts.component';
 import { RandomUserPostsComponent } from './features/blog-post/random-user-posts/random-user-posts.component';
+import { UnauthorizedAccessComponent } from './features/user/unauthorized-access/unauthorized-access.component';
 
 const routes: Routes = [
   {
@@ -56,9 +55,8 @@ const routes: Routes = [
     canActivate: [AdminGuard]
   },
   {
-    path: 'user-roles',
-    component: UserRoleComponent,
-    canActivate: [AdminGuard]
+    path: 'unauthorized',
+    component: UnauthorizedAccessComponent,
   },
 
   {
@@ -87,11 +85,7 @@ const routes: Routes = [
     canActivate: [AuthGuard] 
   },
 
-  {
-    path: 'dashboard',
-    component: DashboardComponent
-  },
-
+ 
   {
     path: 'posts-table',
     component: PostsTableComponent,

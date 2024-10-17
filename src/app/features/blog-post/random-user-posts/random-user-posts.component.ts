@@ -5,6 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PostPhotoService } from '../services/post-photo.service';
 import { PostPhotoDto } from '../models/add-post-photo.model';
 import { User } from '../../user/models/user.model';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-random-user-posts',
@@ -29,7 +31,8 @@ export class RandomUserPostsComponent implements OnInit {
     private postPhotoService: PostPhotoService,
     private userService: UserService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +68,10 @@ export class RandomUserPostsComponent implements OnInit {
       }
     );
   }
+  goBack(): void {
+    this.location.back();
+  }
+  
   
   
   loadAuthorPosts(): void {

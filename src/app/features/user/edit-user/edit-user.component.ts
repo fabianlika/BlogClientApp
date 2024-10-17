@@ -48,81 +48,80 @@ export class EditUserComponent implements OnInit, OnDestroy {
   closeDialog(): void {
     this.dialogRef.close(); // Close the dialog without saving
   }
-
   onFormSubmit(): void {
     // Check for validation errors before proceeding
     if (this.validationErrors.email || this.validationErrors.tel || this.validationErrors.password || this.validationErrors.confirmPassword) {
       this.snackBar.open('Please fix the validation errors before saving.', 'Close', {
         duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
         panelClass: 'custom-snackbar-error'
       });
       return; // Exit if there are validation errors
     }
-
+  
     // Check if editing the password and that it matches the confirm password
     if (this.editPassword) {
       if (this.user.PasswordHash !== this.confirmPassword) {
         this.snackBar.open('Passwords do not match!', 'Close', {
           duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'bottom',
+          horizontalPosition: 'right',
+          verticalPosition: 'top',
           panelClass: 'custom-snackbar-error'
         });
         return; // Exit if passwords do not match
       }
-
+  
       // Hash the new password
       this.user.PasswordHash = bcrypt.hashSync(this.confirmPassword, 10); // Hash the password
     }
-
+  
     const updateUser: UpdateUser = {
       Name: this.user.Name,
       Username: this.user.Username,
       Email: this.user.Email,
       Birthday: this.user.Birthday,
       PhoneNumber: this.user.PhoneNumber,
-      PasswordHash: this.user.PasswordHash ,
+      PasswordHash: this.user.PasswordHash,
       Role: this.selectedRole
     };
-
+  
     this.editUserSubscription = this.userService.updateUser(this.user.UserId.toString(), updateUser)
-    .subscribe({
-      next: () => {
-        // After successfully updating user details, update the user role
-        this.userRoleSubscription = this.userRoleService.updateUserRole(this.user.UserId.toString(), this.selectedRole)
-          .subscribe({
-            next: () => {
-              this.snackBar.open('User role updated successfully', 'Close', {
-                duration: 3000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom',
-                panelClass: ['custom-snackbar']
-              });
-              this.dialogRef.close(true);
-            },
-            error: () => {
-              this.snackBar.open('Failed to update user role', 'Close', {
-                duration: 3000,
-                horizontalPosition: 'right',
-                verticalPosition: 'top',
-                panelClass: 'custom-snackbar-error'
-              });
-            }
+      .subscribe({
+        next: () => {
+          // After successfully updating user details, update the user role
+          this.userRoleSubscription = this.userRoleService.updateUserRole(this.user.UserId.toString(), this.selectedRole)
+            .subscribe({
+              next: () => {
+                this.snackBar.open('User role updated successfully', 'Close', {
+                  duration: 3000,
+                  horizontalPosition: 'right',
+                  verticalPosition: 'top',
+                  panelClass: ['custom-snackbar']
+                });
+                this.dialogRef.close(true);
+              },
+              error: () => {
+                this.snackBar.open('Failed to update user role', 'Close', {
+                  duration: 3000,
+                  horizontalPosition: 'right',
+                  verticalPosition: 'top',
+                  panelClass: 'custom-snackbar-error'
+                });
+              }
+            });
+        },
+        error: () => {
+          this.snackBar.open('Failed to update user', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: 'custom-snackbar-error'
           });
-      },
-      error: () => {
-        this.snackBar.open('Failed to update user', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-          panelClass: 'custom-snackbar-error'
-        });
-      }
-    });
-}
-
+        }
+      });
+  }
+  
   onInputEmail(): void {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email regex pattern
     this.validationErrors.email = this.user.Email && !emailPattern.test(this.user.Email)

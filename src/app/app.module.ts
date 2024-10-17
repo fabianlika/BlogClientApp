@@ -22,7 +22,6 @@ import { AboutComponent } from './core/components/about/about.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { UserListComponent } from './features/user/user-list/user-list.component';
 import { EditUserComponent } from './features/user/edit-user/edit-user.component';
-import { UserRoleComponent } from './features/user-role/user-role/user-role.component';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -30,7 +29,6 @@ import { StripHtmlPipe } from './core/components/pipes/strip-html.pipe';
 import { PaginationComponent } from './features/tablePagination/pagination/pagination.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { MyProfileComponent } from './features/user/my-profile/my-profile.component';
 import { PostsTableComponent } from './features/blog-post/posts-table/posts-table.component';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
@@ -40,7 +38,8 @@ import { EditPostComponent } from './features/blog-post/edit-post/edit-post.comp
 import { AddUserComponent } from './features/user/add-user/add-user.component';
 import { UserPostsComponent } from './features/blog-post/user-posts/user-posts.component';
 import { RandomUserPostsComponent } from './features/blog-post/random-user-posts/random-user-posts.component';
-import { ToastComponent } from './features/blog-post/toast/toast.component';
+
+import { UnauthorizedAccessComponent } from './features/user/unauthorized-access/unauthorized-access.component';
 
 
 
@@ -62,10 +61,8 @@ import { ToastComponent } from './features/blog-post/toast/toast.component';
     FooterComponent,
     UserListComponent,
     EditUserComponent,
-    UserRoleComponent,
     StripHtmlPipe,
     LoginComponent,
-    DashboardComponent,
     MyProfileComponent,
     PostsTableComponent,
     ImageModalComponent,
@@ -73,7 +70,7 @@ import { ToastComponent } from './features/blog-post/toast/toast.component';
     EditPostComponent,
     UserPostsComponent,
     RandomUserPostsComponent,
-    ToastComponent,
+    UnauthorizedAccessComponent,
   
     //SignupComponent,
      // Ensure PaginationComponent is declared here,

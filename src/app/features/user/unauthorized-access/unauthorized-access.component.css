@@ -1,0 +1,14 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.alert {
+    border: 1px solid #ffc107;
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+i.fa-exclamation-triangle {
+    color: #856404;
+}

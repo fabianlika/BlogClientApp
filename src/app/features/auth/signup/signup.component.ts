@@ -48,8 +48,9 @@ export class SignupComponent implements OnInit {
       PhoneNumber: ['', [Validators.required, this.validatePhoneNumber.bind(this)]],
       PasswordHash: ['', [Validators.required, this.passwordValidator.bind(this)]],
       RepeatPassword: ['', Validators.required],
-      Birthday: ['', [Validators.required, this.validateBirthday]],
+      Birthday: ['', [Validators.required, this.validateBirthday]], // Make sure this uses the updated validator
     }, { validators: this.passwordMatchValidator });
+    
   }
 
   validateName(control: AbstractControl): ValidationErrors | null {
@@ -64,15 +65,17 @@ export class SignupComponent implements OnInit {
   
   validateBirthday(control: AbstractControl): ValidationErrors | null {
     const birthday = control.value;
-    // Regular expression for dd/mm/yyyy format
-    const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
-  
-    if (birthday && !datePattern.test(birthday)) {
-      return { invalidDate: true };
+    // Check if the date is in the past
+    if (birthday) {
+      const inputDate = new Date(birthday);
+      const today = new Date();
+      if (inputDate >= today) {
+        return { invalidDate: true }; // Date must be in the past
+      }
     }
     return null;
   }
-
+  
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.value;

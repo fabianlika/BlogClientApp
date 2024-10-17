@@ -20,8 +20,8 @@
     <div class="form-group">
       <label for="content" class="form-label">Content <span class="text-danger">*</span></label>
       <div #editor class="form-control quill-editor"></div>
-      <div *ngIf="postForm.controls['content']?.invalid && (postForm.controls['content']?.touched || submitted)" class="text-danger">
-        <div *ngIf="postForm.controls['content']?.errors?.['required']">Ju lutem plotësoni fushën!</div>
+      <div *ngIf="post.Content.trim().length === 0 && (submitted || postForm.controls['content']?.touched)" class="text-danger">
+        Ju lutem plotësoni fushën!
       </div>
     </div>
 
@@ -36,8 +36,8 @@
         </div>
       </div>
       <input type="hidden" name="category" [(ngModel)]="post.CategoryId" />
-      <div *ngIf="postForm.controls['category']?.invalid && (postForm.controls['category']?.touched || submitted)" class="text-danger">
-        <div *ngIf="postForm.controls['category']?.errors?.['required']">Ju lutem zgjidhni një kategori!</div>
+      <div *ngIf="!post.CategoryId && (submitted || postForm.controls['category']?.touched)" class="text-danger">
+        Ju lutem zgjidhni një kategori!
       </div>
     </div>
 

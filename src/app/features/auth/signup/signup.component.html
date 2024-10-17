@@ -121,7 +121,7 @@
             </div>
           </div>
 
-       <!-- Birthday Input -->
+         <!-- Birthday Input -->
 <div class="form-group mb-3">
   <label for="birthday" class="text-muted">Birthday <span class="text-danger">*</span></label>
   <div class="input-group">
@@ -130,19 +130,20 @@
         <i class="fa fa-calendar text-primary"></i>
       </span>
     </div>
-    <input id="birthday" formControlName="Birthday" type="date" class="form-control" />
+    <input
+      id="birthday"
+      formControlName="Birthday"
+      type="date"
+      class="form-control"
+      placeholder="Choose a date"
+    />
   </div>
   <div *ngIf="signUpForm.get('Birthday')?.invalid && (signUpForm.get('Birthday')?.dirty || signUpForm.get('Birthday')?.touched)">
-    <small class="text-danger" *ngIf="signUpForm.get('Birthday')?.hasError('required')">
-      Birthday is required, Please enter a valid date
-    </small>
-    <br>
-    <small class="text-danger" *ngIf="signUpForm.get('Birthday')?.hasError('invalidBirthday')">
-      Please enter a valid date
-    </small>
+    <small class="text-danger" *ngIf="signUpForm.get('Birthday')?.hasError('invalidDate')">Please enter a valid date in the format mm/dd/yyyy</small>
   </div>
 </div>
 
+          
 
           <button type="submit" class="btn btn-primary btn-block py-2 mt-4">Sign Up</button>
 

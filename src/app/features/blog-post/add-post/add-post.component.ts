@@ -7,10 +7,10 @@ import { CreatePostDto } from 'src/app/features/blog-post/models/create-post.dto
 import { Category } from 'src/app/features/category/models/category.model';
 import { User } from '../../user/models/user.model';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../user/services/user.service';
 import { PostPhotoService } from '../services/post-photo.service';
 import { AuthService } from '../../auth/services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-post',
@@ -90,24 +90,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     });
   }
 
-  private showSuccessMessage(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      panelClass: ['snackbar-success'], // Custom class for success snackbar
-    });
-  }
-
-  private showErrorMessage(message: string) {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000,
-      verticalPosition: 'top',
-      horizontalPosition: 'right',
-      panelClass: ['snackbar-error'], // Custom class for error snackbar
-    });
-  }
-
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -118,7 +100,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.isDropdownOpen = false;
   }
 
-  
   async onSubmit() {
     this.submitted = true; // Set the flag to true on form submission
 
@@ -227,5 +208,21 @@ export class AddPostComponent implements OnInit, AfterViewInit {
 
   goBack(): void {
     this.router.navigate(['/posts']); // Navigate back to the post list
+  }
+
+ private showSuccessMessage(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000, // Duration in milliseconds
+      verticalPosition: 'top', // Position at the top
+      horizontalPosition: 'right', // Position at the right
+    });
+  }
+
+  private showErrorMessage(message: string) {
+    this.snackBar.open(message, 'Close', {
+      duration: 3000, // Duration in milliseconds
+      verticalPosition: 'top', // Position at the top
+      horizontalPosition: 'right', // Position at the right
+    });
   }
 }

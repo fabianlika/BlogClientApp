@@ -7,15 +7,22 @@
 
   <h1 class="form-title text-center">Add New Post <span class="text-danger">*</span></h1>
 
-  <form #postForm="ngForm" (ngSubmit)="onSubmit()" class="form-content">
+  <form #postForm="ngForm" class="form-content">
     <div class="form-group">
       <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
       <input type="text" id="title" name="title" [(ngModel)]="post.Title" required class="form-control" maxlength="100">
+      <div *ngIf="postForm.controls['title']?.invalid && (postForm.controls['title']?.touched || submitted)" class="text-danger">
+        <div *ngIf="postForm.controls['title']?.errors?.['required']">Ju lutem plotësoni fushën!</div>
+        <div *ngIf="postForm.controls['title']?.errors?.['maxlength']">Title cannot be more than 100 characters.</div>
+      </div>
     </div>
 
     <div class="form-group">
       <label for="content" class="form-label">Content <span class="text-danger">*</span></label>
       <div #editor class="form-control quill-editor"></div>
+      <div *ngIf="postForm.controls['content']?.invalid && (postForm.controls['content']?.touched || submitted)" class="text-danger">
+        <div *ngIf="postForm.controls['content']?.errors?.['required']">Ju lutem plotësoni fushën!</div>
+      </div>
     </div>
 
     <div class="form-group custom-dropdown">
@@ -29,6 +36,9 @@
         </div>
       </div>
       <input type="hidden" name="category" [(ngModel)]="post.CategoryId" />
+      <div *ngIf="postForm.controls['category']?.invalid && (postForm.controls['category']?.touched || submitted)" class="text-danger">
+        <div *ngIf="postForm.controls['category']?.errors?.['required']">Ju lutem zgjidhni një kategori!</div>
+      </div>
     </div>
 
     <div class="form-group mt-3">
@@ -51,6 +61,6 @@
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary mt-4" [disabled]="!postForm.valid || !validFiles">Add Post</button>
+    <button type="button" class="btn btn-primary mt-4" (click)="onSubmit()" [disabled]="!postForm.valid || !validFiles">Add Post</button>
   </form>
 </div>

@@ -30,7 +30,9 @@
     <div *ngFor="let post of paginatedPosts" class="col-md-6 mb-4">
       <div class="post-card h-100 shadow border-0 rounded d-flex flex-column">
         <div class="card-body flex-grow-1">
-          <h2 class="card-title text-center text-secondary">{{ post.Title }}</h2>
+          <h2 class="card-title text-center text-secondary">
+            {{ post.Title.length > 30 ? (post.Title | slice:0:30) + '...' : post.Title }}
+          </h2>
           <p class="card-text text-center">
             <small class="text-muted d-block">
               <i class="fas fa-calendar-alt"></i> {{ post.CreatedAt | date: 'mediumDate' }}

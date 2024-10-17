@@ -8,6 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as bcrypt from 'bcryptjs'; 
 
+
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
@@ -20,6 +21,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   validationErrors: { email: string; tel: string; password: string; confirmPassword: string } = { email: '', tel: '', password: '', confirmPassword: '' };
   editPassword: boolean = false; // Track if editing password
   confirmPassword: string = ''; // Store confirm password input
+  newPassword: string = '';
   showPassword: boolean = false; // Track new password visibility
   showConfirmPassword: boolean = false; // Track confirm password visibility
 
@@ -38,7 +40,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
     this.selectedRole = this.user.Role || 'User';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+    this.editPassword=false;
+  }
 
   ngOnDestroy(): void {
     this.editUserSubscription?.unsubscribe();
@@ -62,7 +67,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   
     // Check if editing the password and that it matches the confirm password
     if (this.editPassword) {
-      if (this.user.PasswordHash !== this.confirmPassword) {
+      if (this.newPassword !== this.confirmPassword) {
         this.snackBar.open('Passwords do not match!', 'Close', {
           duration: 3000,
           horizontalPosition: 'right',
@@ -73,7 +78,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       }
   
       // Hash the new password
-      this.user.PasswordHash = bcrypt.hashSync(this.confirmPassword, 10); // Hash the password
+      this.newPassword = bcrypt.hashSync(this.confirmPassword, 10); // Hash the password
     }
   
     const updateUser: UpdateUser = {
@@ -82,7 +87,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
       Email: this.user.Email,
       Birthday: this.user.Birthday,
       PhoneNumber: this.user.PhoneNumber,
-      PasswordHash: this.user.PasswordHash,
+      PasswordHash: this.newPassword,
       Role: this.selectedRole
     };
   
@@ -93,7 +98,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
           this.userRoleSubscription = this.userRoleService.updateUserRole(this.user.UserId.toString(), this.selectedRole)
             .subscribe({
               next: () => {
-                this.snackBar.open('User role updated successfully', 'Close', {
+                this.snackBar.open('User details updated successfully', 'Close', {
                   duration: 3000,
                   horizontalPosition: 'right',
                   verticalPosition: 'top',
@@ -147,7 +152,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
   validatePassword(): void {
     // Password regex: At least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    this.validationErrors.password = this.user.PasswordHash && !passwordPattern.test(this.user.PasswordHash)
+    this.validationErrors.password = this.newPassword && !passwordPattern.test(this.newPassword)
       ? 'Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character!'
       : '';
 
@@ -156,9 +161,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   checkPasswordMatch(): void {
+    debugger;
     if (this.editPassword && this.confirmPassword) {
       // Validate that the confirm password matches the new password
-      this.validationErrors.confirmPassword = this.user.PasswordHash !== this.confirmPassword
+      this.validationErrors.confirmPassword = this.newPassword !== this.confirmPassword
         ? 'Passwords do not match!'
         : '';
     } else {
@@ -172,13 +178,22 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
 
   toggleEditPassword(): void {
+    // Manually set the value of editPassword instead of toggling
     this.editPassword = !this.editPassword;
+  
+    
     if (this.editPassword) {
-      this.user.PasswordHash = ''; // Clear the current password when editing starts
-      this.confirmPassword = ''; // Clear confirm password field
-      this.showPassword = false; // Reset password visibility
-      this.showConfirmPassword = false; // Reset confirm password visibility
+      this.newPassword = ''; 
+      this.confirmPassword = '';
+      this.showPassword = false; 
+      this.showConfirmPassword = false; 
     }
-    this.cdRef.detectChanges();
+  
+  
+      this.cdRef.detectChanges();
+    
   }
+  
+  
+  
 }

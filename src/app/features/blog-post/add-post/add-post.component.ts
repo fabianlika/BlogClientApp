@@ -28,8 +28,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     Author: '',
     CategoryId: '',
     UserId: '',
-    isApproved: false // Initialize as false by default
+    isApproved: false, // Initialize as false by default
   };
+  
   categories: Category[] = [];
   users: User[] = [];
   selectedFiles: File[] = [];
@@ -37,6 +38,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
   isDropdownOpen: boolean = false;
   fileWarning: string = '';
   validFiles: boolean = true;
+  submitted: boolean = false;
 
   maxTitleLength = 100; 
   maxContentLength = 5000;
@@ -52,8 +54,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private snackBar: MatSnackBar
   ) {}
-
-
 
   ngOnInit(): void {
     this.loadCategories();
@@ -75,8 +75,8 @@ export class AddPostComponent implements OnInit, AfterViewInit {
           [{ header: [1, 2, false] }],
           ['bold', 'italic', 'underline'],
           [{ list: 'ordered' }, { list: 'bullet' }],
-        ]
-      }
+        ],
+      },
     });
 
     this.quill.on('text-change', () => {
@@ -107,6 +107,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       panelClass: ['snackbar-error'], // Custom class for error snackbar
     });
   }
+
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
@@ -117,7 +118,25 @@ export class AddPostComponent implements OnInit, AfterViewInit {
     this.isDropdownOpen = false;
   }
 
+  
   async onSubmit() {
+    this.submitted = true; // Set the flag to true on form submission
+
+    // Trim the title and content to remove leading/trailing spaces
+    this.post.Title = this.post.Title.trim();
+    this.post.Content = this.quill?.root.innerText.trim() || ''; // Get plain text and trim spaces
+  
+    // Validate title and content
+    if (this.post.Title.length === 0) {
+      this.showErrorMessage('Title cannot be empty.');
+      return;
+    }
+  
+    if (this.post.Content.length === 0) {
+      this.showErrorMessage('Content cannot be empty.');
+      return;
+    }
+  
     if (this.post.Title.length > this.maxTitleLength) {
       this.showErrorMessage(`Title cannot exceed ${this.maxTitleLength} characters.`);
       return;
@@ -128,15 +147,18 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       return;
     }
   
+    // Check file size
     const oversizedFiles = this.selectedFiles.filter(file => file.size > this.maxFileSize);
     if (oversizedFiles.length > 0) {
       this.showErrorMessage(`Files cannot exceed ${this.maxFileSize / (1024 * 1024)} MB.`);
       return;
     }
   
+    // Default values for author and URL if not provided
     if (!this.post.Author) this.post.Author = 'Default Author';
     if (!this.post.Url) this.post.Url = 'http://defaulturl.com';
   
+    // Set approval status based on user role
     const isAdmin = this.authService.isAdmin();
     this.post.isApproved = isAdmin;
   
@@ -153,6 +175,7 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       const newPost = await this.postService.addPost(postCreationData).toPromise();
       this.showSuccessMessage('Post added successfully!');
   
+      // Handle file uploads if there are any selected files
       if (newPost && newPost.PostId && this.selectedFiles.length > 0) {
         for (const file of this.selectedFiles) {
           const photoFormData = new FormData();
@@ -179,10 +202,9 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       if (error.status === 400 && error.error.errors) {
         console.error('Validation errors:', error.error.errors);
       }
-      this.showErrorMessage('Failed to add post or upload images. Please check your input.');
+      this.showErrorMessage('Failed to add post. Please check your input.');
     }
   }
-  
 
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -202,7 +224,6 @@ export class AddPostComponent implements OnInit, AfterViewInit {
       this.selectedFiles = [...this.selectedFiles, ...newFiles];
     }
   }
-
 
   goBack(): void {
     this.router.navigate(['/posts']); // Navigate back to the post list

@@ -41,38 +41,42 @@
           </div>
 
           <div class="mb-3">
-            <input type="checkbox" id="editPassword" [(ngModel)]="editPassword" (change)="toggleEditPassword()" />
-            <label for="editPassword">Edit Password</label>
+            <input type="checkbox" id="editPassword" [(ngModel)]="editPassword" 
+            [ngModelOptions]="{standalone: true}"
+            (Change)="toggleEditPassword()" />
+            <label for="editPassword"> &nbsp;  Edit Password</label>
           </div>
+          
+
 
           <!-- Password Hash Field -->
-          <div class="mb-3" *ngIf="editPassword">
-            <label class="form-label" for="userPasswordHash">Enter New Password</label>
-            <div class="input-group">
-              <input type="{{ showPassword ? 'text' : 'password' }}" id="userPasswordHash" class="form-control stylish-input" 
-                     name="userPasswordHash" [(ngModel)]="user.PasswordHash" 
-                     placeholder="Enter New Password" (input)="validatePassword()" required>
-              <span class="input-group-text" (click)="showPassword = !showPassword" style="cursor: pointer;">
-                <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-              </span>
-            </div>
-            <div class="text-danger" *ngIf="editPassword && validationErrors.password">{{ validationErrors.password }}</div>
-          </div>
+<div class="mb-3" *ngIf="editPassword">
+  <label class="form-label" for="userPasswordHash">Enter New Password</label>
+  <div class="input-group">
+    <input type="{{ showPassword ? 'text' : 'password' }}" id="userPasswordHash" class="form-control stylish-input" 
+           name="userPasswordHash" [(ngModel)]="newPassword" 
+           placeholder="Enter New Password" (input)="validatePassword()" required>
+    <span class="input-group-text" (click)="showPassword = !showPassword" style="cursor: pointer;">
+      <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+    </span>
+  </div>
+  <div class="text-danger" *ngIf="editPassword && validationErrors.password">{{ validationErrors.password }}</div>
+</div>
 
-          <!-- Confirm Password Field -->
-          <div class="mb-3" *ngIf="editPassword">
-            <label class="form-label" for="userConfirmPasswordHash">Confirm New Password</label>
-            <div class="input-group">
-              <input type="{{ showConfirmPassword ? 'text' : 'password' }}" id="userConfirmPasswordHash" class="form-control stylish-input" 
-                     name="userConfirmPasswordHash" [(ngModel)]="confirmPassword" 
-                     placeholder="Confirm New Password" (input)="checkPasswordMatch()" required>
-              <span class="input-group-text" (click)="showConfirmPassword = !showConfirmPassword" style="cursor: pointer;">
-                <i class="fas" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-              </span>
-            </div>
-            <!-- Display password match error only below the confirm password field -->
-            <div class="text-danger" *ngIf="editPassword && validationErrors.confirmPassword">{{ validationErrors.confirmPassword }}</div>
-          </div>
+<!-- Confirm Password Field -->
+<div class="mb-3" *ngIf="editPassword">
+  <label class="form-label" for="userConfirmPasswordHash">Confirm New Password</label>
+  <div class="input-group">
+    <input type="{{ showConfirmPassword ? 'text' : 'password' }}" id="userConfirmPasswordHash" class="form-control stylish-input" 
+           name="userConfirmPasswordHash" [(ngModel)]="confirmPassword" 
+           placeholder="Confirm New Password" (input)="checkPasswordMatch()" required>
+    <span class="input-group-text" (click)="showConfirmPassword = !showConfirmPassword" style="cursor: pointer;">
+      <i class="fas" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+    </span>
+  </div>
+  <div class="text-danger" *ngIf="editPassword && validationErrors.confirmPassword">{{ validationErrors.confirmPassword }}</div>
+</div>
+
 
           <div class="d-flex justify-content-between mt-4">
             <button type="submit" class="btn btn-primary">Save Changes</button>

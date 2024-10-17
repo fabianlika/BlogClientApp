@@ -42,15 +42,37 @@ export class SignupComponent implements OnInit {
 
   ngOnInit(): void {
     this.signUpForm = this.fb.group({
-      Name: ['', Validators.required],
-      Username: ['', Validators.required],
+      Name: ['', [Validators.required, this.validateName]],
+      Username: ['', [Validators.required, this.validateUsername]],
       Email: ['', [Validators.required, Validators.email]],
       PhoneNumber: ['', [Validators.required, this.validatePhoneNumber.bind(this)]],
       PasswordHash: ['', [Validators.required, this.passwordValidator.bind(this)]],
       RepeatPassword: ['', Validators.required],
-      Birthday: ['', Validators.required],
+      Birthday: ['', [Validators.required, this.validateBirthday]],
     }, { validators: this.passwordMatchValidator });
   }
+
+  validateName(control: AbstractControl): ValidationErrors | null {
+    const namePattern = /^[a-zA-Z\s]+$/;
+    return namePattern.test(control.value) ? null : { invalidName: true };
+  }
+  
+  validateUsername(control: AbstractControl): ValidationErrors | null {
+    const usernamePattern = /^[a-zA-Z0-9]+$/;
+    return usernamePattern.test(control.value) ? null : { invalidUsername: true };
+  }
+  
+  validateBirthday(control: AbstractControl): ValidationErrors | null {
+    const birthday = control.value;
+    // Regular expression for dd/mm/yyyy format
+    const datePattern = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+  
+    if (birthday && !datePattern.test(birthday)) {
+      return { invalidDate: true };
+    }
+    return null;
+  }
+
 
   passwordValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.value;

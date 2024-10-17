@@ -23,7 +23,7 @@ const routes: Routes = [
   {
     path: 'admin/categories',
     component: CategoryListComponent,
-   canActivate: [AdminGuard]
+    canActivate: [AdminGuard]
   },
   {
     path: 'admin/categories/add',
@@ -58,40 +58,31 @@ const routes: Routes = [
     path: 'unauthorized',
     component: UnauthorizedAccessComponent,
   },
-
   {
     path: 'user-posts/:id',
     component: UserPostsComponent,
     canActivate: [AuthGuard] 
   },
-
   {
     path: 'random-user-posts/:userId',
     component: RandomUserPostsComponent,
     canActivate: [AuthGuard] 
   },
-
-
-
   {
     path: 'posts',
     component: PostListComponent,
     canActivate: [AuthGuard]
   },
-
   {
     path: 'my-profile',
     component: MyProfileComponent,
     canActivate: [AuthGuard] 
   },
-
- 
   {
     path: 'posts-table',
     component: PostsTableComponent,
     canActivate: [AdminGuard]
   },
-
   {
     path: 'posts/:id',
     component: PostPageComponent,
@@ -102,7 +93,6 @@ const routes: Routes = [
     component: EditPostComponent,
     canActivate: [AuthGuard]
   },
-  
   {
     path: 'login',
     component: LoginComponent
@@ -113,9 +103,8 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '' // Redirect unknown routes to the homepage
+    redirectTo: 'unauthorized' // Redirect unknown routes to the unauthorized page
   }
-
 ];
 
 @NgModule({

@@ -44,13 +44,15 @@ export class AddUserComponent implements OnInit {
 
   ngOnInit(): void {
     this.addUserForm = this.fb.group({
-      Name: ['', Validators.required],
-      Username: ['', Validators.required],
+      Name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      Username: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9]*$/)]],
+
       Email: ['', [Validators.required, Validators.email]],
       PhoneNumber: ['', [Validators.required, this.validatePhoneNumber.bind(this)]],
       PasswordHash: ['', [Validators.required, this.passwordValidator]], // Apply password validator here
       RepeatPassword: ['', Validators.required],
-      Birthday: ['', Validators.required],
+      Birthday: ['', [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
+
     }, { validators: this.passwordMatchValidator });
   }
 

@@ -79,3 +79,10 @@
   background: #e74c3c !important;
   color: white !important;
 }
+
+.position-relative .input-group-text {
+  position: absolute;
+  right: 10px;
+  top: 67%;
+  transform: translateY(-50%);
+}

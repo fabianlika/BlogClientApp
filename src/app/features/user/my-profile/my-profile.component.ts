@@ -68,15 +68,29 @@ export class MyProfileComponent implements OnInit {
   private loadUserData() {
     const userId = this.authService.getUserIdFromToken();
     this.userService.getUserById(userId).subscribe({
-      next: (user) => {
-        this.userData = user;
-        this.userForm.patchValue(user);
-      },
-      error: (err) => {
-        console.error('Error fetching user data:', err);
-      }
+        next: (user) => {
+            this.userData = user;
+            // Format the birthday before patching the form
+            (user as any).Birthday = this.formatDate(user.Birthday.toString());
+            this.userForm.patchValue(user);
+        },
+        error: (err) => {
+            console.error('Error fetching user data:', err);
+        }
     });
-  }
+}
+
+
+formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are zero-based
+  const day = ('0' + date.getDate()).slice(-2);
+  return `${year}-${month}-${day}`; // Return format for date input
+}
+
+
+  
 
   private passwordValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const password = control.value;

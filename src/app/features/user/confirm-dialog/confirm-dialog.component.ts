@@ -4,11 +4,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-confirm-dialog',
   templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.css']
+  styleUrls: ['./confirm-dialog.component.css'],
 })
 export class ConfirmDialogComponent {
-
-  message: string = "Are you sure you want to proceed?";
+  message: string = 'Are you sure you want to delete this item?';
 
   constructor(
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,

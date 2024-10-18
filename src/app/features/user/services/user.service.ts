@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { User } from '../models/user.model';
 import { environment } from 'src/environments/environment.development';
 import { UpdateUser } from '../models/update-user.model';
+import { DeleteResponse } from '../models/delete-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -40,9 +41,13 @@ export class UserService {
   return this.http.get<User[]>(`${this.baseUrl}/users?page=${page}&pageSize=${pageSize}`);
 }
 
-  deleteUser(id: string): Observable<User> {
-    return this.http.delete<User>(`${this.baseUrl}/${id}`);
-  }
+//  deleteUser(id: string): Observable<DeleteResponse> {
+ //   return this.http.delete<DeleteResponse>(`${this.baseUrl}/${id}`);
+  //}
 
+  deleteUser(userId: string): Observable<string> {
+    return this.http.delete<string>(`${this.baseUrl}/${userId}`, { responseType: 'text' as 'json' });
+  }
+  
   
 }

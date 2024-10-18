@@ -7,6 +7,7 @@ import { EditUserComponent } from '../edit-user/edit-user.component';
 import { ConfirmDialogService } from 'src/app/features/user/services/confirm-dialog.service';
 import { AddUserComponent } from '../add-user/add-user.component';
 import { UserRoleDetail } from 'src/app/features/user-role/models/user-role-details.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -27,7 +28,8 @@ export class UserListComponent implements OnInit {
     private userService: UserService,
     private userRoleService: UserRoleService,
     private dialog: MatDialog,
-    private confirmDialogService: ConfirmDialogService
+    private confirmDialogService: ConfirmDialogService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -45,6 +47,7 @@ export class UserListComponent implements OnInit {
         console.error('Error fetching users:', err);
       },
     });
+    console.log('Users after deletion:', this.users);
   }
 
   loadUserRoles(): void {
@@ -69,22 +72,27 @@ export class UserListComponent implements OnInit {
   }
   
   filterAndPaginateUsers(): void {
-    
+    // Filter users based on the search term
     const filteredUsers = this.users.filter(user => 
       user.Name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
-
+  
+    // Update the total number of pages after filtering
     this.totalPages = Math.ceil(filteredUsers.length / this.pageSize); 
+  
+    // Paginate users for the current page
     this.paginateUsers(this.currentPage, filteredUsers); 
   }
-
+  
   // Paginate users for the current page
   paginateUsers(page: number, userList: User[] = this.users): void {
     const startIndex = (page - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedUsers = userList.slice(startIndex, endIndex);
   }
-
+  
+  
+  
   // Method to handle pagination change
   onPageChange(newPage: number): void {
     this.currentPage = newPage;
@@ -109,22 +117,35 @@ export class UserListComponent implements OnInit {
       }
     });
   }
-
   deleteUser(userId: string): void {
     this.confirmDialogService.confirm('Are you sure you want to delete this user?')
       .then((confirmed) => {
         if (confirmed) {
           this.userService.deleteUser(userId).subscribe({
-            next: () => {
-              this.loadUsers(); 
+            next: (response) => {
+              console.log('Delete response:', response); // Log the response
+              if (response === "User deleted successfully.") {
+                // If the deletion is successful, navigate to the user list page
+                this.router.navigate(['/user-list']);
+                this.loadUsers();
+                window.location.reload();
+              } else {
+                console.error('Unexpected response:', response);
+              }
             },
             error: (err) => {
-              console.error('Error deleting user', err);
+              console.error('Error deleting user:', err);
             }
           });
         }
       });
   }
+  
+  
+  
+  
+  
+  
 
   openAddUserDialog(): void {
     const dialogRef = this.dialog.open(AddUserComponent, {

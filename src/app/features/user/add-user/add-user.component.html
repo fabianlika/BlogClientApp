@@ -20,6 +20,10 @@
         <div *ngIf="addUserForm.get('Name')?.invalid && (addUserForm.get('Name')?.dirty || addUserForm.get('Name')?.touched)">
           <small class="text-danger" *ngIf="addUserForm.get('Name')?.hasError('required')">Name is required</small>
         </div>
+
+        <div *ngIf="addUserForm.get('Name')?.hasError('pattern')">
+          <small class="text-danger">Name must only contain letters and spaces</small>
+        </div>
       </div>
 
       <!-- Username Input -->
@@ -35,6 +39,10 @@
         />
         <div *ngIf="addUserForm.get('Username')?.invalid && (addUserForm.get('Username')?.dirty || addUserForm.get('Username')?.touched)">
           <small class="text-danger" *ngIf="addUserForm.get('Username')?.hasError('required')">Username is required</small>
+        </div>
+
+        <div *ngIf="addUserForm.get('Username')?.hasError('pattern')">
+          <small class="text-danger">Username must only contain letters and numbers</small>
         </div>
       </div>
 
@@ -132,6 +140,10 @@
         />
         <div *ngIf="addUserForm.get('Birthday')?.invalid && (addUserForm.get('Birthday')?.dirty || addUserForm.get('Birthday')?.touched)">
           <small class="text-danger" *ngIf="addUserForm.get('Birthday')?.hasError('required')">Birthday is required</small>
+        </div>
+
+        <div *ngIf="addUserForm.get('Birthday')?.hasError('pattern')">
+          <small class="text-danger">Invalid date format</small>
         </div>
       </div>
 

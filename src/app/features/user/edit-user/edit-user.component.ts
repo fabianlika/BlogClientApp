@@ -18,7 +18,14 @@ export class EditUserComponent implements OnInit, OnDestroy {
   private editUserSubscription?: Subscription;
   private userRoleSubscription?: Subscription;
   user: User;
-  validationErrors: { email: string; tel: string; password: string; confirmPassword: string } = { email: '', tel: '', password: '', confirmPassword: '' };
+  validationErrors: { email: string; tel: string; password: string; confirmPassword: string; name: string; username: string } = {
+    email: '',
+    tel: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+    username: ''
+  };
   editPassword: boolean = false; // Track if editing password
   confirmPassword: string = ''; // Store confirm password input
   newPassword: string = '';
@@ -55,14 +62,24 @@ export class EditUserComponent implements OnInit, OnDestroy {
   }
   onFormSubmit(): void {
     // Check for validation errors before proceeding
-    if (this.validationErrors.email || this.validationErrors.tel || this.validationErrors.password || this.validationErrors.confirmPassword) {
-      this.snackBar.open('Please fix the validation errors before saving.', 'Close', {
+    if (this.validationErrors.email || this.validationErrors.tel || this.validationErrors.password || this.validationErrors.confirmPassword || this.validationErrors.name || this.validationErrors.username) {
+         this.snackBar.open('Please fix the validation errors before saving.', 'Close', {
         duration: 3000,
         horizontalPosition: 'right',
         verticalPosition: 'top',
         panelClass: 'custom-snackbar-error'
       });
       return; // Exit if there are validation errors
+    }
+
+    if (!this.user.Name || !this.user.Username || !this.user.Email || !this.user.PhoneNumber || !this.selectedRole) {
+      this.snackBar.open('Please fill in all required fields before saving.', 'Close', {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+        panelClass: 'custom-snackbar-error'
+      });
+      return; // Exit if there are empty fields
     }
   
     // Check if editing the password and that it matches the confirm password
@@ -126,6 +143,27 @@ export class EditUserComponent implements OnInit, OnDestroy {
         }
       });
   }
+
+ 
+
+
+  validateName(): void {
+    const namePattern = /^[A-Za-z]+$/; // Only letters
+    if (!namePattern.test(this.user.Name)) {
+      this.validationErrors.name = 'Name must contain only letters.';
+    } else {
+      this.validationErrors.name = '';
+    }
+  }
+
+  validateUsername(): void {
+    const usernamePattern = /^[A-Za-z0-9]+$/; // Letters and numbers
+    if (!usernamePattern.test(this.user.Username)) {
+      this.validationErrors.username = 'Username must contain only letters and numbers.';
+    } else {
+      this.validationErrors.username = '';
+    }
+  }
   
   onInputEmail(): void {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Email regex pattern
@@ -137,10 +175,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
   checkTel(): boolean {
     const val = this.user.PhoneNumber?.toString();
     const patterns: RegExp[] = [
-      /^\+35567[0-9]{7}$/, // Match +35567xxxxxxxx
-      /^06[7-9][0-9]{7}$/, // Match 06xxxxxxxx
-      /^\+355[4-5][0-9]{7}$/, // Match +3554xxxxxxxx
-      /^0[4-5][0-9]{7}$/ // Match 0xxxxxxxx
+      /^\+3556[0-9]{8}$/,    // Match +3556xxxxxxxx 
+    /^06[7-9][0-9]{7}$/,   // Match 06xxxxxxxx
+    /^\+355[4-5][0-9]{7}$/, // Match +3554xxxxxxxx
+    /^0[4-5][0-9]{7}$/
     ];
 
     const isMatch = patterns.some(pattern => pattern.test(val!));

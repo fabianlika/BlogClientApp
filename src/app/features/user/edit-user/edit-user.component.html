@@ -9,49 +9,63 @@
       <form #form="ngForm" (ngSubmit)="onFormSubmit()">
         <div class="mt-4">
           <div class="mb-3">
-            <label class="form-label" for="userName">Name</label>
-            <input type="text" id="userName" class="form-control stylish-input" name="userName" [(ngModel)]="user.Name" required>
+            <label class="form-label" for="userName">Name <span class="text-danger">*</span></label>
+            <input type="text" id="userName" class="form-control stylish-input" name="userName" [(ngModel)]="user.Name"  (input)="validateName()" required>
+            <div class="text-danger" *ngIf="validationErrors.name">{{ validationErrors.name }}</div>
+
           </div>
 
-          <div class="mb-3">
-            <label class="form-label" for="userUsername">Username</label>
-            <input type="text" id="userUsername" class="form-control stylish-input" name="userUsername" [(ngModel)]="user.Username" required>
-          </div>
+          <div class="text-danger" *ngIf="!user.Name && form.submitted">Name is required!</div>
 
           <div class="mb-3">
-            <label class="form-label" for="userEmail">Email</label>
+            <label class="form-label" for="userUsername">Username <span class="text-danger">*</span></label>
+            <input type="text" id="userUsername" class="form-control stylish-input" name="userUsername" [(ngModel)]="user.Username"  (input)="validateUsername()"required>
+           
+            <div class="text-danger" *ngIf="validationErrors.username">{{ validationErrors.username }}</div>
+          </div>
+
+          <div class="text-danger" *ngIf="!user.Username && form.submitted">Username is required!</div>
+
+          <div class="mb-3">
+            <label class="form-label" for="userEmail">Email <span class="text-danger">*</span></label>
             <input type="email" id="userEmail" class="form-control stylish-input" name="userEmail" [(ngModel)]="user.Email" 
                    (input)="onInputEmail()" required>
             <div class="text-danger" *ngIf="validationErrors.email">{{ validationErrors.email }}</div>
           </div>
 
+          <div class="text-danger" *ngIf="!user.Email && form.submitted">Email is required!</div>
+
           <div class="mb-3">
-            <label class="form-label" for="userPhoneNumber">Phone Number</label>
+            <label class="form-label" for="userPhoneNumber">Phone Number <span class="text-danger">*</span></label>
             <input type="tel" id="userPhoneNumber" class="form-control stylish-input" name="userPhoneNumber" 
                    [(ngModel)]="user.PhoneNumber" (input)="checkTel()" required>
             <div class="text-danger" *ngIf="validationErrors.tel">{{ validationErrors.tel }}</div>
           </div>
           
+          <div class="text-danger" *ngIf="!user.PhoneNumber && form.submitted">Phone number is required!</div>
 
           <div class="mb-3">
-            <label class="form-label" for="userRole">Role</label>
+            <label class="form-label" for="userRole">Role <span class="text-danger">*</span></label>
             <select id="userRole" class="form-control stylish-input" [(ngModel)]="selectedRole" name="userRole" required>
               <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
             </select>
           </div>
 
+          <div class="text-danger" *ngIf="!selectedRole && form.submitted">Role is required!</div>
+
+
           <div class="mb-3">
             <input type="checkbox" id="editPassword" [(ngModel)]="editPassword" 
             [ngModelOptions]="{standalone: true}"
             (Change)="toggleEditPassword()" />
-            <label for="editPassword"> &nbsp;  Edit Password</label>
+            <label for="editPassword"> &nbsp;  Edit Password </label>
           </div>
           
 
 
           <!-- Password Hash Field -->
 <div class="mb-3" *ngIf="editPassword">
-  <label class="form-label" for="userPasswordHash">Enter New Password</label>
+  <label class="form-label" for="userPasswordHash">Enter New Password <span class="text-danger">*</span></label>
   <div class="input-group">
     <input type="{{ showPassword ? 'text' : 'password' }}" id="userPasswordHash" class="form-control stylish-input" 
            name="userPasswordHash" [(ngModel)]="newPassword" 
@@ -65,7 +79,7 @@
 
 <!-- Confirm Password Field -->
 <div class="mb-3" *ngIf="editPassword">
-  <label class="form-label" for="userConfirmPasswordHash">Confirm New Password</label>
+  <label class="form-label" for="userConfirmPasswordHash">Confirm New Password <span class="text-danger">*</span></label>
   <div class="input-group">
     <input type="{{ showConfirmPassword ? 'text' : 'password' }}" id="userConfirmPasswordHash" class="form-control stylish-input" 
            name="userConfirmPasswordHash" [(ngModel)]="confirmPassword" 

@@ -17,6 +17,7 @@ export class CategoryListComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   totalPages: number = 0;
+  loading: boolean = true; // Add loading variable
 
   constructor(private categoryService: CategoryService, private dialog: MatDialog) {}
 
@@ -25,14 +26,17 @@ export class CategoryListComponent implements OnInit {
   }
 
   loadCategories(): void {
+    this.loading = true; // Set loading to true
     this.categoryService.getAllCategories().subscribe({
       next: (data) => {
         this.categories = data;
         this.totalPages = Math.ceil(this.categories.length / this.itemsPerPage);
         this.updatePagedCategories();
+        this.loading = false; // Set loading to false after data is loaded
       },
       error: (err) => {
         console.error('Error loading categories', err);
+        this.loading = false; // Ensure loading is false on error
       }
     });
   }

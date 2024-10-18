@@ -24,6 +24,14 @@
   text-align: left; /* Left-align text */
 }
 
+td {
+  max-width: 100px; /* Adjust this width as necessary */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+
 .styled-table th {
   background-color: #4caf50; /* Green background for header */
   color: white; /* White text for header */
